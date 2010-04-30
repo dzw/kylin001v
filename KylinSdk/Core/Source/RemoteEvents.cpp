@@ -1,0 +1,25 @@
+#include "corepch.h"
+#include "RemoteEvents.h"
+
+KMAP<KSTR, const EventTemplate*> g_kEventMap;
+//////////////////////////////////////////////////////////////////////////
+EventTemplate ev_lvl_init				("ev_lvl_init");
+EventTemplate ev_lvl_update				("ev_lvl_update");
+EventTemplate ev_lvl_timer				("ev_lvl_timer");
+EventTemplate ev_lvl_destroy			("ev_lvl_destroy");
+
+//////////////////////////////////////////////////////////////////////////
+EventTemplate ev_post_spawn				("ev_post_spawn");
+EventTemplate ev_post_attack			("ev_post_attack");
+EventTemplate ev_post_damage			("ev_post_damage");
+EventTemplate ev_post_picked			("ev_post_picked");
+EventTemplate ev_post_pick_terrain		("ev_post_pick_terrain");
+
+
+EventTemplate ev_post_killed			("ev_post_killed");
+EventTemplate ev_post_destroy			("ev_post_destroy");
+
+//////////////////////////////////////////////////////////////////////////
+EventTemplate ev_sync_translate			("ev_sync_translate");
+EventTemplate ev_sync_gametime			("ev_sync_gametime");
+
