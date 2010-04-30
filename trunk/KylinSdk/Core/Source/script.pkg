@@ -1,0 +1,11 @@
+//////////////////////////////////////////////////////////////////////////
+$#include "corepch.h"
+$#include "tolua++.h"
+
+$#pragma warning(disable : 4800) //forcing value to bool warning
+
+$cfile "core.h"
+$cfile "ScriptFunctions.h"
+
+
+$using namespace Script;
