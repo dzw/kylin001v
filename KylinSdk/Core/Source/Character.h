@@ -22,6 +22,10 @@ namespace Kylin
 
 		virtual KVOID OnEntityCllsn(Node* pCollidee,const KPoint3& rNormal);
 		virtual KBOOL OnShouldCllsn(Node* pCollidee);
+		
+		virtual KBOOL Init(const PropertySet& kProp);
+		virtual KVOID Tick(KFLOAT fElapsed);
+		virtual KVOID UpdateMovement(KFLOAT fElapsed);
 
 	protected:
 		// multiple player...
@@ -32,5 +36,9 @@ namespace Kylin
 		virtual KVOID OnRButtonDown(KINT nX, KINT nY);
 
 		// ∂Øª≠¥¶¿Ì
+	protected:
+		//OgreOpcode::CharacterController* mCharacter;
+		KPoint3 m_kDestination;
+		KFLOAT  m_fDistance;
 	};
 }
