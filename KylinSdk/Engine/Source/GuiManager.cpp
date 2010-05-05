@@ -37,20 +37,13 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 	m_pGUI->initialise(m_sResource);
 	
 	//////////////////////////////////////////////////////////////////////////
-	// test code update by lby [4/26/2010]
-	InitShell(NULL);
 
 	return true;
 }
 
 KVOID Kylin::GuiManager::Destroy()
 {
-	for (GuiMap::iterator it = m_kGuiMap.begin(); it != m_kGuiMap.end(); it++)
-	{
-		it->second->Destroy();
-		KDEL it->second;
-	}
-	m_kGuiMap.clear();
+	RemoveAllGui();
 	//////////////////////////////////////////////////////////////////////////
 	
 	if (m_pGUI)
@@ -90,6 +83,8 @@ KVOID Kylin::GuiManager::UnregisterGui( GuiBase* pGui )
 
 KVOID Kylin::GuiManager::InitShell(GuiShell* pShell)
 {
+	RemoveAllGui();
+
 	if (pShell)
 		pShell->UiLoader();
 	
@@ -127,4 +122,14 @@ Kylin::GuiBase* Kylin::GuiManager::GetGuiBase( KSTR sName )
 		return it->second;
 	}
 	return NULL;
+}
+
+KVOID Kylin::GuiManager::RemoveAllGui()
+{
+	for (GuiMap::iterator it = m_kGuiMap.begin(); it != m_kGuiMap.end(); it++)
+	{
+		it->second->Destroy();
+		KDEL it->second;
+	}
+	m_kGuiMap.clear();
 }

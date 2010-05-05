@@ -1,6 +1,5 @@
 #include "engpch.h"
 #include "CameraControl.h"
-#include "CCSCameraControlSystem.h"
 #include "CCSBasicCameraModes.h"
 #include "CCSFreeCameraMode.h"
 #include "rOgreRoot.h"
@@ -96,4 +95,9 @@ KVOID Kylin::CameraControl::Update( KFLOAT fElapsed )
 Camera* Kylin::CameraControl::GetActiveCamera()
 {
 	return m_pCameraCS->getOgreCamera();
+}
+
+CCS::CameraControlSystem::CameraMode* Kylin::CameraControl::GetMode( KSTR sMode )
+{
+	return m_pCameraCS->getCameraMode(sMode);
 }

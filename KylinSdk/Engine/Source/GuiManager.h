@@ -31,7 +31,6 @@ namespace Kylin
 	class GuiShell
 	{
 	public:
-		GuiShell();
 
 		virtual KVOID UiLoader() = 0;
 	};
@@ -53,6 +52,7 @@ namespace Kylin
 		
 		KVOID RegisterGui(GuiBase* pGui);
 		KVOID UnregisterGui(GuiBase* pGui);
+		KVOID RemoveAllGui();
 		GuiBase* GetGuiBase(KSTR sName);
 
 	public:

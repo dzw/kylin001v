@@ -42,8 +42,8 @@ KBOOL Kylin::InputManager::Initialize()
 
 KVOID Kylin::InputManager::Destroy()
 {
-	SAFE_DEL(m_pMouse)
-	SAFE_DEL(m_pKeyboard)
+	m_pInputManager->destroyInputObject( m_pMouse );
+	m_pInputManager->destroyInputObject( m_pKeyboard );
 
 	OIS::InputManager::destroyInputSystem(m_pInputManager);
 }
