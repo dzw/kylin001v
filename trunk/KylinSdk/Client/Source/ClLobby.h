@@ -17,6 +17,7 @@ namespace Kylin
 		virtual KVOID UiLoader();
 
 	protected:
-		KFLOAT ttime;
+		Ogre::SceneNode* m_pNode;
+		Ogre::Light*	 m_pLight;
 	};
 }
