@@ -32,7 +32,10 @@ namespace Kylin
 		KVOID ShutDown();
 		// 截屏
 		KVOID ScreenShot();
-		
+		//获得资源跟目录
+		KSTR GetRootMedia();
+		//加载资源
+		KVOID LoadResource(KSTR sRes);
 		//获得脚步指针
 		ScriptVM*			GetScriptVM();
 		// 获得鼠标状态
@@ -48,9 +51,11 @@ namespace Kylin
 		GuiManager*			GetGuiManager();
 		// 获得场景管理指针
 		Ogre::SceneManager*	GetSceneManager();
+		//
+		Ogre::RenderWindow*	GetMainWindow();
 		// 获得鼠标射线
 		KBOOL				GetMouseRay(KPoint2 vOrg, Ogre::Ray &kRay);
-
+		
 		// 创建摄像机
 		Ogre::Camera*		CreateCamera(KCCHAR* pName);
 		// 创建视窗
