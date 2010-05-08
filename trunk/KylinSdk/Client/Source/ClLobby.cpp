@@ -3,13 +3,12 @@
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "uiLobbyMenu.h"
-#include "CameraControl.h"
-#include "CCSCameraControlSystem.h"
+
+#include "Stage.h"
 
 
 Kylin::ClLobby::ClLobby()
-: m_pNode(NULL)
-, m_pLight(NULL)
+: m_pStage(NULL)
 {
 	m_eStatus = GS_LOBBY_;
 
@@ -17,46 +16,30 @@ Kylin::ClLobby::ClLobby()
 
 KBOOL Kylin::ClLobby::Initialize()
 {
+		
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 
 	//////////////////////////////////////////////////////////////////////////
-	OgreRoot::GetSingletonPtr()->GetMainWindow()->getViewport(0)->setBackgroundColour(Ogre::ColourValue::Black);
+	m_pStage = KNEW Kylin::Stage();
+	if (!m_pStage->Initialize())
+		return false;
+	//////////////////////////////////////////////////////////////////////////	
 
-	m_pLight = OgreRoot::GetSingletonPtr()->GetSceneManager()->createLight("LobbyLight");
-	m_pLight->setType(Ogre::Light::LT_DIRECTIONAL);
-	Ogre::Vector3 vec(-0.3, -0.3, -0.3);
-	vec.normalise();
-
-	m_pNode = OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
-
-	Ogre::MeshManager::getSingleton().createPlane(
-		"FloorPlane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		Ogre::Plane(Ogre::Vector3::UNIT_Y, 0), 1000, 1000, 1, 1, true, 1, 1, 1, Ogre::Vector3::UNIT_Z);
-
-	Ogre::Entity* pEntity = OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity("FloorPlane", "FloorPlane");
-	pEntity->setMaterialName("Ground");
-	m_pNode->attachObject(pEntity);
-	
-	OgreRoot::GetSingletonPtr()->GetCameraController()->SetTarget(m_pNode);
-	OgreRoot::GetSingletonPtr()->GetCameraController()->SetMode("FirstPerson");
-	
 	return true;
 }
 
 KVOID Kylin::ClLobby::Tick( KFLOAT fElapsed )
 {
-
+	if (m_pStage)
+		m_pStage->Tick(fElapsed);
 }
 
 KVOID Kylin::ClLobby::Destroy()
 {
-	OgreRoot::GetSingletonPtr()->GetCameraController()->GetMode("FirstPerson")->stop();
-
-	OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyLight(m_pLight);
-
-	m_pNode->removeAndDestroyAllChildren();
-	OgreRoot::GetSingletonPtr()->GetSceneManager()->destroySceneNode(m_pNode);
-	m_pNode = NULL;
+	SAFE_DEL(m_pStage);
+	OgreRoot::GetSingletonPtr()->DestroyCameraControl();
+	// 注：摄像机不被销毁
+	OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
 }
 
 KVOID Kylin::ClLobby::UiLoader()
