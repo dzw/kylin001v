@@ -3,6 +3,7 @@
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "GameStatus.h"
+#include "ClGame.h"
 
 
 Kylin::LobbyMenu::LobbyMenu()
@@ -16,9 +17,7 @@ KBOOL Kylin::LobbyMenu::Initialize()
 {
 	m_pBtnStart->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::LobbyMenu::NotifyButtonClick);
 	m_pBtnQuit->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::LobbyMenu::NotifyButtonClick);
-	m_pBtnNew->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::LobbyMenu::NotifyButtonClick);
-	m_pBtnNextChar->eventMouseButtonClick	= MyGUI::newDelegate(this, &Kylin::LobbyMenu::NotifyButtonClick);
-
+	
 	return true;
 }
 
@@ -37,9 +36,8 @@ KVOID Kylin::LobbyMenu::SetVisible( KBOOL bVisible )
 {
 	m_pBtnStart->setVisible(bVisible);
 	m_pBtnQuit->setVisible(bVisible);
-	m_pBtnNew->setVisible(bVisible);
-	m_pBtnNextChar->setVisible(bVisible);
-
+	m_pTxtExplain->setVisible(bVisible);
+	
 }
 
 void Kylin::LobbyMenu::NotifyButtonClick( MyGUI::Widget* _sender )
@@ -48,18 +46,11 @@ void Kylin::LobbyMenu::NotifyButtonClick( MyGUI::Widget* _sender )
 	if (pButton == m_pBtnStart)
 	{
 		SetVisible(false);
-		KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW GSGame());
+		KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW ClGame());
 	}
 	else if (pButton == m_pBtnQuit) 
 	{
 		OgreRoot::GetSingletonPtr()->ShutDown();
 	}
-	else if (pButton == m_pBtnNew) 
-	{
-
-	}
-	else if (pButton == m_pBtnNextChar) 
-	{
-		
-	}
+	
 }
