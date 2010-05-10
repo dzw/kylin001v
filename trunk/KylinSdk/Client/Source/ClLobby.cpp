@@ -18,7 +18,7 @@ KBOOL Kylin::ClLobby::Initialize()
 {
 		
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
-
+	OgreRoot::GetSingletonPtr()->CreateSceneRay();
 	//////////////////////////////////////////////////////////////////////////
 	m_pStage = KNEW Kylin::Stage();
 	if (!m_pStage->Initialize())
@@ -37,6 +37,7 @@ KVOID Kylin::ClLobby::Tick( KFLOAT fElapsed )
 KVOID Kylin::ClLobby::Destroy()
 {
 	SAFE_DEL(m_pStage);
+	OgreRoot::GetSingletonPtr()->DestroySceneRay();
 	OgreRoot::GetSingletonPtr()->DestroyCameraControl();
 	// 注：摄像机不被销毁
 	OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();

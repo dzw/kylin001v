@@ -2,6 +2,8 @@
 
 #include "Node.h"
 
+#define QUERYFLAG_SHOWGIRL 1
+
 namespace Kylin
 {
 	struct AnimUnit

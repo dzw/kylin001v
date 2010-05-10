@@ -24,15 +24,13 @@ Kylin::Stage::~Stage()
 
 KBOOL Kylin::Stage::Initialize()
 {
-	Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
-	if (pCam)
+	m_pCamera = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
+	if (m_pCamera)
 	{
-		pCam->setNearClipDistance(0.2f);
-		OgreRoot::GetSingletonPtr()->CreateCameraControl(pCam);
+		m_pCamera->setNearClipDistance(0.2f);
+		
+		OgreRoot::GetSingletonPtr()->CreateViewports(m_pCamera,Ogre::ColourValue::Black);
 	}
-
-	OgreRoot::GetSingletonPtr()->GetMainWindow()->getViewport(0)->setBackgroundColour(Ogre::ColourValue::Black);
-
 	//////////////////////////////////////////////////////////////////////////	
 	m_pLight = OgreRoot::GetSingletonPtr()->GetSceneManager()->createLight("LobbyLight");
 	m_pLight->setType(Ogre::Light::LT_DIRECTIONAL);
@@ -41,16 +39,14 @@ KBOOL Kylin::Stage::Initialize()
 
 	m_pNode = OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
 
-	Ogre::MeshManager::getSingleton().createPlane(
-		"FloorPlane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
-		Ogre::Plane(Ogre::Vector3::UNIT_Y, 0), 1000, 1000, 1, 1, true, 1, 1, 1, Ogre::Vector3::UNIT_Z);
+ 	Ogre::MeshManager::getSingleton().createPlane(
+ 		"FloorPlane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+ 		Ogre::Plane(Ogre::Vector3::UNIT_Y, 0), 1000, 1000, 1, 1, true, 1, 1, 1, Ogre::Vector3::UNIT_Z);
 
 	Ogre::Entity* pEntity = OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity("FloorPlane", "FloorPlane");
 	pEntity->setMaterialName("Ground");
 	m_pNode->attachObject(pEntity);
-	
-	OgreRoot::GetSingletonPtr()->GetCameraController()->SetTarget(m_pNode);
-	OgreRoot::GetSingletonPtr()->GetCameraController()->SetMode("FirstPerson");
+	pEntity->setQueryFlags(0);
 	//////////////////////////////////////////////////////////////////////////	
 	
 	LoadActors();	
@@ -66,6 +62,31 @@ KBOOL Kylin::Stage::LoadActors()
 	
 	kXml.SetToFirstChild("stage");
 	// 加载舞台信息
+	kXml.SetToFirstChild("skybox");
+	KSTR sSky = kXml.GetString("");
+	
+	kXml.SetToParent();
+	// 设置摄像机位置
+	kXml.SetToFirstChild("camera_pos");
+	KSTR sPos = kXml.GetString("");
+	Ogre::vector<Ogre::String>::type kV = Ogre::StringUtil::split(sPos," ");
+	KPoint3 kPos;
+	kPos.x = atof(kV[0].data());
+	kPos.y = atof(kV[1].data());
+	kPos.z = atof(kV[2].data());
+	m_pCamera->setPosition(kPos);
+	
+	kXml.SetToParent();
+	// 设置观察位置
+	kXml.SetToFirstChild("look_at");
+	sPos = kXml.GetString("");
+	kV = Ogre::StringUtil::split(sPos," ");
+	kPos.x = atof(kV[0].data());
+	kPos.y = atof(kV[1].data());
+	kPos.z = atof(kV[2].data());
+	m_pCamera->lookAt(kPos);
+
+	kXml.SetToParent();
 	kXml.SetToParent();
 	
 	// 加载角色信息
@@ -114,6 +135,9 @@ KBOOL Kylin::Stage::LoadActors()
 	}
 
 	kXml.Close();
+	
+	if (!sSky.empty())
+		OgreRoot::GetSingletonPtr()->GetSceneManager()->setSkyDome(true,sSky,100,1);
 
 	return true;
 }
@@ -147,4 +171,15 @@ Kylin::Showgirl* Kylin::Stage::SpawnActor( const KUINT& uGid )
 {
 
 	return NULL;
+}
+
+KVOID Kylin::Stage::OnLButtonDown(KINT nX, KINT nY)
+{
+	Ogre::Entity* pEnt;
+	Ogre::Ray kMouseRay;
+	OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY), kMouseRay,m_pCamera);
+	if (OgreRoot::GetSingletonPtr()->PickOgreEntity(kMouseRay,&pEnt,QUERYFLAG_SHOWGIRL))
+	{
+		pEnt->getName();
+	}
 }
