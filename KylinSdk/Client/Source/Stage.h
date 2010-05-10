@@ -1,9 +1,11 @@
 #pragma once
 
+#include "InputListener.h"
+
 namespace Kylin
 {
 	class Showgirl;
-	class Stage
+	class Stage : public InputListener
 	{
 	public:
 		Stage();
@@ -28,7 +30,10 @@ namespace Kylin
 		virtual Showgirl* SpawnActor(const KUINT& uGid);
 
 	protected:
+		virtual KVOID OnLButtonDown(KINT nX, KINT nY);
 
+	protected:
+		Ogre::Camera*	 m_pCamera;
 		Ogre::SceneNode* m_pNode;
 		Ogre::Light*	 m_pLight;
 

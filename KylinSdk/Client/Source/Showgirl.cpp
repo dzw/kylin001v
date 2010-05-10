@@ -5,7 +5,6 @@
 #include "dbCharacterLoader.h"
 #include "FileUtils.h"
 
-
 Kylin::Showgirl::Showgirl(KUINT uGid)
 : m_uGid(uGid)
 , m_uCurAnimIndex(-1)
@@ -60,6 +59,8 @@ KBOOL Kylin::Showgirl::Initialize()
 
 	if (!Load(kSet))
 		return false;
+	
+	m_pOgreEntity->setQueryFlags(QUERYFLAG_SHOWGIRL);
 
 	return true;
 }
