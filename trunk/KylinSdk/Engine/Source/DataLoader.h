@@ -5,11 +5,12 @@ namespace Kylin
 	class DataLoader
 	{
 	public:
-		DataLoader();
+		DataLoader(const KSTR& sName);
 		virtual ~DataLoader();
-
-		virtual KBOOL Initialize() = 0;
-		virtual KVOID OnLoading() = 0;
+		
+		DataUnit*	GetDBPtr();
+	protected:
+		virtual KBOOL Initialize();
 		virtual KVOID OnFinish() = 0;
 
 	protected:

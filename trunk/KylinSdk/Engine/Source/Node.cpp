@@ -12,26 +12,22 @@ Kylin::Node::Node()
 
 Kylin::Node::~Node()
 {
-	if (m_pOgreEntity)
+	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
-	if (m_pOgreNode)
+	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroySceneNode(m_pOgreNode);
 }
 
 KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 {
 	KSTR sMesh, sMaterials;
-	if (kProp.GetStrValue("$MESH",sMesh))
+	if (kProp.GetStrValue("$Mesh",sMesh))
 	{
-		kProp.GetStrValue("$MATERIALS",sMaterials);
+		kProp.GetStrValue("$Materials",sMaterials);
 		// 加载模型资源
-		if (!Ogre::MeshManager::getSingletonPtr()->resourceExists("sphere.mesh"))
-		{
-			Ogre::MeshPtr pMesh = Ogre::MeshManager::getSingleton().load(sMesh, "General");
-			//if (pMesh == NULL) 
-			//	return false;
-		}
-		
+		//if (!Ogre::MeshManager::getSingletonPtr()->resourceExists(sMesh))
+		//	Ogre::MeshManager::getSingletonPtr()->load(sMesh,"General");
+
 		m_pOgreNode		= OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
 		m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
 		
@@ -80,7 +76,8 @@ KVOID Kylin::Node::Tick( KFLOAT fElapsed )
 
 KVOID Kylin::Node::SetTranslate( KPoint3 kPos )
 {
-	m_pOgreNode->setPosition(kPos);
+	if (m_pOgreNode)
+		m_pOgreNode->setPosition(kPos);
 }
 
 KPoint3 Kylin::Node::GetTranslate()

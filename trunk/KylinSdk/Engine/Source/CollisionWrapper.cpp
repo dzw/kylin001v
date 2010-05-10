@@ -187,5 +187,6 @@ KBOOL Kylin::CollisioListener::SetupCllsn( Ogre::Entity* pEnt,Kylin::PropertySet
 
 Kylin::CollisioListener::~CollisioListener()
 {
-	CollisionWrapper::GetSingletonPtr()->UnregisterCollider(this);
+	if (CollisionWrapper::Initialized())
+		CollisionWrapper::GetSingletonPtr()->UnregisterCollider(this);
 }

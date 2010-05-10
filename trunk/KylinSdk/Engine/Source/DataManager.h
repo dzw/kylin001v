@@ -12,6 +12,7 @@ namespace Kylin
 		
 		DataLoader* GetLoaderPtr(KSTR sName);
 		
+		KVOID		InvokeLoader(DataLoader* pLoader);
 		KVOID		Destroy();
 		KVOID		RegisterLoader(DataLoader* pLoader);
 		KVOID		UnregisterLoader(DataLoader* pLoader);

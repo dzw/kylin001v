@@ -46,7 +46,7 @@ namespace Kylin
 		KMAP<KSTR,DataField> m_kFieldsMap;
 	};
 	
-	typedef KVEC<DataItem> QResult;
+	typedef KVEC<DataItem*> QResult;
 	
 	class DataUnit
 	{
@@ -88,9 +88,22 @@ namespace Kylin
 					}
 					
 					DataItem::DataField kField;
-					kField.m_sKey	= m_kKeyTable[nItemNum];
-					kField.m_sType	= m_kTypeTable[nItemNum];
-					kField.m_aValue = sItem;
+					kField.m_sKey	= m_kKeyTable[nItemNum-1];
+					kField.m_sType	= m_kTypeTable[nItemNum-1];
+
+					if (kField.m_sType == "INT")
+						kField.m_aValue = atoi(sItem.data());
+					else if (kField.m_sType == "FLOAT")
+						kField.m_aValue = (KFLOAT)atof(sItem.data());
+					else if (kField.m_sType == "STRING")
+						kField.m_aValue = sItem;
+					else if (kField.m_sType == "BOOL")
+						kField.m_aValue = (atoi(sItem.data()) != 0);
+					else 
+					{
+						assert(NULL);
+						continue;
+					}
 
 					kDataItem.AddField(kField);
 				}
@@ -113,7 +126,7 @@ namespace Kylin
 			DataItem::DataField kDF;
 			if (kItem.QueryField("ID",kDF))
 			{
-				KUINT uID = boost::any_cast<KUINT>(kDF.m_aValue);
+				KUINT uID = boost::any_cast<KINT>(kDF.m_aValue);
 				if (m_kItemsMap.find(uID) == m_kItemsMap.end())
 					m_kItemsMap.insert(std::pair<KUINT,DataItem>(uID,kItem));
 			}
@@ -126,7 +139,7 @@ namespace Kylin
 				m_kItemsMap.erase(it);
 		}
 
-		QResult Query(const KSTR& sKey, DFactor eFactor, KANY aValue)
+		QResult Query(const KSTR& sKey, DFactor eFactor, const KANY& aValue)
 		{
 			QResult vRet;
 			
@@ -134,13 +147,13 @@ namespace Kylin
 			KMAP<KUINT,DataItem>::iterator end = m_kItemsMap.end();
 			KMAP<KUINT,DataItem>::iterator it  = beg;
 			
-			DataItem kItem;
+			DataItem* kItem;
 			DataItem::DataField kDF;
 			for (; it != end ; it++)
 			{
-				kItem = it->second;
+				kItem = &(it->second);
 
-				if (kItem.QueryField(sKey,kDF))
+				if (kItem->QueryField(sKey,kDF))
 				{
 					switch (eFactor)
 					{
@@ -148,13 +161,43 @@ namespace Kylin
 						
 						if (kDF.m_sType == "STRING")
 						{
+							KSTR sVar1 = boost::any_cast<KSTR>(kDF.m_aValue);
+							KSTR sVar2 = boost::any_cast<KSTR>(aValue);
+
+							if (sVar1 == sVar2)
+								vRet.push_back(kItem);
+						}
+						else if(kDF.m_sType == "INT")
+						{
+							KINT nVar1 = boost::any_cast<KINT>(kDF.m_aValue);
+							KINT nVar2 = boost::any_cast<KINT>(aValue);
 							
+							if (nVar1 == nVar2)
+								vRet.push_back(kItem);
+						}
+						else if (kDF.m_sType == "FLOAT")
+						{
+							KFLOAT nVar1 = boost::any_cast<KFLOAT>(kDF.m_aValue);
+							KFLOAT nVar2 = boost::any_cast<KFLOAT>(aValue);
+
+							if (nVar1 == nVar2)
+								vRet.push_back(kItem);
+						}
+						else if (kDF.m_sType == "BOOL")
+						{
+							KBOOL nVar1 = boost::any_cast<KBOOL>(kDF.m_aValue);
+							KBOOL nVar2 = boost::any_cast<KBOOL>(aValue);
+
+							if (nVar1 == nVar2)
+								vRet.push_back(kItem);
 						}
 
 						break;
 					case DF_LESS:
+
 						break;
 					case DF_MORE:
+
 						break;
 					}
 

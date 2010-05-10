@@ -58,3 +58,14 @@ KVOID Kylin::DataManager::Destroy()
 
 	m_kLoaderMap.clear();
 }
+
+KVOID Kylin::DataManager::InvokeLoader( DataLoader* pLoader )
+{
+	if (!pLoader) return;
+
+	LoaderMap::iterator it = m_kLoaderMap.find(pLoader->m_sName);
+	if (it != m_kLoaderMap.end())
+	{
+		pLoader->Initialize();
+	}
+}
