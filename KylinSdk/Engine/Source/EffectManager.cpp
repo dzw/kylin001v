@@ -25,7 +25,7 @@ KBOOL Kylin::EffectManager::Initialize(Ogre::Root* pRoot, Ogre::SceneManager* pS
 
 KVOID Kylin::EffectManager::CreateCompositors()
 {
-	Ogre::Viewport* pVP = OgreRoot::GetSingletonPtr()->GetCameraController()->GetActiveCamera()->getViewport();
+	Ogre::Viewport* pVP = OgreRoot::GetSingletonPtr()->GetMainWindow()->getViewport(0);
 
 	// bloom
 	Ogre::CompositorInstance *compositor_instance = 

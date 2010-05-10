@@ -8,7 +8,8 @@ namespace Kylin
 	{
 	public:
 		CameraControl();
-		
+		~CameraControl();
+
 		enum Mode
 		{
 			CC_FREE,

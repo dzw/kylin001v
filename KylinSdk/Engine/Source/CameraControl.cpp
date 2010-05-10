@@ -11,6 +11,11 @@ Kylin::CameraControl::CameraControl()
 
 }
 
+Kylin::CameraControl::~CameraControl()
+{
+	SAFE_DEL(m_pCameraCS);
+}
+
 KBOOL Kylin::CameraControl::Initialize( SceneManager* pSceneMgr, Camera* pCamera, KSTR sName/*="kylin_camera_control"*/ )
 {
 	

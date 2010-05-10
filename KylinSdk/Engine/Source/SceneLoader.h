@@ -1,6 +1,7 @@
 #pragma once
 
 //#include "Engine.h"
+#include "rOgreRoot.h"
 
 namespace Kylin
 {

@@ -55,18 +55,30 @@ namespace Kylin
 		Ogre::RenderWindow*	GetMainWindow();
 		// 获得鼠标射线
 		KBOOL				GetMouseRay(KPoint2 vOrg, Ogre::Ray &kRay);
-		
+		KBOOL				GetMouseRay(KPoint2 vOrg, Ogre::Ray &kRay, Ogre::Camera* pCamera);
+		//
+		KBOOL				PickOgreEntity(Ogre::Ray &rRay, Ogre::Entity **ppResult, KUINT uQueryMask = 0xffffffff);
 		// 创建摄像机
 		Ogre::Camera*		CreateCamera(KCCHAR* pName);
 		// 创建视窗
 		Ogre::Viewport*		CreateViewports(Ogre::Camera* pCamera, KColor kValue = KColor(0.2f,0.3f,0.4f));
 		// 创建地形
 		Ogre::TerrainGroup* CreateTerrainGroup(KINT nMapSize, KFLOAT fWorldSize);
-		
+		// 创建场景射线
+		Ogre::RaySceneQuery* CreateSceneRay();
+		//
+		KVOID				DestroySceneRay();
+		// 
+		CameraControl*		CreateCameraControl(Ogre::Camera* pCamera);
+		//
+		KVOID				DestroyCameraControl();
 
 		// 注册监听
 		KVOID RegOptListener(InputListener* pl);
 		// 卸载监听
 		KVOID UnregOptListener(InputListener* pl);
+
+	protected:
+		Ogre::RaySceneQuery* m_pRaySceneQuery;
 	};
 }

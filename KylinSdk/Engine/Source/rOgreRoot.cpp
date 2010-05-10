@@ -10,6 +10,7 @@
 extern Kylin::AppFrame* g_theApp;
 
 Kylin::OgreRoot::OgreRoot()
+: m_pRaySceneQuery(NULL)
 {
 
 }
@@ -29,17 +30,28 @@ HWND Kylin::OgreRoot::GetWindowHandle()
 
 Ogre::Camera* Kylin::OgreRoot::CreateCamera( KCCHAR* pName )
 {
-	return g_theApp->m_pSceneMgr->createCamera(pName);
+	Ogre::Camera* pCam = NULL;
+	if (!g_theApp->m_pSceneMgr->hasCamera(pName))
+		pCam = g_theApp->m_pSceneMgr->createCamera(pName);
+	else
+		pCam = g_theApp->m_pSceneMgr->getCamera(pName);
+
+	return pCam;
 }
 
 Ogre::Viewport* Kylin::OgreRoot::CreateViewports(Ogre::Camera* pCamera, KColor kValue)
 {
-	Ogre::Viewport* vp = g_theApp->m_pWindow->addViewport(pCamera);
-	vp->setBackgroundColour(kValue);
+	Ogre::Viewport* vp = pCamera->getViewport();
+	if (!vp)
+	{
+		vp = g_theApp->m_pWindow->addViewport(pCamera);
+		vp->setBackgroundColour(kValue);
 
-	// Alter the camera aspect ratio to match the viewport
-	pCamera->setAspectRatio(
-		Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+		// Alter the camera aspect ratio to match the viewport
+		pCamera->setAspectRatio(
+			Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+	}
+
 
 	return vp;
 }
@@ -143,10 +155,17 @@ KBOOL Kylin::OgreRoot::GetMouseRay( KPoint2 vOrg, Ogre::Ray &kRay )
 	if(!g_theApp->m_pCameraCtrl->GetActiveCamera()) 
 		return false;
 	
-	Ogre::Viewport* pVP = g_theApp->m_pCameraCtrl->GetActiveCamera()->getViewport();
+	GetMouseRay(vOrg,kRay,g_theApp->m_pCameraCtrl->GetActiveCamera());
+
+	return true;
+}
+
+KBOOL Kylin::OgreRoot::GetMouseRay( KPoint2 vOrg, Ogre::Ray &kRay, Ogre::Camera* pCamera )
+{
+	Ogre::Viewport* pVP = GetMainWindow()->getViewport(0);
 	KFLOAT fWidth  = pVP->getActualWidth();
 	KFLOAT fHeight = pVP->getActualHeight();
-	kRay = g_theApp->m_pCameraCtrl->GetActiveCamera()->getCameraToViewportRay(vOrg.x / fWidth, vOrg.y / fHeight);
+	kRay = pCamera->getCameraToViewportRay(vOrg.x / fWidth, vOrg.y / fHeight);
 
 	return true;
 }
@@ -184,4 +203,78 @@ KVOID Kylin::OgreRoot::LoadResource( KSTR sRes )
 Ogre::RenderWindow* Kylin::OgreRoot::GetMainWindow()
 {
 	return g_theApp->m_pWindow;
+}
+
+Kylin::CameraControl* Kylin::OgreRoot::CreateCameraControl( Ogre::Camera* pCamera )
+{
+	if (pCamera)
+	{
+		CreateViewports(pCamera);
+		//-------------------------------------------------
+		SAFE_DEL(g_theApp->m_pCameraCtrl);
+
+		g_theApp->m_pCameraCtrl = KNEW Kylin::CameraControl();
+		g_theApp->m_pCameraCtrl->Initialize(OgreRoot::GetSingletonPtr()->GetSceneManager(),pCamera);
+	}
+
+	return g_theApp->m_pCameraCtrl;
+}
+
+KVOID Kylin::OgreRoot::DestroyCameraControl()
+{
+	SAFE_DEL(g_theApp->m_pCameraCtrl);
+}
+
+Ogre::RaySceneQuery* Kylin::OgreRoot::CreateSceneRay()
+{
+	if (!m_pRaySceneQuery)
+		m_pRaySceneQuery = OgreRoot::GetSingletonPtr()->GetSceneManager()->createRayQuery(Ogre::Ray());
+
+	return m_pRaySceneQuery;
+}
+
+KVOID Kylin::OgreRoot::DestroySceneRay()
+{
+	if (m_pRaySceneQuery)
+	{
+		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyQuery(m_pRaySceneQuery);
+		m_pRaySceneQuery = 0;
+	}
+}
+
+KBOOL Kylin::OgreRoot::PickOgreEntity( Ogre::Ray &rRay, Ogre::Entity **ppResult, KUINT uQueryMask )
+{
+	if (!m_pRaySceneQuery) return false;
+
+	m_pRaySceneQuery->setRay(rRay);
+	if (uQueryMask != 0xffffffff)
+		m_pRaySceneQuery->setQueryMask(uQueryMask);
+	m_pRaySceneQuery->setSortByDistance(true);
+
+	KUINT uVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();
+
+	if (m_pRaySceneQuery->execute().size() <= 0) return (false);
+
+	Ogre::RaySceneQueryResult &query_result = m_pRaySceneQuery->getLastResults();
+
+	for (size_t qr_idx = 0; qr_idx < query_result.size(); qr_idx++)
+	{
+		// only check this result if its a hit against an entity
+		if ((query_result[qr_idx].movable != NULL) && (query_result[qr_idx].movable->getMovableType().compare("Entity") == 0))
+		{
+			// get the entity to check
+			Ogre::Entity *pentity = static_cast<Ogre::Entity*>(query_result[qr_idx].movable);
+
+			if(!(pentity->getVisibilityFlags() & uVisibilityMask))
+				continue;
+
+			if(!pentity->getVisible()) 
+				continue;
+
+			*ppResult = pentity;
+			return true;
+		}
+	}
+
+	return false;
 }

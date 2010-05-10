@@ -174,10 +174,6 @@ KVOID Kylin::InputManager::OnKeyDown( KUINT uKey )
 	{
 		OgreRoot::GetSingletonPtr()->ScreenShot();
 	}
-	else if (uKey == OIS::KC_ESCAPE)
-	{
-		OgreRoot::GetSingletonPtr()->ShutDown();
-	}
 	else if (uKey == OIS::KC_0)
 	{
 		if ( OgreRoot::GetSingletonPtr()->IsPaused() )

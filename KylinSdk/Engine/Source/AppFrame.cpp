@@ -6,7 +6,6 @@
 #include "InputManager.h"
 #include "CameraControl.h"
 #include "ScriptVM.h"
-#include "CollisionWrapper.h"
 #include "EffectManager.h"
 
 
@@ -21,6 +20,7 @@ namespace Kylin
 		, m_pSceneMgr(NULL)
 		, m_pInputMgr(NULL)
 		, m_pScriptVM(NULL)
+		, m_pCameraCtrl(NULL)
 		, m_bShutDown(false)
 		, m_bPaused(false)
 	{
@@ -85,8 +85,6 @@ namespace Kylin
 	{
 		if (EffectManager::Initialized())
 			KDEL EffectManager::GetSingletonPtr();
-		if (CollisionWrapper::Initialized())
-			KDEL CollisionWrapper::GetSingletonPtr();
 
 		SAFE_DEL(m_pScriptVM);
 		SAFE_DEL(m_pGuiMgr);
@@ -149,9 +147,7 @@ namespace Kylin
 			pCam->setNearClipDistance(0.2f);
 			
 			OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
-			//-------------------------------------------------
-			m_pCameraCtrl = KNEW CameraControl();
-			m_pCameraCtrl->Initialize(m_pSceneMgr,pCam);
+			//OgreRoot::GetSingletonPtr()->CreateCameraControl(pCam);
 		}
 		//////////////////////////////////////////////////////////////////////////
 		m_pInputMgr = KNEW InputManager();
@@ -167,10 +163,7 @@ namespace Kylin
 			OpenScriptBinding(m_pScriptVM->GetLuaState());
 			m_pScriptVM->ExecuteScriptFile("./Data/script/startvm.lua");
 		}
-		//////////////////////////////////////////////////////////////////////////
-		if (!CollisionWrapper::Initialized())
-			KNEW CollisionWrapper();
-		CollisionWrapper::GetSingletonPtr()->Initialize(m_pSceneMgr);
+
 		//////////////////////////////////////////////////////////////////////////
 		if (!EffectManager::Initialized())
 			KNEW EffectManager();
@@ -215,9 +208,9 @@ namespace Kylin
 
 	KVOID AppFrame::OnIdle( KFLOAT fElapsed )
 	{
-		m_pCameraCtrl->Update(fElapsed);
+		if (m_pCameraCtrl)
+			m_pCameraCtrl->Update(fElapsed);
 		m_pGuiMgr->Update(fElapsed);
-		CollisionWrapper::GetSingletonPtr()->Update(fElapsed);
 	}
 
 	KVOID AppFrame::Pause(KVOID)
