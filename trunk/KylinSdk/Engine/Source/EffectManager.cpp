@@ -1,40 +1,209 @@
 #include "engpch.h"
 #include "EffectManager.h"
 #include "rOgreRoot.h"
-#include "CameraControl.h"
+#include "ParticleUniverseSystemManager.h"
 
 
-KBOOL Kylin::EffectManager::Initialize(Ogre::Root* pRoot, Ogre::SceneManager* pSceneMngr)
+KBOOL Kylin::EffectManager::Initialize()
 {
-	// particle system needs to be initialised here
-	//Ogre::ParticleSystem* particle_system = pSceneMngr->createParticleSystem("Spark", "Spark");
-	//pSceneMngr->getRootSceneNode()->attachObject(particle_system);
-
 	// do not implement if not supported
-	const Ogre::RenderSystemCapabilities* caps = pRoot->getRenderSystem()->getCapabilities();
-	if ( caps->hasCapability(Ogre::RSC_VERTEX_PROGRAM) 
-		&& (caps->hasCapability(Ogre::RSC_FRAGMENT_PROGRAM))
-		)
-	{
-		// just experimenting with compositors here
-		CreateCompositors();
-	}
+// 	const Ogre::RenderSystemCapabilities* caps = pRoot->getRenderSystem()->getCapabilities();
+// 	if ( caps->hasCapability(Ogre::RSC_VERTEX_PROGRAM) 
+// 		&& (caps->hasCapability(Ogre::RSC_FRAGMENT_PROGRAM))
+// 		)
+// 	{
+// 		// just experimenting with compositors here
+// 		CreateCompositors();
+// 	}
+	//KNEW ParticleUniverse::ParticleSystemManager();
+	PropertySet kInfo;
+	kInfo.SetValue("$Name",KSTR("Bloom"));
+	Generate(kInfo,ET_COMPOSITOR);
+	Generate(KNEW EffectMotionBlur());
 
 	return true;
 }
 
-KVOID Kylin::EffectManager::CreateCompositors()
+Kylin::EffectObject* Kylin::EffectManager::Generate( PropertySet& kInfo, KUINT uType)
+{
+	KSTR sName = "";
+	if (!kInfo.GetStrValue("$Name",sName))
+		return NULL;
+	
+	EffectMap::iterator it = m_kEffectMap.find(sName);
+	if (it != m_kEffectMap.end())
+		return it->second;
+
+	EffectObject* pEffect = NULL;
+	if (uType == ET_PARTICLE)
+	{
+		KSTR sTemplate = "";
+		if (!kInfo.GetStrValue("$Template",sTemplate))
+			return NULL;
+
+		pEffect = KNEW EffectParticle(sName,sTemplate);
+		pEffect->Initialize();
+	}
+	else if (uType == ET_COMPOSITOR)
+	{
+		pEffect = KNEW EffectCompositor(sName);
+		pEffect->Initialize();
+	}
+
+	if (pEffect)
+		m_kEffectMap.insert(std::pair<KSTR,EffectObject*>(sName,pEffect));
+
+	return pEffect;
+}
+
+KVOID Kylin::EffectManager::Generate( EffectObject* pEffect )
+{
+	if (pEffect)
+	{
+		pEffect->Initialize();
+		m_kEffectMap.insert(std::pair<KSTR,EffectObject*>(pEffect->GetName(),pEffect));
+	}
+}
+
+KVOID Kylin::EffectManager::Activate( KSTR sName, KBOOL bFlag)
+{
+	EffectMap::iterator it = m_kEffectMap.find(sName);
+	if (it != m_kEffectMap.end())
+	{
+		it->second->Activate(bFlag);
+	}
+}
+
+KVOID Kylin::EffectManager::Destroy()
+{
+	EffectMap::iterator beg = m_kEffectMap.begin();
+	EffectMap::iterator end = m_kEffectMap.end();
+	for (EffectMap::iterator it = beg; it != end; it++)
+	{
+		SAFE_DEL(it->second);
+	}
+
+	m_kEffectMap.clear();
+	//////////////////////////////////////////////////////////////////////////
+	KDEL ParticleUniverse::ParticleSystemManager::getSingletonPtr();
+}
+
+KVOID Kylin::EffectManager::DestroyEffect( KSTR sName )
+{
+	EffectMap::iterator it = m_kEffectMap.find(sName);
+	if (it != m_kEffectMap.end())
+	{
+		SAFE_DEL(it->second);
+		m_kEffectMap.erase(it);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate)
+: EffectObject(sName)
+, m_sTemplate(sTemplate)
+, m_pSystem(NULL)
+{
+	m_uType = EffectManager::ET_PARTICLE;
+}
+
+Kylin::EffectParticle::~EffectParticle()
+{
+	Destroy();
+}
+
+KBOOL Kylin::EffectParticle::Initialize()
+{
+	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
+	Ogre::SceneManager* pSceneMngr = OgreRoot::GetSingletonPtr()->GetSceneManager();
+
+	m_pSystem = pPSManager->getParticleSystem(m_sName);
+	if (!m_pSystem)
+		m_pSystem = pPSManager->createParticleSystem(m_sName, m_sTemplate, pSceneMngr);
+	
+	return true;
+}
+
+KVOID Kylin::EffectParticle::Destroy()
+{
+	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
+	Ogre::SceneManager* pSceneMngr = OgreRoot::GetSingletonPtr()->GetSceneManager();
+	
+	if (m_pSystem->getParentSceneNode())
+		m_pSystem->getParentSceneNode()->detachObject(m_pSystem);
+
+	pPSManager->destroyParticleSystem(m_pSystem,pSceneMngr);
+	m_pSystem = NULL;
+}
+
+KVOID Kylin::EffectParticle::Activate( KBOOL bFlag )
+{
+	if (m_pSystem)
+	{
+		if (bFlag)
+		{
+			if (m_pSystem->getState() != ParticleUniverse::ParticleSystem::PSS_STARTED)
+				m_pSystem->start();
+		}
+		else if (m_pSystem->getState() != ParticleUniverse::ParticleSystem::PSS_STOPPED)
+			m_pSystem->stop();
+	}
+}
+
+KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode )
+{
+	assert(pNode);
+	if (m_pSystem->getParentSceneNode())
+		m_pSystem->getParentSceneNode()->detachObject(m_pSystem);
+	pNode->attachObject(m_pSystem);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+Kylin::EffectCompositor::EffectCompositor( KSTR sName )
+: EffectObject(sName)
+{
+	m_uType = EffectManager::ET_COMPOSITOR;
+}
+
+Kylin::EffectCompositor::~EffectCompositor()
+{
+	Destroy();
+}
+
+
+KBOOL Kylin::EffectCompositor::Initialize()
 {
 	Ogre::Viewport* pVP = OgreRoot::GetSingletonPtr()->GetMainWindow()->getViewport(0);
 
-	// bloom
-	Ogre::CompositorInstance *compositor_instance = 
-		Ogre::CompositorManager::getSingletonPtr()->addCompositor(pVP, "Bloom");
-	compositor_instance->setEnabled(false);
+	m_pCompositor = Ogre::CompositorManager::getSingletonPtr()->addCompositor(pVP, m_sName);
+	m_pCompositor->setEnabled(false);
+
+	return true;
+}
+
+KVOID Kylin::EffectCompositor::Destroy()
+{
+	Ogre::Viewport* pVP = OgreRoot::GetSingletonPtr()->GetMainWindow()->getViewport(0);
+	Ogre::CompositorManager::getSingletonPtr()->removeCompositor(pVP,m_sName);
+}
+
+KVOID Kylin::EffectCompositor::Activate( KBOOL bFlag )
+{
+	if (m_pCompositor)
+			m_pCompositor->setEnabled(bFlag);
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
+KBOOL Kylin::EffectMotionBlur::Initialize()
+{
+	m_sName = "MotionBlur";
 
 	/// Motion blur effect
 	Ogre::CompositorPtr comp3 = Ogre::CompositorManager::getSingleton().create(
-		"MotionBlur", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+		m_sName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
 		);
 	{
 		Ogre::CompositionTechnique *t = comp3->createTechnique();
@@ -103,23 +272,6 @@ KVOID Kylin::EffectManager::CreateCompositors()
 			}
 		}
 	}
-
-	compositor_instance = 
-		Ogre::CompositorManager::getSingletonPtr()->addCompositor(pVP, "MotionBlur");
-	compositor_instance->setEnabled(false);
-}
-
-// KVOID Kylin::EffectManager::CreateLightning()
-// {
-// 	//instance = new Lightning(scene_manager);
-// }
-
-KVOID Kylin::EffectManager::SetEffectEnable( KSTR sName, KBOOL bFlag )
-{
-	Ogre::Viewport* pVP = OgreRoot::GetSingletonPtr()->GetCameraController()->GetActiveCamera()->getViewport();
-
-	Ogre::CompositorManager::getSingletonPtr()->setCompositorEnabled(pVP,sName,bFlag);
-
-	//Lightning *lightning = dynamic_cast<Lightning*>(mGameObjectManager->AddObjectToCollection("lightning", mSceneManager));
-	//lightning->AddToScene(mPaddle2->GetSceneNode(), mBall->GetSceneNode());
+	
+	return EffectCompositor::Initialize();
 }
