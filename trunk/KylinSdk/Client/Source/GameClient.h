@@ -11,6 +11,6 @@ namespace Kylin
 		virtual KVOID	Entrance();
 
 	protected:
-	
+		virtual KVOID	Destroy();
 	};
 }

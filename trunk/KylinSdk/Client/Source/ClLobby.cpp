@@ -16,14 +16,14 @@ Kylin::ClLobby::ClLobby()
 
 KBOOL Kylin::ClLobby::Initialize()
 {
-		
-	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 	OgreRoot::GetSingletonPtr()->CreateSceneRay();
 	//////////////////////////////////////////////////////////////////////////
 	m_pStage = KNEW Kylin::Stage();
 	if (!m_pStage->Initialize())
 		return false;
 	//////////////////////////////////////////////////////////////////////////	
+	// 最后初始化UI
+	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 
 	return true;
 }
