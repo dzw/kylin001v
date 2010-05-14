@@ -1,17 +1,21 @@
 #include "engpch.h"
 #include "Node.h"
 #include "rOgreRoot.h"
+#include "AnimationProxy.h"
 
 
 Kylin::Node::Node()
 : m_pOgreNode(NULL)
 , m_pOgreEntity(NULL)
+, m_pAnimProxy(NULL)
 {
-
+	m_pAnimProxy = KNEW AnimationProxy();
 }
 
 Kylin::Node::~Node()
 {
+	SAFE_DEL(m_pAnimProxy);
+
 	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
 	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
@@ -24,13 +28,15 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	if (kProp.GetStrValue("$Mesh",sMesh))
 	{
 		kProp.GetStrValue("$Materials",sMaterials);
-		// 加载模型资源
-		//if (!Ogre::MeshManager::getSingletonPtr()->resourceExists(sMesh))
-		//	Ogre::MeshManager::getSingletonPtr()->load(sMesh,"General");
-
-		m_pOgreNode		= OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
-		m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
+		KUINT uID;
 		
+		// 加载模型资源
+		m_pOgreNode		= OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
+		if (kProp.GetUIntValue("$ID",uID))
+			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(Ogre::StringConverter::toString(uID),sMesh,"General");
+		else
+			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
+
 		// 设置模型贴图
 		if (!sMaterials.empty())
 			m_pOgreEntity->setMaterialName(sMaterials);
@@ -50,6 +56,9 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		KFLOAT fRenderDisance = -1.0f;
 		if (kProp.GetFloatValue("$RENDER_DISTANCE",fRenderDisance) && fRenderDisance > 0)
 			m_pOgreEntity->setRenderingDistance(fRenderDisance);
+
+		// 设置动画
+		m_pAnimProxy->SetTarget(m_pOgreEntity);
 	}
 	
 	KBOOL bCollide = false;
@@ -71,7 +80,7 @@ KVOID Kylin::Node::Unload()
 
 KVOID Kylin::Node::Tick( KFLOAT fElapsed )
 {
-
+	if (m_pAnimProxy) m_pAnimProxy->Update(fElapsed);
 }
 
 KVOID Kylin::Node::SetTranslate( KPoint3 kPos )
@@ -87,7 +96,8 @@ KPoint3 Kylin::Node::GetTranslate()
 
 KVOID Kylin::Node::SetVisible( KBOOL bFlag )
 {
-	m_pOgreEntity->setVisible(bFlag);
+	if (m_pOgreEntity)
+		m_pOgreEntity->setVisible(bFlag);
 }
 
 KBOOL Kylin::Node::GetVisible()
@@ -116,4 +126,9 @@ KVOID Kylin::Node::SetYaw( KFLOAT fYaw )
 	q.FromAngleAxis(Ogre::Radian(Ogre::Degree(Ogre::Real(fYaw))),Vector3::UNIT_Y);
 
 	m_pOgreNode->setOrientation(q);
+}
+
+Kylin::AnimationProxy* Kylin::Node::GetAnimationProxy()
+{
+	return m_pAnimProxy;
 }

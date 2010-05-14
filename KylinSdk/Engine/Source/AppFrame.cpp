@@ -7,6 +7,7 @@
 #include "CameraControl.h"
 #include "ScriptVM.h"
 #include "EffectManager.h"
+#include "uiLoadingProgress.h"
 
 
 namespace Kylin
@@ -42,9 +43,9 @@ namespace Kylin
 		else  g_theApp = this;
 
 #ifdef _DEBUG
-		m_pRoot = new Ogre::Root("plugins_debug.cfg");
+		m_pRoot = OGRE_NEW Ogre::Root("plugins_debug.cfg");
 #else
-		m_pRoot = new Ogre::Root();
+		m_pRoot = OGRE_NEW Ogre::Root();
 #endif
 		//////////////////////////////////////////////////////////////////////////
 		if(m_pRoot->restoreConfig() || m_pRoot->showConfigDialog())
@@ -61,8 +62,6 @@ namespace Kylin
 			m_pRoot->addFrameListener(this);
 
 			//////////////////////////////////////////////////////////////////////////
-			Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-			
 			CreateWidgets();
 
 			return true;
@@ -75,6 +74,9 @@ namespace Kylin
 	{
 		if (m_pRoot)
 		{
+			if (m_pGuiMgr->GetGuiBase("LoadingProgress"))
+				m_pGuiMgr->GetGuiBase("LoadingProgress")->SetVisible(false);
+			//////////////////////////////////////////////////////////////////////////
 			m_pRoot->startRendering();
 		}
 
@@ -140,22 +142,27 @@ namespace Kylin
 		m_pSceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));
 		m_pSceneMgr->setShadowTextureSize(1024);
 		m_pSceneMgr->setShadowTextureCount(1);
-
+		//////////////////////////////////////////////////////////////////////////
 		Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
 		if (pCam)
 		{
 			pCam->setNearClipDistance(0.2f);
 			
 			OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
-			//OgreRoot::GetSingletonPtr()->CreateCameraControl(pCam);
 		}
+		// splash
+		Kylin::LoadingProgress* pLoading = KNEW Kylin::LoadingProgress();
+		pLoading->Initialize();
+		pLoading->SetVisible(true);
+		//////////////////////////////////////////////////////////////////////////
+		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 		//////////////////////////////////////////////////////////////////////////
 		m_pInputMgr = KNEW InputManager();
 		m_pInputMgr->Initialize();
 		//////////////////////////////////////////////////////////////////////////
 		m_pGuiMgr = KNEW GuiManager();
 		m_pGuiMgr->Create(m_pWindow,m_pSceneMgr);
-
+		m_pGuiMgr->RegisterGui(pLoading);
 		//////////////////////////////////////////////////////////////////////////
 		m_pScriptVM = KNEW ScriptVM();
 		if(m_pScriptVM->Init())
@@ -167,7 +174,7 @@ namespace Kylin
 		//////////////////////////////////////////////////////////////////////////
 		if (!EffectManager::Initialized())
 			KNEW EffectManager();
-		EffectManager::GetSingletonPtr()->Initialize(m_pRoot,m_pSceneMgr);
+		EffectManager::GetSingletonPtr()->Initialize();
 		//////////////////////////////////////////////////////////////////////////
 	}
 

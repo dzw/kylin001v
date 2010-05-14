@@ -30,10 +30,11 @@ MyGUI::Gui* Kylin::GuiManager::GetGUI()
 
 KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager* pSceneMnger)
 {
-	m_pPlatform = new MyGUI::OgrePlatform();
+	//////////////////////////////////////////////////////////////////////////
+	m_pPlatform = KNEW MyGUI::OgrePlatform();
 	m_pPlatform->initialise(pWindew, pSceneMnger);
 
-	m_pGUI = new MyGUI::Gui();
+	m_pGUI = KNEW MyGUI::Gui();
 	m_pGUI->initialise(m_sResource);
 	
 	//////////////////////////////////////////////////////////////////////////
