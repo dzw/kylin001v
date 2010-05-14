@@ -21,7 +21,10 @@ namespace Kylin
 			}
 		}
 
-		virtual KBOOL Load(KSTR mSceneFile) = 0;
+		virtual KBOOL LoadScene(KSTR mSceneFile) = 0;
+		virtual KBOOL LoadPlayer() = 0;
+		virtual KVOID LoadLevel() = 0;
+
 		virtual KVOID Unload(SceneHag* pHag){}
 
 		Ogre::TerrainGroup* getTerrainGroup() { return m_pTerrainGroup; }

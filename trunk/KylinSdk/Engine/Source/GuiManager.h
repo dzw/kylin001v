@@ -18,8 +18,11 @@ namespace Kylin
 		virtual KSTR  GetName() { return m_sGuiName; }
 
 		virtual KVOID SetVisible(KBOOL bVisible) { m_bVisibleFlag = bVisible; }
+		virtual KVOID SetWidgetVisible(KSTR sName, KBOOL bVisible){}
 		virtual KBOOL IsVisible() { return m_bVisibleFlag; }
-
+		virtual KVOID SetEnable(){}
+		virtual KVOID SetWidgetEnable(KSTR sName, KBOOL bEnable){}
+		
 	protected:
 		friend GuiManager;
 

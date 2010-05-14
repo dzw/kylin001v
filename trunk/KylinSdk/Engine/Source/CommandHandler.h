@@ -74,9 +74,9 @@ namespace Kylin
 					if (kCmd.size() < 3) return;
 
 					if (kCmd[2] == "true")
-						EffectManager::GetSingletonPtr()->SetEffectEnable(kCmd[1],true);
+						EffectManager::GetSingletonPtr()->Activate(kCmd[1],true);
 					else
-						EffectManager::GetSingletonPtr()->SetEffectEnable(kCmd[1],false);
+						EffectManager::GetSingletonPtr()->Activate(kCmd[1],false);
 				}
 				else if (kCmd[0] == "help")
 				{

@@ -35,6 +35,8 @@ namespace Kylin
 	
 	class DataUnit;
 	class DataLoader;
+	
+	class AnimationProxy;
 
 	extern AppFrame* g_theApp;
 }

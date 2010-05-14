@@ -50,10 +50,14 @@ namespace Kylin
 // 		KPoint3 GetBoundRadius();
 // 		
  		Ogre::SceneNode* GetSceneNode();
+		KSTR	GetEntityName() { return m_pOgreEntity->getName(); }
+
+		AnimationProxy*	 GetAnimationProxy();
 
 	protected:
 		Ogre::SceneNode* m_pOgreNode;
 		Ogre::Entity*	 m_pOgreEntity;
+		AnimationProxy*	 m_pAnimProxy;
 	};
 }
 
