@@ -33,13 +33,11 @@ namespace Kylin
 		virtual KVOID	EnterScene(KVOID);
 		//离开场景
 		virtual KVOID	LeaveScene(KVOID);
-		//产生场景内配置的Entity
-		virtual KVOID	SpawnEntities();
 		//场景位置是否合法
 		virtual KBOOL	IsValidPosition(const KPoint2& fvPos);
 		
 	protected:
-		virtual KBOOL	CreateLevel(KCCHAR* pLevelName);
+		virtual KVOID	SpawnScene();
 
 		//环境音效列表
 		struct EnvSound_t
@@ -59,6 +57,8 @@ namespace Kylin
 		
 		//场景数据
 		SceneHag		m_kSceneHag;
+		//
+		Zone*			m_pZone;
 		//场景加载接口
 		SceneLoader*	m_pSceneLoader;
 		//场景ENTITY管理器

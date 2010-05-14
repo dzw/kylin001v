@@ -7,6 +7,8 @@
 
 #include "CollisionWrapper.h"
 
+#define CH_HEIGHT 1.0f;
+
 namespace Kylin
 {
 	BtImplementRTTI(Character, Entity, id_character);
@@ -144,13 +146,23 @@ KVOID Kylin::Character::UpdateMovement( KFLOAT fElapsed )
 			KFLOAT fOffset = fElapsed*17;
 			m_fDistance -= fOffset;
 			if (m_fDistance < 0.0001f)
-			{
-				SetTranslate(m_kDestination);
+			{				
 				m_kDestination = KPoint3::ZERO;
 			}
 			else 
 			{
-				m_pOgreNode->translate(kDir*fOffset,Ogre::Node::TS_LOCAL);
+				KPoint3 vPos(this->GetTranslate() + kDir*fOffset);
+				vPos.y = 5000.0f;
+
+				if (KylinRoot::GetSingletonPtr()->HitTest(vPos,Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Y),vPos))
+				{
+					Ogre::Real r = m_pOgreNode->_getWorldAABB().getSize().y * KHALF;
+					vPos.y += r;
+
+					this->SetTranslate(vPos);
+				}
+
+				//m_pOgreNode->translate(kDir*fOffset,Ogre::Node::TS_LOCAL);
 			}
 		}
 
@@ -204,10 +216,18 @@ KVOID Kylin::Character::UpdateMovement( KFLOAT fElapsed )
 
 	//m_pOgreNode->yaw(Degree(yawToGoal));
 
-
 	// move in current body direction (not the goal direction)
-	
-	m_pOgreNode->translate(kGoalDirection*fElapsed*17,Ogre::Node::TS_LOCAL);
+	KPoint3 vPos(this->GetTranslate() + kGoalDirection*fElapsed*17);
+	vPos.y = 5000.0f;
+
+	if (KylinRoot::GetSingletonPtr()->HitTest(vPos,Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Y),vPos))
+	{
+		Ogre::Real r = m_pOgreNode->_getWorldAABB().getSize().y * KHALF;
+		vPos.y += r;
+
+		this->SetTranslate(vPos);
+	}
+		//m_pOgreNode->translate(kGoalDirection*fElapsed*17,Ogre::Node::TS_LOCAL);
 }
 
 KBOOL Kylin::Character::Init( const PropertySet& kProp )

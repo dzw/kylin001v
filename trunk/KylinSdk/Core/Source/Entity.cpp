@@ -14,7 +14,7 @@ namespace Kylin
 }
 
 Kylin::Entity::Entity( void )
-: m_uID()
+: m_uID(0xffffffff)
 {
 	 
 }
@@ -28,8 +28,9 @@ KBOOL Kylin::Entity::Init( const PropertySet& kProp )
 {
 	assert(kProp.GetCount() > 0);
 	m_kProperty = kProp;
-	
-	if (!Node::Load(kProp))
+	m_kProperty.SetValue("$ID",m_uID);
+
+	if (!Node::Load(m_kProperty))
 		return false;
 	
 	return true;
