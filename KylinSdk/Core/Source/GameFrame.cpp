@@ -1,13 +1,13 @@
 #include "corepch.h"
 #include "gameFrame.h"
-#include "WorldManager.h"
 #include "KylinRoot.h"
 #include "RegisterClass.h"
+#include "GameStatus.h"
+#include "Property.h"
 
-
-#define KY_WORLD_CGF "world.xml"
 
 Kylin::GameFrame::GameFrame()
+: m_pActiveStatus(NULL)
 {
 	
 }
@@ -19,8 +19,7 @@ Kylin::GameFrame::~GameFrame()
 
 KVOID Kylin::GameFrame::Run()
 {
-	m_pWorldManager->Initialize(KY_WORLD_CGF);
-	
+	Entrance();
 	//////////////////////////////////////////////////////////////////////////////
 	AppFrame::Run();
 	//////////////////////////////////////////////////////////////////////////////
@@ -28,8 +27,9 @@ KVOID Kylin::GameFrame::Run()
 
 KVOID Kylin::GameFrame::Destroy()
 {
-	m_pWorldManager->Destroy();
-	SAFE_DEL(m_pWorldManager);
+	if (m_pActiveStatus)
+		m_pActiveStatus->Destroy();
+	KDEL m_pActiveStatus;
 
 	if (KylinRoot::Initialized())
 		KDEL KylinRoot::GetSingletonPtr();
@@ -40,8 +40,9 @@ KVOID Kylin::GameFrame::Destroy()
 KVOID Kylin::GameFrame::OnIdle( KFLOAT fElapsed )
 {
 	AppFrame::OnIdle(fElapsed);
-
-	m_pWorldManager->Tick(fElapsed);
+	
+	if (m_pActiveStatus)
+		m_pActiveStatus->Tick(fElapsed);
 }
 
 extern int tolua_script_open(lua_State* tolua_S);
@@ -59,8 +60,26 @@ KVOID Kylin::GameFrame::CreateWidgets()
 	if (!KylinRoot::Initialized())
 		KNEW KylinRoot();
 
-	m_pWorldManager = new WorldManager();
-
 	//////////////////////////////////////////////////////////////////////////
 	RegisterClasses();
+}
+
+KVOID Kylin::GameFrame::SwitchStatus( GameStatus* pStatus )
+{
+	PropertySet kSwitchInfo;
+	if (m_pActiveStatus)
+	{
+		m_pActiveStatus->Deserialize(kSwitchInfo);
+		m_pActiveStatus->Destroy();
+
+		KDEL m_pActiveStatus;
+	}
+	
+	//////////////////////////////////////////////////////////////////////////
+	m_pActiveStatus = pStatus;
+	if (m_pActiveStatus)
+	{
+		m_pActiveStatus->Serialize(kSwitchInfo);
+		m_pActiveStatus->Initialize();
+	}
 }

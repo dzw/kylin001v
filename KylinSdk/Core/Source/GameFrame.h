@@ -15,16 +15,19 @@ namespace Kylin
 		virtual KVOID			CreateWidgets();
 		// Clear out everything and reset variables to start the game over again without leaving the state
 		virtual KVOID			Run();
+		virtual KVOID			Entrance() = 0;
 		virtual KVOID			OnIdle(KFLOAT fElapsed);
 		virtual KVOID			Destroy();
+		virtual KVOID			SwitchStatus( GameStatus* pStatus );
 
 	protected:
 		virtual KVOID			OpenScriptBinding(lua_State *L);
 
 	private:
 		friend class KylinRoot;
-
-		WorldManager*	m_pWorldManager;
+		
+		GameStatus*	m_pActiveStatus;
+		
 	};
 }
 

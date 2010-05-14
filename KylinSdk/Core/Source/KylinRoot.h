@@ -25,6 +25,15 @@ namespace Kylin
 		
 		//向entity发送消息
 		KVOID		PostMessage(KUINT uEntID,const EventPtr spEvent);
+		
+		KVOID		SwitchStatus(GameStatus* pStatus);
+
+		// debug
+		KVOID		DebugHideEntities(KBOOL bFlag);
+		// 
+		KVOID		DebugHideTerrain(KBOOL bFlag);
+		// 获得当前状态
+		GameStatus*	GetCurrentGameStatus();
 
 	protected:
 

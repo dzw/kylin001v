@@ -19,8 +19,10 @@ namespace Kylin
 	class SceneHag;
 	class Scene;
 	class SceneLoader;
+	class Zone;
+	class GameStatus;
 	class GameFrame;	
-
+	
 	class LevelController;
 
 }

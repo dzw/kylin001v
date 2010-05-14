@@ -10,6 +10,8 @@
 #include "rOgreRoot.h"
 #include "CameraControl.h"
 #include "Entity.h"
+#include "Zone.h"
+#include "CollisionWrapper.h"
 
 
 Kylin::SceneHag::SceneHag()
@@ -30,61 +32,69 @@ Kylin::Scene::Scene( const SceneHag& kSceneHag )
 {
 	m_pEntityManager = KNEW EntityManager();
 	m_pEventManager  = KNEW EventManager(m_pEntityManager);
+
+	m_pZone			 = KNEW Zone();
 }
 
 Kylin::Scene::~Scene()
 {
+	SAFE_DEL(m_pZone);
 	SAFE_DEL(m_pEventManager);
 	SAFE_DEL(m_pEntityManager);
 }
 
 KVOID Kylin::Scene::EnterScene( KVOID )
 {
+	//////////////////////////////////////////////////////////////////////////
+	if (!CollisionWrapper::Initialized())
+		KNEW CollisionWrapper();
+	CollisionWrapper::GetSingletonPtr()->Initialize(OgreRoot::GetSingletonPtr()->GetSceneManager());
+
 	// 读取配置文件
-	// 加载NPC
-	m_pSceneLoader = KylinRoot::GetSingletonPtr()->GetGameFramePtr()->CreateSceneLoader();
-	m_pSceneLoader->Load(m_kSceneHag.m_sSceneFile);
-
+	// 加载场景
+	SpawnScene();
 	//////////////////////////////////////////////////////////////////////////
-	// spawn level
-	PropertySet kProp;
-	
-	kProp.SetValue("$CLASS_ID",(KUINT)id_level);
-	KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
-	//////////////////////////////////////////////////////////////////////////
-	
-	kProp.Clear();
-	kProp.SetValue("$CLASS_ID",(KUINT)id_character);
-	kProp.SetValue("$MESH","Ogre.mesh");
-	kProp.SetValue("$MATERIALS","ogre.mat/SOLID/TEX/ogre.tex.jpg/VertCol");
-	
-	kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
-	kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
-	kProp.SetValue("$COLLISION",true);
-
-	Entity * pMyself = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
-	if (pMyself)
-	{
-		OgreRoot::GetSingletonPtr()->GetCameraController()->SetTarget(pMyself->GetSceneNode());
-		OgreRoot::GetSingletonPtr()->GetCameraController()->SetMode("ChasePerson");
-	}
 }
 
 KVOID Kylin::Scene::LeaveScene( KVOID )
 {
 	m_pSceneLoader->Unload(&m_kSceneHag);
 	SAFE_DEL(m_pSceneLoader);
+
+	if (CollisionWrapper::Initialized())
+		KDEL CollisionWrapper::GetSingletonPtr();
 }
 
-KVOID Kylin::Scene::SpawnEntities()
+KVOID Kylin::Scene::SpawnScene()
 {
-	
+	m_pSceneLoader = KylinRoot::GetSingletonPtr()->GetGameFramePtr()->CreateSceneLoader();
+
+	Ogre::FileInfoListPtr resPtr = Ogre::ResourceGroupManager::getSingletonPtr()->findResourceFileInfo("General", m_kSceneHag.m_sSceneFile);
+	Ogre::FileInfo fInfo = (*(resPtr->begin()));
+
+	Ogre::String fname = fInfo.archive->getName();
+	fname += "/" + m_kSceneHag.m_sSceneFile;
+
+	if (!m_pSceneLoader->LoadScene(m_kSceneHag.m_sSceneFile))
+	{
+		assert(!"场景加载失败！");
+		return;
+	}
+	// 加载玩家
+	m_pSceneLoader->LoadPlayer();
+	// 加载NPC等
+	m_pSceneLoader->LoadLevel();
+
+	m_pZone->Initialize(fname.data());
 }
 
 KVOID Kylin::Scene::Tick( KFLOAT fElapsed )
 {
 	m_pEventManager->HandleEvents(fElapsed);
 	m_pEntityManager->Tick(fElapsed);	
+	
+	if (CollisionWrapper::Initialized())
+		CollisionWrapper::GetSingletonPtr()->Update(fElapsed);
 }
 
 KBOOL Kylin::Scene::IsValidPosition( const KPoint2& fvPos )
@@ -93,8 +103,3 @@ KBOOL Kylin::Scene::IsValidPosition( const KPoint2& fvPos )
 	return true;
 }
 
-KBOOL Kylin::Scene::CreateLevel( KCCHAR* pLevelName )
-{
-	
-	return true;
-}
