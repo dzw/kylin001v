@@ -16,18 +16,9 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID Destroy();
 		
-		enum ShowFlag
-		{
-			SF_NODE_,
-			SF_PREPARE_,
-			SF_SHOWING_,
-		};
-
+		virtual KVOID SpawnActors();
 	protected:
-		KVOID	OnPrepare(KFLOAT fElapsed);
-		KVOID	OnShowing(KFLOAT fElapsed);
-		
-		virtual Showgirl* SpawnActor(const KUINT& uGid);
+		KINT GetShowgirl(KSTR sName);
 
 	protected:
 		virtual KVOID OnLButtonDown(KINT nX, KINT nY);
@@ -37,7 +28,6 @@ namespace Kylin
 		Ogre::SceneNode* m_pNode;
 		Ogre::Light*	 m_pLight;
 
-		ShowFlag		m_eShowFlag;
 		KUINT			m_uSelectedIndex;
 		KVEC<Showgirl*>	m_kActorVec;
 	};

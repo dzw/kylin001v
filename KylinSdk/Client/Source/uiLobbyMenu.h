@@ -20,7 +20,8 @@ namespace Kylin
 		virtual KVOID Destroy();
 		
 		virtual KVOID SetVisible(KBOOL bVisible);
-		
+		virtual KVOID SetWidgetEnable(KSTR sName, KBOOL bEnable);
+
 		void NotifyButtonClick(MyGUI::Widget* _sender);
 
 	private:

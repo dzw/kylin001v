@@ -2,15 +2,16 @@
 #include "Stage.h"
 #include "Showgirl.h"
 #include "rOgreRoot.h"
-#include "CameraControl.h"
-#include "CCSCameraControlSystem.h"
 #include "XmlStream.h"
+
+#include "GuiManager.h"
+#include "EffectManager.h"
 
 
 #define SC_SHOWING	"Data\\script\\showing.xml"
 
 Kylin::Stage::Stage()
-: m_eShowFlag(Stage::SF_NODE_)
+: m_uSelectedIndex(-1)
 , m_pNode(NULL)
 , m_pLight(NULL)
 {
@@ -47,9 +48,24 @@ KBOOL Kylin::Stage::Initialize()
 	pEntity->setMaterialName("Ground");
 	m_pNode->attachObject(pEntity);
 	pEntity->setQueryFlags(0);
+
+	//
+	PropertySet kInfo;
+	kInfo.SetValue("$Name",KSTR(pEntity->getName() + "_ps"));
+	kInfo.SetValue("$Template",KSTR("flameSystem"));
+
+	EffectObject* pObj = EffectManager::GetSingletonPtr()->Generate(kInfo);
+	pObj->Activate(true);
+	//pObj->Attach(m_pNode);
+
+	Ogre::SceneNode* pEffectNode = OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
+	pObj->Attach(pEffectNode);
+
+	pEffectNode->setPosition(KPoint3(0,0,-180));
 	//////////////////////////////////////////////////////////////////////////	
 	
 	LoadActors();	
+	SpawnActors();
 
 	return true;
 }
@@ -137,18 +153,23 @@ KBOOL Kylin::Stage::LoadActors()
 	kXml.Close();
 	
 	if (!sSky.empty())
-		OgreRoot::GetSingletonPtr()->GetSceneManager()->setSkyDome(true,sSky,100,1);
+		OgreRoot::GetSingletonPtr()->GetSceneManager()->setSkyDome(true,sSky,22,1);
 
 	return true;
 }
 
 KVOID Kylin::Stage::Tick( KFLOAT fElapsed )
 {
-
+	for (KUINT i = 0; i < m_kActorVec.size(); i++)
+	{
+		m_kActorVec[i]->Tick(fElapsed);
+	}
 }
 
 KVOID Kylin::Stage::Destroy()
 {
+	EffectManager::GetSingletonPtr()->DestroyEffect("FloorPlane_ps");
+
 	for (KUINT i = 0; i < m_kActorVec.size(); i++)
 	{
 		KDEL m_kActorVec[i];
@@ -157,21 +178,6 @@ KVOID Kylin::Stage::Destroy()
 	m_kActorVec.clear();
 }
 
-KVOID Kylin::Stage::OnPrepare( KFLOAT fElapsed )
-{
-
-}
-
-KVOID Kylin::Stage::OnShowing( KFLOAT fElapsed )
-{
-
-}
-
-Kylin::Showgirl* Kylin::Stage::SpawnActor( const KUINT& uGid )
-{
-
-	return NULL;
-}
 
 KVOID Kylin::Stage::OnLButtonDown(KINT nX, KINT nY)
 {
@@ -180,6 +186,38 @@ KVOID Kylin::Stage::OnLButtonDown(KINT nX, KINT nY)
 	OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY), kMouseRay,m_pCamera);
 	if (OgreRoot::GetSingletonPtr()->PickOgreEntity(kMouseRay,&pEnt,QUERYFLAG_SHOWGIRL))
 	{
-		pEnt->getName();
+		KINT nIndex = GetShowgirl(pEnt->getName());
+		if (nIndex != -1)
+		{
+			if (m_uSelectedIndex != -1)
+				m_kActorVec[m_uSelectedIndex]->Showing(false);
+
+			m_kActorVec[nIndex]->Showing(true);
+			m_uSelectedIndex = nIndex;
+
+			//////////////////////////////////////////////////////////////////////////
+			OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("LobbyMenu")->SetWidgetEnable("_Main",true);
+		}
 	}
+}
+
+KVOID Kylin::Stage::SpawnActors()
+{
+	for (KUINT i = 0; i < m_kActorVec.size(); i++)
+	{
+		m_kActorVec[i]->Spawn();
+	}
+}
+
+KINT Kylin::Stage::GetShowgirl( KSTR sName )
+{
+	for (KUINT i = 0; i < m_kActorVec.size(); i++)
+	{
+		if (m_kActorVec[i]->GetEntityName() == sName)
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }

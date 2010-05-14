@@ -18,6 +18,8 @@ KBOOL Kylin::LobbyMenu::Initialize()
 	m_pBtnStart->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::LobbyMenu::NotifyButtonClick);
 	m_pBtnQuit->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::LobbyMenu::NotifyButtonClick);
 	
+	SetWidgetEnable("_Main",false);
+
 	return true;
 }
 
@@ -53,4 +55,12 @@ void Kylin::LobbyMenu::NotifyButtonClick( MyGUI::Widget* _sender )
 		OgreRoot::GetSingletonPtr()->ShutDown();
 	}
 	
+}
+
+KVOID Kylin::LobbyMenu::SetWidgetEnable( KSTR sName, KBOOL bVisible )
+{
+	if (sName == "_Main")
+	{
+		m_pBtnStart->setEnabled(bVisible);
+	}
 }
