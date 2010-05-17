@@ -38,9 +38,12 @@ using namespace std;
 
 #define SAFE_DEL(ptr)		if (ptr) KDEL ptr; ptr = NULL;
 #define SAFE_DEL_ARR(ptr)	if (ptr) KDEL[] ptr; ptr = NULL;
+#define SAFE_CALL(ptr,func) if (ptr) ptr->func;		
 
-#define KVEC std::vector
-#define KMAP std::map
+#define KHALF	0.5f
+#define KVEC	std::vector
+#define KMAP	std::map
+#define KLIST	std::list
 
 typedef int				KINT;
 typedef const int		KCINT;
