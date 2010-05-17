@@ -2,11 +2,11 @@
 #include "Showgirl.h"
 #include "DataItem.h"
 #include "DataManager.h"
-#include "dbCharacterLoader.h"
 #include "FileUtils.h"
 #include "AnimationProxy.h"
 #include "KylinRoot.h"
 #include "GameStatus.h"
+#include "DataLoader.h"
 
 
 Kylin::Showgirl::Showgirl(KUINT uGid)
@@ -18,14 +18,13 @@ Kylin::Showgirl::Showgirl(KUINT uGid)
 
 }
 
-Kylin::Showgirl::~Showgirl()
-{
-
-}
-
 KBOOL Kylin::Showgirl::Initialize()
 {
-	Kylin::DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(DB_CHARACTER);
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("CHAR_DB",sValue))
+		return false;
+
+	Kylin::DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
 	// 查询对应的角色信息
 	Kylin::DataItem dbItem;
 	if (!pLoader->GetDBPtr()->Query(m_uGid,dbItem))

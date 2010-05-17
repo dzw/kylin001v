@@ -11,6 +11,6 @@ namespace Kylin
 	public:
 		
 		Entity* SpawnCharactor(KUINT uGid, ClassID uCid);
-
+		
 	};
 }

@@ -1,16 +1,20 @@
 #include "cltpch.h"
 #include "KylinHelper.h"
 #include "DataManager.h"
-#include "dbCharacterLoader.h"
 #include "DataItem.h"
 #include "FileUtils.h"
 #include "Property.h"
 #include "KylinRoot.h"
+#include "DataLoader.h"
 
 
 Kylin::Entity* Kylin::KylinHelper::SpawnCharactor( KUINT uGid, ClassID uCid )
 {
-	Kylin::DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(DB_CHARACTER);
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("CHAR_DB",sValue))
+		return NULL;
+
+	Kylin::DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
 	// 查询对应的角色信息
 	Kylin::DataItem dbItem;
 	if (!pLoader->GetDBPtr()->Query(uGid,dbItem))
@@ -48,9 +52,9 @@ Kylin::Entity* Kylin::KylinHelper::SpawnCharactor( KUINT uGid, ClassID uCid )
 	kProp.SetValue("$Mesh",sName);
 	kProp.SetValue("$Materials",sMaterials);
 
-	kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
-	kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
-	kProp.SetValue("$COLLISION",true);
+	//kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
+	//kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
+	//kProp.SetValue("$COLLISION",false);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 
