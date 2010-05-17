@@ -11,7 +11,7 @@ namespace Kylin
 		DataUnit*	GetDBPtr();
 	protected:
 		virtual KBOOL Initialize();
-		virtual KVOID OnFinish() = 0;
+		virtual KVOID OnFinish(){}
 
 	protected:
 		friend class DataManager;

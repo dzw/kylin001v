@@ -200,8 +200,6 @@ namespace Kylin
 
 						break;
 					}
-
-					vRet.push_back(kItem);
 				}
 			}
 
