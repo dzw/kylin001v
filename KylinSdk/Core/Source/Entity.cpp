@@ -1,6 +1,8 @@
 #include "corepch.h"
 #include "Entity.h"
 #include "RegisterClass.h"
+#include "RemoteEvents.h"
+#include "KylinRoot.h"
 
 
 namespace Kylin
@@ -9,6 +11,8 @@ namespace Kylin
 
 	Implement_Event_Handler(Entity, EventHandler)
 	{
+		{&ev_post_destroy,			&EV_PostDestroy},
+		{&ev_post_spawn,			&EV_PostSpawn},
 		{NULL, NULL}
 	};
 }
@@ -33,6 +37,18 @@ KBOOL Kylin::Entity::Init( const PropertySet& kProp )
 	if (!Node::Load(m_kProperty))
 		return false;
 	
+	//////////////////////////////////////////////////////////////////////////
+	EventPtr spEV(
+		new Event(
+		&ev_post_spawn, 
+		Event::ev_nextframe, 
+		0, 
+		0, 
+		NULL
+		));
+
+	KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spEV);
+
 	return true;
 }
 
@@ -47,3 +63,17 @@ KVOID Kylin::Entity::Tick( KFLOAT fElapsed )
 
 }
 
+KVOID Kylin::Entity::EV_PostDestroy( EventPtr spEV )
+{
+	PostDestroy();
+}
+
+KVOID Kylin::Entity::PostDestroy()
+{
+	KylinRoot::GetSingletonPtr()->DestroyEntity(this->GetID());
+}
+
+KVOID Kylin::Entity::EV_PostSpawn( EventPtr spEV )
+{
+	PostSpawn();
+}

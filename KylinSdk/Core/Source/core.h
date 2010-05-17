@@ -24,7 +24,11 @@ namespace Kylin
 	class GameFrame;	
 	
 	class LevelController;
-
+	
+	class Factor;
+	class Action;
+	class ActionDispatcher;
+	class ActionFactory;
 }
 
 class EventTemplate;

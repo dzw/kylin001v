@@ -22,7 +22,8 @@ namespace Kylin
 
 		//由属性产生entity
 		Entity *	SpawnEntity(PropertySet& rProp);
-		
+		KVOID		DestroyEntity(KUINT uEntID);
+
 		//向entity发送消息
 		KVOID		PostMessage(KUINT uEntID,const EventPtr spEvent);
 		

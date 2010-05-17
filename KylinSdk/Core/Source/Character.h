@@ -14,8 +14,10 @@ namespace Kylin
 		Declare_Entity_Creator(Character)
 
 		Character();
-		virtual ~Character();
 		
+		KVOID	SetActionFactory(ActionFactory*);
+		ActionDispatcher* GetActionDispatcher();
+
 	protected:
 		KVOID	EV_Picked(EventPtr spEV);
 		KVOID	EV_PickTerrain(EventPtr spEV);
@@ -26,6 +28,8 @@ namespace Kylin
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID UpdateMovement(KFLOAT fElapsed);
+		
+		virtual KVOID Destroy();
 
 	protected:
 		// multiple player...
@@ -40,5 +44,7 @@ namespace Kylin
 		//OgreOpcode::CharacterController* mCharacter;
 		KPoint3 m_kDestination;
 		KFLOAT  m_fDistance;
+
+		ActionDispatcher* m_pActDispatcher;
 	};
 }

@@ -9,6 +9,8 @@ enum ClassID
 	id_entity,
 	id_level,
 	id_character,
+	
+	id_factor,
 
 	id_last,
 };

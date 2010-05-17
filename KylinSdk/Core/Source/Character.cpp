@@ -6,6 +6,8 @@
 #include "KylinRoot.h"
 
 #include "CollisionWrapper.h"
+#include "ActionDispatcher.h"
+
 
 #define CH_HEIGHT 1.0f;
 
@@ -23,14 +25,11 @@ namespace Kylin
 
 Kylin::Character::Character()
 : m_kDestination(KPoint3::ZERO)
+, m_pActDispatcher(NULL)
 {
 
 }
 
-Kylin::Character::~Character()
-{
-
-}
 
 KVOID Kylin::Character::OnLButtonDown( KINT nX, KINT nY )
 {
@@ -45,6 +44,15 @@ KVOID Kylin::Character::OnLButtonDown( KINT nX, KINT nY )
 // 			));
 // 
 // 	KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spEV);
+	Ogre::Ray kRay;
+	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
+	{
+		KPoint3 vPos;
+		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
+		{
+			SAFE_CALL(m_pActDispatcher,SpawnAction(1,vPos));
+		}
+	}
 
 }
 
@@ -106,6 +114,8 @@ KBOOL Kylin::Character::OnShouldCllsn( Node* pCollidee )
 KVOID Kylin::Character::Tick( KFLOAT fElapsed )
 {
 	Entity::Tick(fElapsed);
+
+	SAFE_CALL(m_pActDispatcher,Tick(fElapsed));
 
 	UpdateMovement(fElapsed);
 }
@@ -236,6 +246,41 @@ KBOOL Kylin::Character::Init( const PropertySet& kProp )
 		return false;
 
 	//mCharacter = new OgreOpcode::CharacterController(mCollisionContext,mAvatarBaseNode,0.3,10);
-	
+	//////////////////////////////////////////////////////////////////////////
+	KPoint3 vPos(this->GetTranslate());
+	vPos.y = 5000.0f;
+
+	if (KylinRoot::GetSingletonPtr()->HitTest(vPos,Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Y),vPos))
+	{
+		Ogre::Real r = m_pOgreNode->_getWorldAABB().getSize().y * KHALF;
+		vPos.y += r;
+
+		this->SetTranslate(vPos);
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//
+	m_pActDispatcher = KNEW ActionDispatcher(this->GetID());
+
 	return true;
+}
+
+KVOID Kylin::Character::SetActionFactory( ActionFactory* pActFactory )
+{
+	assert(pActFactory);
+	
+	SAFE_CALL(m_pActDispatcher,SetFactory(pActFactory));
+}
+
+KVOID Kylin::Character::Destroy()
+{
+	m_pActDispatcher->DestroyAllAction();
+	SAFE_DEL(m_pActDispatcher);
+
+	Entity::Destroy();
+}
+
+Kylin::ActionDispatcher* Kylin::Character::GetActionDispatcher()
+{
+	return m_pActDispatcher;
 }
