@@ -14,12 +14,7 @@ Kylin::Node::Node()
 
 Kylin::Node::~Node()
 {
-	SAFE_DEL(m_pAnimProxy);
-
-	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
-		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
-	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
-		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroySceneNode(m_pOgreNode);
+	Destroy();
 }
 
 KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
@@ -131,4 +126,14 @@ KVOID Kylin::Node::SetYaw( KFLOAT fYaw )
 Kylin::AnimationProxy* Kylin::Node::GetAnimationProxy()
 {
 	return m_pAnimProxy;
+}
+
+KVOID Kylin::Node::Destroy()
+{
+	SAFE_DEL(m_pAnimProxy);
+
+	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
+		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
+	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
+		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroySceneNode(m_pOgreNode);
 }

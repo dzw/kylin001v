@@ -15,7 +15,7 @@ namespace Kylin
 
 		virtual KBOOL Load(PropertySet kProp);
 		virtual KVOID Unload();
-
+		virtual KVOID Destroy();
 
 		virtual KVOID Tick(KFLOAT fElapsed);
 		

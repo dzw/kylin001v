@@ -1,11 +1,14 @@
 #include "engpch.h"
 #include "DataManager.h"
 #include "DataLoader.h"
+#include "DataItem.h"
 
+
+#define DB_GLOBAL "Data/db/global.csv"
 
 Kylin::DataManager::DataManager()
 {
-
+	Initialize();
 }
 
 Kylin::DataManager::~DataManager()
@@ -68,4 +71,28 @@ KVOID Kylin::DataManager::InvokeLoader( DataLoader* pLoader )
 	{
 		pLoader->Initialize();
 	}
+}
+
+KBOOL Kylin::DataManager::GetGlobalValue( KSTR sKey, KSTR& sValue )
+{
+	Kylin::DataLoader* pLoader = this->GetLoaderPtr(DB_GLOBAL);
+	
+	QResult kRes = pLoader->GetDBPtr()->Query("KEY",Kylin::DataUnit::DF_EQUAL,sKey);
+	if (kRes.size() == 0)
+		return false;
+	
+	assert(kRes.size() == 1);
+	Kylin::DataItem* pDBItem = kRes[0];
+
+	DataItem::DataField dbField;
+	pDBItem->QueryField("VALUE",dbField);
+	sValue = boost::any_cast<KSTR>(dbField.m_aValue);
+	
+	return true;
+}
+
+KVOID Kylin::DataManager::Initialize()
+{
+	InvokeLoader(KNEW DataLoader(DB_GLOBAL));
+
 }
