@@ -50,7 +50,7 @@ KBOOL Kylin::KylinRoot::HitTest( const Ogre::Ray &kCamRay, KPoint3& vRetPos )
 		{
 			vRetPos = result.position;
 
-			if (pStatus->m_pWorldManager->m_pActiveScene->m_pZone->GetTile(vRetPos.x,vRetPos.z) > 0)
+			//if (pStatus->m_pWorldManager->m_pActiveScene->m_pZone->GetTile(vRetPos.x,vRetPos.z) > 0)
 				return true;
 		}
 	}
@@ -78,8 +78,7 @@ Kylin::Entity * Kylin::KylinRoot::SpawnEntity( PropertySet& rProp )
 				pStatus->m_pWorldManager->m_pActiveScene->m_pEntityManager->DestroyEntity(pEnt->GetID());
 				return NULL;
 			}
-
-			pEnt->PostSpawn();
+			//pEnt->PostSpawn();
 		}	
 	}
 
@@ -126,4 +125,12 @@ KVOID Kylin::KylinRoot::DebugHideTerrain( KBOOL bFlag )
 		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
 		//pStatus->m_pWorldManager->m_pActiveScene->m_pSceneLoader->getTerrainGroup()->getTerrainIterator()
 	}
+}
+
+KVOID Kylin::KylinRoot::DestroyEntity( KUINT uEntID )
+{
+	Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+	
+	if (pStatus)
+		pStatus->m_pWorldManager->m_pActiveScene->m_pEntityManager->DestroyEntity(uEntID);
 }

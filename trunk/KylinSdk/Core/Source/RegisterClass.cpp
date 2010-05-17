@@ -3,6 +3,7 @@
 
 #include "Level.h"
 #include "Character.h"
+#include "Factor.h"
 
 
 #define RegEntity(classname) EntitiesFactory::RegisterCreatorFunction(classname::m_RTTI.GetClassID(), classname::CreateInstance); \
@@ -16,6 +17,7 @@ KVOID RegisterClasses()
 	RegEntity(Kylin::Entity);
 	RegEntity(Level);
 	RegEntity(Character);
+	RegEntity(Factor);
 
 //	RegEntity(EntitySpawner);
 // 	RegMessage(M_SpawnEntity);

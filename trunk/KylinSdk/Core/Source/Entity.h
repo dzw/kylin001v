@@ -22,7 +22,6 @@ namespace Kylin
 
 	public:
 		virtual KBOOL	Init(const PropertySet& kProp);
-		virtual KVOID	PostSpawn();
 		virtual KVOID	Tick(KFLOAT fElapsed);
 
 		KVOID	SetID(KUINT uID) { m_uID = uID; }
@@ -34,6 +33,12 @@ namespace Kylin
 		PropertySet&	GetPropertyRef() { return m_kProperty; }
 
 	protected:
+		KVOID	EV_PostDestroy(EventPtr spEV);
+		KVOID	EV_PostSpawn(EventPtr spEV);
+
+	protected:
+		virtual KVOID	PostSpawn();
+		virtual KVOID	PostDestroy();
 
 	private:
 		KUINT		m_uID;
