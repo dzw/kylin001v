@@ -7,7 +7,8 @@
 #include "GameStatus.h"
 #include "kylinroot.h"
 #include "KylinHelper.h"
-#include "Entity.h"
+#include "Character.h"
+#include "ClActionFactory.h"
 
 
 KBOOL Kylin::ClSceneLoader::LoadPlayer()
@@ -26,6 +27,9 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	{
 		OgreRoot::GetSingletonPtr()->GetCameraController()->SetTarget(pMyself->GetSceneNode());
 		OgreRoot::GetSingletonPtr()->GetCameraController()->SetMode("ChasePerson");
+
+		Character* pChar = BtDynamicCast(Character,pMyself);
+		SAFE_CALL(pChar,SetActionFactory(KNEW ClActionFactory(pChar->GetActionDispatcher())));
 	}
 
 	return true;

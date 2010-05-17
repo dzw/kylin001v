@@ -26,7 +26,6 @@ namespace Kylin
 	{
 	public:
 		Showgirl(KUINT uGid);
-		virtual ~Showgirl();
 		
 		KVOID Spawn();
 		KBOOL Initialize();
