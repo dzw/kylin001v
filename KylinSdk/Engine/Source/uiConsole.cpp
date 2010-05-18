@@ -7,6 +7,7 @@ Kylin::DebugConsole::DebugConsole()
 : m_spContentWidget(NULL)
 , m_spCmdWidget(NULL)
 , m_pCmdHandler(NULL)
+, m_nCurrIndex(0)
 {
 
 }
@@ -99,14 +100,30 @@ void Kylin::DebugConsole::notifyButtonPressed( MyGUI::Widget* _sender, MyGUI::Ke
 		strftime( szTmp, sizeof(szTmp), "%H : %M : %S ->>",localtime(&t) ); 
 
 		PrintLine(szTmp + sCmd);
+
+		//////////////////////////////////////////////////////////////////////////
+		m_nCurrIndex = m_kStoredList.size();
+		m_kStoredList.push_back(sCmd);
 	}
 	else if (_key == MyGUI::KeyCode::Tab)
 	{
 		OnRecept();
 	}
-	else 
+	else if (_key == MyGUI::KeyCode::ArrowUp)
 	{
-
+		if (m_nCurrIndex >= 0)
+		{
+			m_spCmdWidget->setCaption(m_kStoredList[m_nCurrIndex]);
+			m_nCurrIndex--;
+		}
+	}
+	else if (_key == MyGUI::KeyCode::ArrowDown)
+	{
+		if (m_nCurrIndex < m_kStoredList.size())
+		{
+			m_spCmdWidget->setCaption(m_kStoredList[m_nCurrIndex]);
+			m_nCurrIndex++;
+		}
 	}
 }
 
