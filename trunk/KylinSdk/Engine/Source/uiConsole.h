@@ -34,5 +34,8 @@ namespace Kylin
 		MyGUI::ListPtr			m_spContentWidget;
 		
 		CommandHandler*			m_pCmdHandler;
+		//////////////////////////////////////////////////////////////////////////
+		KVEC<KSTR>				m_kStoredList;
+		KINT					m_nCurrIndex;
 	};
 }
