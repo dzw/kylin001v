@@ -19,18 +19,22 @@ namespace Kylin
 
 		// 初始化
 		virtual KBOOL Initialize() = 0;
-
+		// render
+		virtual KVOID Render(KFLOAT fElapsed){}
 		// 销毁
 		virtual KVOID Destroy() = 0;
 
 		// 挂载到某点
-		virtual KVOID Attach(Ogre::SceneNode* pNode){}
-
+		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO){}
+	
 		// 激活特效
 		virtual KVOID Activate(KBOOL bFlag) = 0;
+		virtual KBOOL IsEnabled() { return false; }
 
 		// 获得特效名称
 		virtual KSTR  GetName() { return m_sName; }
+		// 
+		virtual KVOID SetScale(KFLOAT fScale){}
 
 	protected:
 		KSTR				m_sName;	// 特效名称
@@ -51,9 +55,11 @@ namespace Kylin
 
 		virtual KVOID Activate(KBOOL bFlag);
 		
-		virtual KVOID Attach(Ogre::SceneNode* pNode);
+		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO);
+		
+		virtual KVOID SetScale(KFLOAT fScale);
 
-	private:
+	protected:
 		ParticleUniverse::ParticleSystem* m_pSystem;	// 粒子特效句柄
 		KSTR	m_sTemplate;							// 特效模板
 	};
@@ -71,19 +77,21 @@ namespace Kylin
 		virtual KVOID Destroy();
 
 		virtual KVOID Activate(KBOOL bFlag);
+		
+		virtual KBOOL IsEnabled();
 
-	private:
+	protected:
 		Ogre::CompositorInstance* m_pCompositor;
 	};
 
 	//////////////////////////////////////////////////////////////////////////
-	// 动态模糊特效
-	class EffectMotionBlur : public EffectCompositor
-	{
-	public:
-		EffectMotionBlur():EffectCompositor(""){}
-		virtual KBOOL Initialize();
-	};
+	// Bloom特效
+//	class EffectBloom : public EffectCompositor
+//	{
+//	public:
+//		EffectBloom():EffectCompositor("Bloom"){}
+//		virtual KBOOL Initialize();
+//	};
 
 	//////////////////////////////////////////////////////////////////////////
 	// 特效管理器
@@ -99,13 +107,15 @@ namespace Kylin
 		};
 		// 初始化
 		KBOOL Initialize();
+		// render
+		KVOID Render(KFLOAT fElapsed);
 		// 销毁
 		KVOID Destroy();
 		// 销毁某个特效
 		KVOID DestroyEffect(KSTR sName);
 		// 产生特效
 		KVOID Generate(EffectObject* pEffect);
-		EffectObject* Generate(PropertySet& kInfo, KUINT uType = ET_PARTICLE);
+		EffectObject* Generate(const KSTR& sName, const KSTR& sTemplate, KUINT uType = ET_PARTICLE);
 		// 激活特效
 		KVOID Activate(KSTR sName, KBOOL bFlag);
 

@@ -2,6 +2,7 @@
 #include "Node.h"
 #include "rOgreRoot.h"
 #include "AnimationProxy.h"
+#include "EffectManager.h"
 
 
 Kylin::Node::Node()
@@ -19,15 +20,19 @@ Kylin::Node::~Node()
 
 KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 {
+	KUINT uID = -1;
+	if (kProp.GetUIntValue("$ID",uID))
+		SetWorldID(uID);
+	// 
+	m_pOgreNode	= OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
+
+	//////////////////////////////////////////////////////////////////////////
 	KSTR sMesh, sMaterials;
-	if (kProp.GetStrValue("$Mesh",sMesh))
+	if (kProp.GetStrValue("$Mesh",sMesh) && !sMesh.empty())
 	{
 		kProp.GetStrValue("$Materials",sMaterials);
-		KUINT uID;
-		
 		// 加载模型资源
-		m_pOgreNode		= OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
-		if (kProp.GetUIntValue("$ID",uID))
+		if (uID != -1)
 			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(Ogre::StringConverter::toString(uID),sMesh,"General");
 		else
 			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
@@ -42,7 +47,7 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 
 		// 设置影子
 		KBOOL bShadows = false;
-		if (kProp.GetBoolValue("$SHADOWS",bShadows) && bShadows)
+		if (kProp.GetBoolValue("$Shadows",bShadows) && bShadows)
 			m_pOgreEntity->setCastShadows(bShadows);
 		else
 			m_pOgreEntity->setCastShadows(false);
@@ -55,9 +60,22 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		// 设置动画
 		m_pAnimProxy->SetTarget(m_pOgreEntity);
 	}
-	
+	//////////////////////////////////////////////////////////////////////////
+	// 设置缩放参数
+	KFLOAT fScale;
+	if (kProp.GetFloatValue("$Scale",fScale))
+		m_pOgreNode->setScale(KPoint3(fScale,fScale,fScale));
+	//////////////////////////////////////////////////////////////////////////
+	// 加载特效
+	KSTR sEffect;
+	if (kProp.GetStrValue("$Effect",sEffect))
+	{
+		AttachEffect(sEffect);
+	}
+	//////////////////////////////////////////////////////////////////////////
+	// 加载碰撞
 	KBOOL bCollide = false;
-	if (kProp.GetBoolValue("$COLLISION",bCollide))
+	if (kProp.GetBoolValue("$Collision",bCollide))
 	{
 		if (!bCollide || !SetupCllsn(m_pOgreEntity,kProp))
 		{
@@ -130,10 +148,63 @@ Kylin::AnimationProxy* Kylin::Node::GetAnimationProxy()
 
 KVOID Kylin::Node::Destroy()
 {
+	for (KUINT i = 0; i < m_kEffectList.size(); i++)
+		EffectManager::GetSingletonPtr()->DestroyEffect(m_kEffectList[i]->GetName());
+	m_kEffectList.clear();
+
+	//--------------------------------------------------------
 	SAFE_DEL(m_pAnimProxy);
 
 	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
 	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroySceneNode(m_pOgreNode);
+}
+
+Ogre::Entity* Kylin::Node::GetEntityPtr()
+{
+	return m_pOgreEntity;
+}
+
+KVOID Kylin::Node::AttachEffect( KSTR sName, KUINT uType /*= EffectManager::ET_PARTICLE*/, KPoint3 kPos )
+{
+	KSTR sNewName = sName + Ogre::StringConverter::toString(GetWorldID());
+	EffectObject* pObj = EffectManager::GetSingletonPtr()->Generate(sNewName,sName,uType);
+	if (pObj)
+	{
+		pObj->Attach(m_pOgreNode,kPos);
+		pObj->SetScale(GetScale());
+
+		m_kEffectList.push_back(pObj);
+	}
+}
+
+KVOID Kylin::Node::DetachAndDestroyEffect( KSTR sName )
+{
+	KSTR sNewName = sName + GetEntityName();
+	for (KUINT i = 0; i < m_kEffectList.size(); i++)
+	{	
+		if (m_kEffectList[i]->GetName() == sNewName)
+		{
+			EffectManager::GetSingletonPtr()->DestroyEffect(sNewName);
+			m_kEffectList.erase(m_kEffectList.begin()+i);
+			break;
+		}
+	}
+}
+
+KVOID Kylin::Node::ActivateEffect( KSTR sName, KBOOL bFlag )
+{
+	KSTR sNewName = sName + Ogre::StringConverter::toString(GetWorldID());
+	EffectManager::GetSingletonPtr()->Activate(sNewName, bFlag);
+}
+
+KVOID Kylin::Node::SetRotation( KQuaternion kQua )
+{
+	m_pOgreNode->setOrientation(kQua);
+}
+
+KQuaternion Kylin::Node::GetRotation()
+{
+	return m_pOgreNode->getOrientation();
 }

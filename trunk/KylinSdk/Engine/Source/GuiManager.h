@@ -7,6 +7,7 @@ namespace Kylin
 	class GuiBase
 	{
 	public:
+		GuiBase(KSTR sName) : m_sGuiName(sName){}
 		GuiBase():m_bVisibleFlag(false){}
 		virtual ~GuiBase(){}
 

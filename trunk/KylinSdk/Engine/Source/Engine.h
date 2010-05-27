@@ -11,10 +11,11 @@ typedef boost::any	KANY;
 
 #define KPoint2		Ogre::Vector2 
 #define KPoint3		Ogre::Vector3 
+#define KPoint4		Ogre::Vector4 
 #define KMatrix3	Ogre::Matrix3 
 #define KMatrix4	Ogre::Matrix4 
 #define KColor		Ogre::ColourValue
-
+#define KQuaternion Ogre::Quaternion
 #define KKeyCode	OIS::KeyCode
 
 //---------------------------------------------------------
@@ -37,6 +38,13 @@ namespace Kylin
 	class DataLoader;
 	
 	class AnimationProxy;
+	
+	class SkyXWapper;
+	
+	class EffectObject;
+	class EffectParticle;
+	class EffectCompositor;
+	class EffectManager;
 
 	extern AppFrame* g_theApp;
 }

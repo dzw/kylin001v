@@ -2,6 +2,8 @@
 #include "EffectManager.h"
 #include "rOgreRoot.h"
 #include "ParticleUniverseSystemManager.h"
+#include "EffectMotionBlur.h"
+#include "EffectFade.h"
 
 
 KBOOL Kylin::EffectManager::Initialize()
@@ -16,20 +18,16 @@ KBOOL Kylin::EffectManager::Initialize()
 // 		CreateCompositors();
 // 	}
 	//KNEW ParticleUniverse::ParticleSystemManager();
-	PropertySet kInfo;
-	kInfo.SetValue("$Name",KSTR("Bloom"));
-	Generate(kInfo,ET_COMPOSITOR);
+
+	Generate("Bloom","",ET_COMPOSITOR);
+	Generate(KNEW EffectFade());
 	Generate(KNEW EffectMotionBlur());
 
 	return true;
 }
 
-Kylin::EffectObject* Kylin::EffectManager::Generate( PropertySet& kInfo, KUINT uType)
+Kylin::EffectObject* Kylin::EffectManager::Generate( const KSTR& sName,const KSTR& sTemplate, KUINT uType)
 {
-	KSTR sName = "";
-	if (!kInfo.GetStrValue("$Name",sName))
-		return NULL;
-	
 	EffectMap::iterator it = m_kEffectMap.find(sName);
 	if (it != m_kEffectMap.end())
 		return it->second;
@@ -37,11 +35,7 @@ Kylin::EffectObject* Kylin::EffectManager::Generate( PropertySet& kInfo, KUINT u
 	EffectObject* pEffect = NULL;
 	if (uType == ET_PARTICLE)
 	{
-		KSTR sTemplate = "";
-		if (!kInfo.GetStrValue("$Template",sTemplate))
-			return NULL;
-
-		pEffect = KNEW EffectParticle(sName,sTemplate);
+		pEffect = KNEW EffectParticle(sName,sTemplate);		
 		pEffect->Initialize();
 	}
 	else if (uType == ET_COMPOSITOR)
@@ -98,6 +92,17 @@ KVOID Kylin::EffectManager::DestroyEffect( KSTR sName )
 	}
 }
 
+KVOID Kylin::EffectManager::Render( KFLOAT fElapsed )
+{
+	EffectMap::iterator beg = m_kEffectMap.begin();
+	EffectMap::iterator end = m_kEffectMap.end();
+	for (EffectMap::iterator it = beg; it != end; it++)
+	{
+		if (it->second->IsEnabled())
+			it->second->Render(fElapsed);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate)
 : EffectObject(sName)
@@ -150,12 +155,19 @@ KVOID Kylin::EffectParticle::Activate( KBOOL bFlag )
 	}
 }
 
-KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode )
+KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset )
 {
 	assert(pNode);
 	if (m_pSystem->getParentSceneNode())
 		m_pSystem->getParentSceneNode()->detachObject(m_pSystem);
 	pNode->attachObject(m_pSystem);
+
+	pNode->setPosition(kOffset);
+}
+
+KVOID Kylin::EffectParticle::SetScale( KFLOAT fScale )
+{
+	SAFE_CALL(m_pSystem,setScale(KPoint3(fScale,fScale,fScale)));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -194,84 +206,69 @@ KVOID Kylin::EffectCompositor::Activate( KBOOL bFlag )
 			m_pCompositor->setEnabled(bFlag);
 }
 
+KBOOL Kylin::EffectCompositor::IsEnabled()
+{
+	return m_pCompositor->getEnabled();
+}
 
 //////////////////////////////////////////////////////////////////////////
 
-KBOOL Kylin::EffectMotionBlur::Initialize()
-{
-	m_sName = "MotionBlur";
 
-	/// Motion blur effect
-	Ogre::CompositorPtr comp3 = Ogre::CompositorManager::getSingleton().create(
-		m_sName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
-		);
-	{
-		Ogre::CompositionTechnique *t = comp3->createTechnique();
-		{
-			Ogre::CompositionTechnique::TextureDefinition *def = t->createTextureDefinition("scene");
-			def->width = 0;
-			def->height = 0;
-			def->formatList.push_back(Ogre::PF_R8G8B8);
-		}
-		{
-			Ogre::CompositionTechnique::TextureDefinition *def = t->createTextureDefinition("sum");
-			def->width = 0;
-			def->height = 0;
-			def->formatList.push_back(Ogre::PF_R8G8B8);
-		}
-		{
-			Ogre::CompositionTechnique::TextureDefinition *def = t->createTextureDefinition("temp");
-			def->width = 0;
-			def->height = 0;
-			def->formatList.push_back(Ogre::PF_R8G8B8);
-		}
-		/// Render scene
-		{
-			Ogre::CompositionTargetPass *tp = t->createTargetPass();
-			tp->setInputMode(Ogre::CompositionTargetPass::IM_PREVIOUS);
-			tp->setOutputName("scene");
-		}
-		/// Initialisation pass for sum texture
-		{
-			Ogre::CompositionTargetPass *tp = t->createTargetPass();
-			tp->setInputMode(Ogre::CompositionTargetPass::IM_PREVIOUS);
-			tp->setOutputName("sum");
-			tp->setOnlyInitial(true);
-		}
-		/// Do the motion blur
-		{
-			Ogre::CompositionTargetPass *tp = t->createTargetPass();
-			tp->setInputMode(Ogre::CompositionTargetPass::IM_NONE);
-			tp->setOutputName("temp");
-			{ Ogre::CompositionPass *pass = tp->createPass();
-			pass->setType(Ogre::CompositionPass::PT_RENDERQUAD);
-			pass->setMaterialName("Ogre/Compositor/Combine");
-			pass->setInput(0, "scene");
-			pass->setInput(1, "sum");
-			}
-		}
-		/// Copy back sum texture
-		{
-			Ogre::CompositionTargetPass *tp = t->createTargetPass();
-			tp->setInputMode(Ogre::CompositionTargetPass::IM_NONE);
-			tp->setOutputName("sum");
-			{ Ogre::CompositionPass *pass = tp->createPass();
-			pass->setType(Ogre::CompositionPass::PT_RENDERQUAD);
-			pass->setMaterialName("Ogre/Compositor/Copyback");
-			pass->setInput(0, "temp");
-			}
-		}
-		/// Display result
-		{
-			Ogre::CompositionTargetPass *tp = t->getOutputTargetPass();
-			tp->setInputMode(Ogre::CompositionTargetPass::IM_NONE);
-			{ Ogre::CompositionPass *pass = tp->createPass();
-			pass->setType(Ogre::CompositionPass::PT_RENDERQUAD);
-			pass->setMaterialName("Ogre/Compositor/MotionBlur");
-			pass->setInput(0, "sum");
-			}
-		}
-	}
-	
-	return EffectCompositor::Initialize();
-}
+
+//////////////////////////////////////////////////////////////////////////
+//KBOOL Kylin::EffectBloom::Initialize()
+//{
+	/// Bloom effect
+//	Ogre::CompositorPtr spCompositor = Ogre::CompositorManager::getSingleton().create(
+//		m_sName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
+//		);
+
+// 	CompositionTechnique *t;
+// 	CompositionTechnique::TextureDefinition *td;
+// 	CompositionTargetPass *tp;
+// 	CompositionPass *pass;
+// 
+// 	t = spCompositor->createTechnique();
+// 	td = t->createTextureDefinition("scene");
+// 	td->width = 1;
+// 	td->height = 1;
+// 	td->formatList.push_back(PF_X8R8G8B8);
+// 	td = t->createTextureDefinition("blur0");
+// 	td->width = 0.25;
+// 	td->height = 0.25;
+// 	td->formatList.push_back(PF_X8R8G8B8);
+// 	td = t->createTextureDefinition("blur1");
+// 	td->width = 0.25;
+// 	td->height = 0.25;
+// 	td->formatList.push_back(PF_X8R8G8B8);
+// 
+// 	tp = t->createTargetPass();
+// 	tp->setInputMode(CompositionTargetPass::IM_PREVIOUS);
+// 	tp->setOutputName("scene");
+// 
+// 	tp = t->createTargetPass();
+// 	tp->setInputMode(CompositionTargetPass::IM_NONE);
+// 	tp->setOutputName("blur0");
+// 	pass = tp->createPass();
+// 	pass->setType(CompositionPass::PT_RENDERQUAD);
+// 	pass->setMaterialName("PostFilters/Bloom/Blur");
+// 	pass->setInput(0, "scene");
+// 
+// 	tp = t->createTargetPass();
+// 	tp->setInputMode(CompositionTargetPass::IM_NONE);
+// 	tp->setOutputName("blur1");
+// 	pass = tp->createPass();
+// 	pass->setType(CompositionPass::PT_RENDERQUAD);
+// 	pass->setMaterialName("PostFilters/Bloom/Blur");
+// 	pass->setInput(0, "blur0");
+// 
+// 	tp = t->getOutputTargetPass();
+// 	tp->setInputMode(CompositionTargetPass::IM_NONE);
+// 	pass = tp->createPass();
+// 	pass->setType(CompositionPass::PT_RENDERQUAD);
+// 	pass->setMaterialName("PostFilters/Bloom/Final");
+// 	pass->setInput(0, "scene");
+// 	pass->setInput(1, "blur1");
+// 
+// 	return EffectCompositor::Initialize();
+//}

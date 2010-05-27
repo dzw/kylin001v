@@ -16,6 +16,6 @@ namespace Kylin
 		virtual KVOID OnRButtonDown(KINT nX, KINT nY){}
 		virtual KVOID OnRButtonUp(KINT nX, KINT nY){}
 		virtual KVOID OnMouseMove(KINT nX, KINT nY){}
-		
+		virtual KVOID OnMouseMove(KFLOAT fX, KFLOAT fY, KFLOAT fZ){}
 	};
 }
