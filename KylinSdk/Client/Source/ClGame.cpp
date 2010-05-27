@@ -18,7 +18,7 @@ KBOOL Kylin::ClGame::Initialize()
 	Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
 	if (pCam)
 	{
-		pCam->setNearClipDistance(0.2f);
+		pCam->setNearClipDistance(1.0f);
 		//OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
 		OgreRoot::GetSingletonPtr()->CreateCameraControl(pCam);
 	}

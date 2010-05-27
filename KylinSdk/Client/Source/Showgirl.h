@@ -31,8 +31,6 @@ namespace Kylin
 		KBOOL Initialize();
 		KVOID Tick(KFLOAT fElapsed);
 		
-		KVOID Showing(KBOOL bFlag);
-
 		enum ShowFlag
 		{
 			SF_NODE_,
@@ -45,9 +43,8 @@ namespace Kylin
 		KVOID	OnShowing(KFLOAT fElapsed);
 
 	protected:
-		friend class Stage;
+		friend class LobbyScene;
 		
-		KSTR		m_sIdleAnim;
 		KUINT		m_uGid;
 		ShowFlag	m_eShowFlag;
 		AnimQueue	m_kAnimQueue;

@@ -2,13 +2,15 @@
 #include "ClLobby.h"
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
-#include "uiLobbyMenu.h"
 
-#include "Stage.h"
+#include "uiLobbyMenu.h"
+#include "uiSelectMenu.h"
+
+#include "LobbyScene.h"
 
 
 Kylin::ClLobby::ClLobby()
-: m_pStage(NULL)
+: m_pLobbyScene(NULL)
 {
 	m_eStatus = GS_LOBBY_;
 
@@ -16,10 +18,9 @@ Kylin::ClLobby::ClLobby()
 
 KBOOL Kylin::ClLobby::Initialize()
 {
-	OgreRoot::GetSingletonPtr()->CreateSceneRay();
 	//////////////////////////////////////////////////////////////////////////
-	m_pStage = KNEW Kylin::Stage();
-	if (!m_pStage->Initialize())
+	m_pLobbyScene = KNEW Kylin::LobbyScene();
+	if (!m_pLobbyScene->Initialize())
 		return false;
 	//////////////////////////////////////////////////////////////////////////	
 	// 最后初始化UI
@@ -30,14 +31,13 @@ KBOOL Kylin::ClLobby::Initialize()
 
 KVOID Kylin::ClLobby::Tick( KFLOAT fElapsed )
 {
-	if (m_pStage)
-		m_pStage->Tick(fElapsed);
+	if (m_pLobbyScene)
+		m_pLobbyScene->Tick(fElapsed);
 }
 
 KVOID Kylin::ClLobby::Destroy()
 {
-	SAFE_DEL(m_pStage);
-	OgreRoot::GetSingletonPtr()->DestroySceneRay();
+	SAFE_DEL(m_pLobbyScene);
 	OgreRoot::GetSingletonPtr()->DestroyCameraControl();
 	// 注：摄像机不被销毁
 	OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
@@ -45,10 +45,18 @@ KVOID Kylin::ClLobby::Destroy()
 
 KVOID Kylin::ClLobby::UiLoader()
 {
-	Kylin::LobbyMenu* pLobby = KNEW Kylin::LobbyMenu();
+	LobbyMenu* pLobby = KNEW LobbyMenu();
 	pLobby->Initialize();	
+	
+	SelectMenu* pSelect = KNEW SelectMenu();
+	pSelect->Initialize();
 
 	//////////////////////////////////////////////////////////////////////////
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pLobby);
+	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pSelect);
 }
 
+Kylin::LobbyScene* Kylin::ClLobby::GetLobbyScene()
+{
+	return m_pLobbyScene;
+}

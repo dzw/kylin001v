@@ -1,6 +1,5 @@
 #include "cltpch.h"
 #include "LobbyScene.h"
-#include "Showgirl.h"
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "XmlStream.h"
@@ -17,6 +16,10 @@
 Kylin::LobbyScene::LobbyScene()
 : m_uSelectedIndex(-1)
 , m_pNode(NULL)
+, m_fScale(1.0f)
+, m_pCamera(NULL)
+, m_pShowgirl(NULL)
+, m_pSceneLoader(NULL)
 {
 
 }
@@ -37,11 +40,8 @@ KBOOL Kylin::LobbyScene::Initialize()
 	}
 	//////////////////////////////////////////////////////////////////////////	
 	
-//	m_pNode = OgreRoot::GetSingletonPtr()->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
-	
 	SpawnScene();
 	LoadActors();	
-//	SpawnActors();
 
 	return true;
 }
@@ -53,11 +53,7 @@ KBOOL Kylin::LobbyScene::LoadActors()
 		return false;
 	
 	kXml.SetToFirstChild("stage");
-// 	// 加载舞台信息
-// 	kXml.SetToFirstChild("skybox");
-// 	KSTR sSky = kXml.GetString("");
-// 	
-// 	kXml.SetToParent();
+
 	// 设置摄像机位置
 	kXml.SetToFirstChild("camera_pos");
 	KSTR sPos = kXml.GetString("");
@@ -69,7 +65,7 @@ KBOOL Kylin::LobbyScene::LoadActors()
 	m_pCamera->setPosition(kPos);
 	
 	kXml.SetToParent();
-	// 设置观察位置
+	// 设置摄像机朝向
 	kXml.SetToFirstChild("camera_ori");
 	sPos = kXml.GetString("");
 	kV = Ogre::StringUtil::split(sPos," ");
@@ -83,61 +79,49 @@ KBOOL Kylin::LobbyScene::LoadActors()
 	kXml.SetToParent();
 	kXml.SetToParent();
 	
-// 	// 加载角色信息
-// 	KBOOL bRes = kXml.SetToFirstChild("actor");
-// 	while (bRes)
-// 	{
-// 		KINT nGid = kXml.GetAttrInt("gid");
-// 		
-// 		Showgirl* pGirl = KNEW Showgirl(nGid);
-// 		
-// 		kXml.SetToFirstChild("idle");
-// 		pGirl->m_sIdleAnim = kXml.GetAttrString("name");
-// 		kXml.SetToParent();
-// 		// 加载展示动画信息
-// 		KBOOL bAnim = kXml.SetToFirstChild("animation");
-// 		while(bAnim)
-// 		{
-// 			AnimUnit kAnim;
-// 			kAnim.mAnim = kXml.GetAttrString("name");
-// 			kAnim.mLoopFlag = kXml.GetAttrBool("loop");
-// 			if (kXml.HasAttr("time"))
-// 				kAnim.mTime = kXml.GetAttrFloat("time");
-// 			pGirl->m_kAnimQueue.push_back(kAnim);
-// 			
-// 			bAnim = kXml.SetToNextChild("animation");
-// 		}
-// 		// 产生showgirl
-// 		if (pGirl->Initialize())
-// 		{
-// 			// 设置位置
-// 			kXml.SetToFirstChild("position");
-// 			KSTR sPos = kXml.GetString("");
-// 			Ogre::vector<Ogre::String>::type kV = Ogre::StringUtil::split(sPos," ");
-// 			KPoint3 kPos;
-// 			kPos.x = atof(kV[0].data());
-// 			kPos.y = atof(kV[1].data());
-// 			kPos.z = atof(kV[2].data());
-// 			pGirl->SetTranslate(kPos);
-// 
-// 			kXml.SetToParent();
-// 
-// 			m_kActorVec.push_back(pGirl);
-// 		}
-// 		
-// 		bRes = kXml.SetToNextChild("actor");
-// 	}
+ 	// 加载角色信息
+ 	KBOOL bRes = kXml.SetToFirstChild("actor");
+ 	if (bRes)
+ 	{
+		// 获得缩放参数
+		m_fScale = kXml.GetAttrFloat("scale");
+
+ 		// 加载展示动画信息
+ 		KBOOL bAnim = kXml.SetToFirstChild("animation");
+ 		while(bAnim)
+ 		{
+ 			AnimUnit kAnim;
+ 			kAnim.mAnim = kXml.GetAttrString("name");
+ 			kAnim.mLoopFlag = kXml.GetAttrBool("loop");
+ 			if (kXml.HasAttr("time"))
+ 				kAnim.mTime = kXml.GetAttrFloat("time");
+ 			m_kAnimQueue.push_back(kAnim);
+ 			
+ 			bAnim = kXml.SetToNextChild("animation");
+ 		}
+
+		// 设置位置
+		kXml.SetToFirstChild("position");
+		KSTR sPos = kXml.GetString("");
+		m_kPosition = Ogre::StringConverter::parseVector3(sPos);
+	
+		kXml.SetToParent();
+
+		// 设置朝向
+		kXml.SetToFirstChild("orientation");
+		sPos = kXml.GetString("");
+		m_kQuaternion = Ogre::StringConverter::parseQuaternion(sPos);
+		
+		kXml.SetToParent();
+ 	}
 
 	kXml.Close();
 	
-// 	if (!sSky.empty())
-// 		OgreRoot::GetSingletonPtr()->GetSceneManager()->setSkyDome(true,sSky,22,1);
-
 	//////////////////////////////////////////////////////////////////////////
 	// test code
-	PropertySet kProp;
-	kProp.SetValue("$PlayerID",KUINT(1));
-	KylinRoot::GetSingletonPtr()->GetCurrentGameStatus()->Serialize(kProp);
+// 	PropertySet kProp;
+// 	kProp.SetValue("$PlayerID",KUINT(1));
+// 	KylinRoot::GetSingletonPtr()->GetCurrentGameStatus()->Serialize(kProp);
 
 	//OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("LobbyMenu")->SetWidgetEnable("_Main",true);
 	//////////////////////////////////////////////////////////////////////////
@@ -146,31 +130,31 @@ KBOOL Kylin::LobbyScene::LoadActors()
 
 KVOID Kylin::LobbyScene::Tick( KFLOAT fElapsed )
 {
-	for (KUINT i = 0; i < m_kActorVec.size(); i++)
-	{
-		m_kActorVec[i]->Tick(fElapsed);
-	}
+	SAFE_CALL(m_pShowgirl,Tick(fElapsed));
 }
 
 KVOID Kylin::LobbyScene::Destroy()
 {
-	for (KUINT i = 0; i < m_kActorVec.size(); i++)
-	{
-		KDEL m_kActorVec[i];
-	}
-
-	m_kActorVec.clear();
+	SAFE_DEL(m_pShowgirl);
 	//////////////////////////////////////////////////////////////////////////
 	SAFE_CALL(m_pSceneLoader,Unload(NULL));
 	SAFE_DEL(m_pSceneLoader);
 }
 
-KVOID Kylin::LobbyScene::SpawnActors()
+KVOID Kylin::LobbyScene::SpawnActor(KUINT uIndex)
 {
-	for (KUINT i = 0; i < m_kActorVec.size(); i++)
-	{
-		m_kActorVec[i]->Spawn();
-	}
+	SAFE_DEL(m_pShowgirl);
+	//////////////////////////////////////////////////////////////////////////
+	m_pShowgirl = KNEW Showgirl(uIndex);
+	if (!m_pShowgirl->Initialize())
+		return;
+	
+	m_pShowgirl->SetScale(m_fScale);
+	m_pShowgirl->SetTranslate(m_kPosition);
+	//-----------------------------------------------------
+	// 设置进入游戏按钮为可用状态
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("LobbyMenu")->SetWidgetEnable("_Main",true);
+	//-----------------------------------------------------
 }
 
 KVOID Kylin::LobbyScene::SpawnScene()

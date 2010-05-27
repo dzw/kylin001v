@@ -1,11 +1,10 @@
 #pragma once
 
-#include "InputListener.h"
+#include "Showgirl.h"
 
 namespace Kylin
 {
-	class Showgirl;
-	class LobbyScene : public InputListener
+	class LobbyScene //: public InputListener
 	{
 	public:
 		LobbyScene();
@@ -16,7 +15,7 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID Destroy();
 		
-		virtual KVOID SpawnActors();
+		virtual KVOID SpawnActor(KUINT uIndex);
 
 	protected:
 		virtual KVOID	SpawnScene();
@@ -24,10 +23,14 @@ namespace Kylin
 	protected:
 		Ogre::Camera*	 m_pCamera;
 		Ogre::SceneNode* m_pNode;
-		
+		KPoint3			m_kPosition;
+		KQuaternion		m_kQuaternion;
+		KFLOAT			m_fScale;
+
 		SceneLoader*	m_pSceneLoader;
 
 		KUINT			m_uSelectedIndex;
-		KVEC<Showgirl*>	m_kActorVec;
+		Showgirl*		m_pShowgirl;
+		AnimQueue		m_kAnimQueue;
 	};
 }

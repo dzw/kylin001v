@@ -14,7 +14,7 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID Destroy();
 
-		virtual Factor* SpawnFactor(KUINT uHostID);
+		virtual Factor* SpawnFactor();
 
 	protected:
 		virtual KVOID OnTriggered(Factor* pFactor);

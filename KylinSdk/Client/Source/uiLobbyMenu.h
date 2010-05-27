@@ -29,7 +29,5 @@ namespace Kylin
 		MyGUI::Button* m_pBtnStart;
 		ATTRIBUTE_FIELD_WIDGET_NAME(LobbyMenu, m_pBtnQuit, "Quit");
 		MyGUI::Button* m_pBtnQuit;
-		ATTRIBUTE_FIELD_WIDGET_NAME(LobbyMenu, m_pTxtExplain, "Explain");
-		MyGUI::StaticText* m_pTxtExplain;
 	};
 }

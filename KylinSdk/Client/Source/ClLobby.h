@@ -5,7 +5,7 @@
 
 namespace Kylin
 {	
-	class Stage;
+	class LobbyScene;
 	class ClLobby : public GameStatus , public GuiShell
 	{
 	public:
@@ -16,8 +16,10 @@ namespace Kylin
 		virtual KVOID Destroy();
 		
 		virtual KVOID UiLoader();
+		
+		LobbyScene*	  GetLobbyScene();
 
 	protected:
-		Stage* m_pStage;
+		LobbyScene* m_pLobbyScene;
 	};
 }
