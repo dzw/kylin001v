@@ -17,8 +17,9 @@ namespace Kylin
 		
 		virtual KBOOL IsComplete();
 		
-		virtual Factor* SpawnFactor(KUINT uHostID) = 0;
-		
+		virtual Factor* SpawnFactor();
+		virtual KVOID	RemoveFactor(KUINT uFactorID);
+
 		virtual KUINT GetGID();
 
 	protected:
@@ -29,9 +30,6 @@ namespace Kylin
 		friend class Factor;
 
 		PropertySet m_kProperty;
-
-// 		KUINT m_uGID;
-// 		KUINT m_uMinFactorCount;
 
 		typedef KLIST<KUINT> FactorList;
 		FactorList m_kFactorList;

@@ -40,7 +40,7 @@ namespace Kylin
 		virtual KVOID	PostSpawn();
 		virtual KVOID	PostDestroy();
 
-	private:
+	protected:
 		KUINT		m_uID;
 		KSTR		m_sName;
 		PropertySet m_kProperty;

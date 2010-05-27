@@ -25,7 +25,7 @@ Kylin::Action* Kylin::ActionDispatcher::SpawnAction( KUINT uGID ,const KPoint3& 
 	
 	if (pAct)
 	{
-		Factor* pFactor = pAct->SpawnFactor(m_uHostID);
+		Factor* pFactor = pAct->SpawnFactor();
 		SAFE_CALL(pFactor,SetTranslate(kPos));
 	}
 	

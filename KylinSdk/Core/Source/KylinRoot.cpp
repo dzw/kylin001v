@@ -134,3 +134,4 @@ KVOID Kylin::KylinRoot::DestroyEntity( KUINT uEntID )
 	if (pStatus)
 		pStatus->m_pWorldManager->m_pActiveScene->m_pEntityManager->DestroyEntity(uEntID);
 }
+

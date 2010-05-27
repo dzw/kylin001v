@@ -38,6 +38,8 @@ Kylin::Scene::Scene( const SceneHag& kSceneHag )
 
 Kylin::Scene::~Scene()
 {
+	LeaveScene();
+
 	SAFE_DEL(m_pZone);
 	SAFE_DEL(m_pEventManager);
 	SAFE_DEL(m_pEntityManager);
@@ -58,7 +60,7 @@ KVOID Kylin::Scene::EnterScene( KVOID )
 
 KVOID Kylin::Scene::LeaveScene( KVOID )
 {
-	m_pSceneLoader->Unload(&m_kSceneHag);
+	SAFE_CALL(m_pSceneLoader,Unload(&m_kSceneHag));
 	SAFE_DEL(m_pSceneLoader);
 
 	if (CollisionWrapper::Initialized())
@@ -90,11 +92,13 @@ KVOID Kylin::Scene::SpawnScene()
 
 KVOID Kylin::Scene::Tick( KFLOAT fElapsed )
 {
-	m_pEventManager->HandleEvents(fElapsed);
-	m_pEntityManager->Tick(fElapsed);	
+	SAFE_CALL(m_pEventManager,HandleEvents(fElapsed));
+	SAFE_CALL(m_pEntityManager,Tick(fElapsed));	
 	
 	if (CollisionWrapper::Initialized())
 		CollisionWrapper::GetSingletonPtr()->Update(fElapsed);
+
+	SAFE_CALL(m_pSceneLoader,Tick(fElapsed));
 }
 
 KBOOL Kylin::Scene::IsValidPosition( const KPoint2& fvPos )
