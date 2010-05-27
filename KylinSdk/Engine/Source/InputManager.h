@@ -31,6 +31,7 @@ namespace Kylin
 		//virtual KVOID OnMButtonDown(KINT nX, KINT nY){}
 		//virtual KVOID OnMButtonUp(KINT nX, KINT nY){}
 		virtual KVOID OnMouseMove(KINT nX, KINT nY);
+		virtual KVOID OnMouseMove(KFLOAT fX, KFLOAT fY, KFLOAT fZ);
 
 	private:
 		virtual KBOOL keyPressed( const OIS::KeyEvent &arg );

@@ -152,10 +152,10 @@ KVOID Kylin::OgreRoot::UnregOptListener( InputListener* pl )
 
 KBOOL Kylin::OgreRoot::GetMouseRay( KPoint2 vOrg, Ogre::Ray &kRay )
 {
-	if(!g_theApp->m_pCameraCtrl->GetActiveCamera()) 
-		return false;
+	//if(!g_theApp->m_pCameraCtrl->GetActiveCamera()) 
+	//	return false;
 	
-	GetMouseRay(vOrg,kRay,g_theApp->m_pCameraCtrl->GetActiveCamera());
+	GetMouseRay(vOrg,kRay,GetCamera("$MainCamera"));
 
 	return true;
 }

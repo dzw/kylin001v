@@ -68,12 +68,11 @@ KVOID Kylin::InputManager::SetWindowExtents( KINT nWidth, KINT nHeight )
 //////////////////////////////////////////////////////////////////////////
 KBOOL Kylin::InputManager::keyPressed( const OIS::KeyEvent &arg )
 {
-	OnKeyDown(arg.key);
-	
 	//////////////////////////////////////////////////////////////////////////
 	// ui
 	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
-	gui->injectKeyPress(MyGUI::KeyCode::Enum(arg.key), (MyGUI::Char)arg.text);
+	if (!gui->injectKeyPress(MyGUI::KeyCode::Enum(arg.key), (MyGUI::Char)arg.text))
+		OnKeyDown(arg.key);
 	//////////////////////////////////////////////////////////////////////////
 
 	return true;
@@ -81,12 +80,12 @@ KBOOL Kylin::InputManager::keyPressed( const OIS::KeyEvent &arg )
 
 KBOOL Kylin::InputManager::keyReleased( const OIS::KeyEvent &arg )
 {
-	OnKeyUp(arg.key);
-	
 	//////////////////////////////////////////////////////////////////////////
 	// ui
 	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
-	gui->injectKeyRelease(MyGUI::KeyCode::Enum(arg.key));
+	if (!gui->injectKeyRelease(MyGUI::KeyCode::Enum(arg.key)))
+		OnKeyUp(arg.key);
+
 	//////////////////////////////////////////////////////////////////////////
 
 	return true;
@@ -94,19 +93,28 @@ KBOOL Kylin::InputManager::keyReleased( const OIS::KeyEvent &arg )
 
 KBOOL Kylin::InputManager::mouseMoved( const OIS::MouseEvent &arg )
 {
-	OnMouseMove(arg.state.X.abs,arg.state.Y.abs);
-
 	//////////////////////////////////////////////////////////////////////////
 	// ui
 	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
-	gui->injectMouseMove(arg.state.X.abs,arg.state.Y.abs, arg.state.Z.abs);
+	if (gui->injectMouseMove(arg.state.X.abs,arg.state.Y.abs, arg.state.Z.abs))
+		return true;
 	//////////////////////////////////////////////////////////////////////////
+	
+	OnMouseMove(arg.state.X.abs,arg.state.Y.abs);
+	
+	OnMouseMove(arg.state.X.rel, arg.state.Y.rel, arg.state.Z.rel);
 
-	return true;
+	return false;
 }
 
 KBOOL Kylin::InputManager::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+	//////////////////////////////////////////////////////////////////////////
+	// ui
+	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
+	if (gui->injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id)))
+		return true;
+	//////////////////////////////////////////////////////////////////////////
 	switch (id)
 	{
 	case OIS::MB_Left:
@@ -118,21 +126,21 @@ KBOOL Kylin::InputManager::mousePressed( const OIS::MouseEvent &arg, OIS::MouseB
 
 		break;
 	case OIS::MB_Middle:
-		
+
 		break;
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// ui
-	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
-	gui->injectMousePress(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
-	//////////////////////////////////////////////////////////////////////////
-
-	return true;
+	return false;
 }
 
 KBOOL Kylin::InputManager::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
 {
+	//////////////////////////////////////////////////////////////////////////
+	// ui
+	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
+	if (gui->injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id)))
+		return true;
+	//////////////////////////////////////////////////////////////////////////
 	switch (id)
 	{
 	case OIS::MB_Left:
@@ -147,13 +155,7 @@ KBOOL Kylin::InputManager::mouseReleased( const OIS::MouseEvent &arg, OIS::Mouse
 		break;
 	}
 
-	//////////////////////////////////////////////////////////////////////////
-	// ui
-	MyGUI::Gui* gui = OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGUI();
-	gui->injectMouseRelease(arg.state.X.abs, arg.state.Y.abs, MyGUI::MouseButton::Enum(id));
-	//////////////////////////////////////////////////////////////////////////
-
-	return true;
+	return false;
 }
 
 KBOOL Kylin::InputManager::IsKeyDown( KUINT uKey )
@@ -166,6 +168,12 @@ KVOID Kylin::InputManager::OnMouseMove(KINT nX, KINT nY)
 	//////////////////////////////////////////////////////////////////////////
 	for (size_t i = 0 ; i < m_kContainer.size(); i++)
 		m_kContainer[i]->OnMouseMove(nX, nY);
+}
+
+KVOID Kylin::InputManager::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
+{
+	for (size_t i = 0 ; i < m_kContainer.size(); i++)
+		m_kContainer[i]->OnMouseMove(fX, fY, fZ);
 }
 
 KVOID Kylin::InputManager::OnKeyDown( KUINT uKey )

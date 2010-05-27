@@ -19,21 +19,21 @@ Kylin::CameraControl::~CameraControl()
 KBOOL Kylin::CameraControl::Initialize( SceneManager* pSceneMgr, Camera* pCamera, KSTR sName/*="kylin_camera_control"*/ )
 {
 	
-	m_pCameraCS = new CCS::CameraControlSystem(pSceneMgr, sName, pCamera);
-
-	CCS::FirstPersonCameraMode* pCamMode = new CCS::FirstPersonCameraMode(m_pCameraCS,Ogre::Vector3(0,17,-16)
-		, Ogre::Radian(0),Ogre::Radian(Ogre::Degree(180)),Ogre::Radian(0));
-	m_pCameraCS->registerCameraMode("FirstPerson",pCamMode);
-
-	CCS::ChaseFreeYawAxisCameraMode* pCamModeC = new CCS::ChaseFreeYawAxisCameraMode(m_pCameraCS,Ogre::Vector3(0,15,-22)
-		, Ogre::Radian(0),Ogre::Radian(Ogre::Degree(180)),Ogre::Radian(Ogre::Degree(-18)));
-	m_pCameraCS->registerCameraMode("ChasePerson",pCamModeC);
-
-	CCS::FreeCameraMode* pCamModeF = new CCS::FreeCameraMode(m_pCameraCS);
-	m_pCameraCS->registerCameraMode("Free",pCamModeF);
-	pCamModeF->setMoveFactor(10);
-	
-	m_pCameraCS->setCurrentCameraMode(pCamModeF);
+// 	m_pCameraCS = new CCS::CameraControlSystem(pSceneMgr, sName, pCamera);
+// 
+// 	CCS::FirstPersonCameraMode* pCamMode = new CCS::FirstPersonCameraMode(m_pCameraCS,Ogre::Vector3(0,17,-16)
+// 		, Ogre::Radian(0),Ogre::Radian(Ogre::Degree(180)),Ogre::Radian(0));
+// 	m_pCameraCS->registerCameraMode("FirstPerson",pCamMode);
+// 
+// 	CCS::ChaseFreeYawAxisCameraMode* pCamModeC = new CCS::ChaseFreeYawAxisCameraMode(m_pCameraCS,Ogre::Vector3(0,15,-22)
+// 		, Ogre::Radian(0),Ogre::Radian(Ogre::Degree(180)),Ogre::Radian(Ogre::Degree(-18)));
+// 	m_pCameraCS->registerCameraMode("ChasePerson",pCamModeC);
+// 
+// 	CCS::FreeCameraMode* pCamModeF = new CCS::FreeCameraMode(m_pCameraCS);
+// 	m_pCameraCS->registerCameraMode("Free",pCamModeF);
+// 	pCamModeF->setMoveFactor(10);
+// 	
+// 	m_pCameraCS->setCurrentCameraMode(pCamModeF);
 	
 	return true;
 }
