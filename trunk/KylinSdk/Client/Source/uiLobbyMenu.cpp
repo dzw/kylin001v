@@ -38,8 +38,6 @@ KVOID Kylin::LobbyMenu::SetVisible( KBOOL bVisible )
 {
 	m_pBtnStart->setVisible(bVisible);
 	m_pBtnQuit->setVisible(bVisible);
-	m_pTxtExplain->setVisible(bVisible);
-	
 }
 
 void Kylin::LobbyMenu::NotifyButtonClick( MyGUI::Widget* _sender )

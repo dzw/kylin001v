@@ -23,10 +23,17 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 	DataItem::DataField dbField;
 	dbItem.QueryField("CLASS",dbField);
 	KSTR sClass = boost::any_cast<KSTR>(dbField.m_aValue);
-	
+
+	dbItem.QueryField("FACTOR_ID",dbField);
+	KUINT uFactor = boost::any_cast<KINT>(dbField.m_aValue);	
+
+	dbItem.QueryField("ANIMATION",dbField);
+	KSTR sAnim = boost::any_cast<KSTR>(dbField.m_aValue);	
+
+
 	PropertySet kProp;
 	kProp.SetValue("$GID",uGID);
-	kProp.SetValue("$FactorID",KUINT(1));
+	kProp.SetValue("$FactorID",uFactor);
 	//////////////////////////////////////////////////////////////////////////
 	Action* pAct = NULL;
 	if (sClass == "ActSkill")

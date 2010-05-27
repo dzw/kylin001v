@@ -38,4 +38,6 @@ KVOID Kylin::GameClient::DataTableLoading()
 	if (DataManager::GetSingletonPtr()->GetGlobalValue("EFFECT_DB",sValue))
 		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
 	
+	if (DataManager::GetSingletonPtr()->GetGlobalValue("FACTOR_DB",sValue))
+		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
 }

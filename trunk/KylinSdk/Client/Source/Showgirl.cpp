@@ -64,7 +64,9 @@ KBOOL Kylin::Showgirl::Initialize()
 	if (!Load(kSet))
 		return false;
 	
-	m_pOgreEntity->setQueryFlags(QUERYFLAG_SHOWGIRL);
+	//-----------------------------------------------------
+	Spawn();
+	//-----------------------------------------------------
 
 	return true;
 }
@@ -81,24 +83,14 @@ KVOID Kylin::Showgirl::Tick( KFLOAT fElapsed )
 
 KVOID Kylin::Showgirl::Spawn()
 {
-	//GetAnimationProxy()->Play(m_sIdleAnim,true);
-}
+	//m_eShowFlag = SF_PREPARE_;
 
-KVOID Kylin::Showgirl::Showing( KBOOL bFlag )
-{
-	if (bFlag)
-	{
-		m_eShowFlag = SF_PREPARE_;
-
-		PropertySet kProp;
-		kProp.SetValue("$PlayerID",m_uGid);
-		KylinRoot::GetSingletonPtr()->GetCurrentGameStatus()->Serialize(kProp);
-	}
-	else
-	{
-		m_eShowFlag = SF_NODE_;
-		GetAnimationProxy()->Play(m_sIdleAnim);
-	}
+	//-----------------------------------------------------
+	// ÉèÖÃÍæ¼ÒGID
+	PropertySet kProp;
+	kProp.SetValue("$PlayerID",m_uGid);
+	KylinRoot::GetSingletonPtr()->GetCurrentGameStatus()->Serialize(kProp);
+	//-----------------------------------------------------
 }
 
 KVOID Kylin::Showgirl::OnPrepare(KFLOAT fElapsed)
