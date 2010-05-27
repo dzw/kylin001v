@@ -36,10 +36,12 @@ using namespace std;
 //#define KNEW				new( __FILE__, __LINE__ )
 #define KDEL				delete //(setOwner( __FILE__, __LINE__ ), false) ? setOwner( "", 0 ) : delete
 
+#define CLASS_TO(classname) #classname
 #define SAFE_DEL(ptr)		if (ptr) KDEL ptr; ptr = NULL;
 #define SAFE_DEL_ARR(ptr)	if (ptr) KDEL[] ptr; ptr = NULL;
 #define SAFE_CALL(ptr,func) if (ptr) ptr->func;		
 
+#define KZERO	0.0001f
 #define KHALF	0.5f
 #define KVEC	std::vector
 #define KMAP	std::map
