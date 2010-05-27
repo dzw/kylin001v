@@ -26,7 +26,7 @@ namespace Kylin
 	{
 	public:
 		Scene(const SceneHag& kSceneHag);
-		virtual ~Scene();	
+		~Scene();	
 
 		virtual KVOID	Tick(KFLOAT fElapsed);
 		//½øÈë³¡¾°

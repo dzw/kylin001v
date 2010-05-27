@@ -18,7 +18,7 @@ Kylin::WorldManager::~WorldManager()
 KBOOL Kylin::WorldManager::Initialize( KCCHAR* pWorldCfg )
 {
 	SceneHag* hag = new SceneHag;
-	hag->m_sSceneFile = "sampleScene2.xml";
+	hag->m_sSceneFile = "level_em.xml";
 	hag->m_uSceneID = 10000000;
 	hag->m_sName = "111";
 	hag->m_uType = 1;

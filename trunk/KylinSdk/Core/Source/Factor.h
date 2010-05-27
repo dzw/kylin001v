@@ -15,8 +15,11 @@ namespace Kylin
 		Factor();
 
 		virtual KBOOL Init(const PropertySet& kProp);
-		virtual KVOID PostDestroy();
 		virtual KVOID Tick(KFLOAT fElapsed);
+
+	protected:
+		virtual KVOID PostSpawn();
+		virtual KVOID PostDestroy();
 
 	public:
 		virtual KVOID SetHostAction(Action* pAct);
