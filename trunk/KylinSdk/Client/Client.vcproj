@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm159"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;../../3rd\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../3rd\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../3rd/boost_1_42;./Source;../CCS/include;../../3rd/MyGUI3.0/MyGUIEngine/include;../../3rd/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../../3rd/ogreopcode/include;../Engine/Source;../Core/Source"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../Engine/Source;../Core/Source;../../Dependencies/MyGUI3.0/Common;../../Dependencies/ParticleUniverse/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -86,7 +86,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -106,9 +106,12 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm150"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../Engine/Source;../Core/Source;../../Dependencies/MyGUI3.0/Common;../../Dependencies/ParticleUniverse/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="cltpch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
@@ -124,6 +127,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				OutputFile="./release\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -151,7 +155,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Source\ActSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClActionFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClGame.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClLobby.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClSceneLoader.cpp"
 				>
 			</File>
 			<File
@@ -175,7 +195,27 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Source\GameCamera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\GameClient.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\KylinHelper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LobbyScene.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PlayerController.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Showgirl.cpp"
 				>
 			</File>
 		</Filter>
@@ -185,7 +225,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Source\ActSkill.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClActionFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClGame.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClLobby.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClSceneLoader.h"
 				>
 			</File>
 			<File
@@ -193,7 +249,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\GameCamera.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\GameClient.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\KylinHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LobbyScene.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PlayerController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Showgirl.h"
 				>
 			</File>
 		</Filter>
@@ -206,6 +282,74 @@
 		<Filter
 			Name="Menu"
 			>
+			<File
+				RelativePath=".\Source\uiCellView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiCellView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiitemboxcontainer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiitemboxcontainer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiItemBoxMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiitemboxmenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiItemMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiLobbyMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiLobbyMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiOptionMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiOptionMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiResourceItemInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiResourceItemInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiSelectMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiSelectMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiTipMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiTipMenu.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
