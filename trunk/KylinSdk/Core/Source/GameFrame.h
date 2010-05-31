@@ -15,7 +15,7 @@ namespace Kylin
 		virtual KVOID			CreateWidgets();
 		// Clear out everything and reset variables to start the game over again without leaving the state
 		virtual KVOID			Run();
-		virtual KVOID			Entrance() = 0;
+		virtual KVOID			Entrance(KCHAR *argv) = 0;
 		virtual KVOID			OnIdle(KFLOAT fElapsed);
 		virtual KVOID			Destroy();
 		virtual KVOID			SwitchStatus( GameStatus* pStatus );
