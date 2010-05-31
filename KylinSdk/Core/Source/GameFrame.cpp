@@ -4,6 +4,7 @@
 #include "RegisterClass.h"
 #include "GameStatus.h"
 #include "Property.h"
+#include "rPhyXSystem.h"
 
 
 Kylin::GameFrame::GameFrame()
@@ -19,7 +20,6 @@ Kylin::GameFrame::~GameFrame()
 
 KVOID Kylin::GameFrame::Run()
 {
-	Entrance();
 	//////////////////////////////////////////////////////////////////////////////
 	AppFrame::Run();
 	//////////////////////////////////////////////////////////////////////////////
@@ -34,6 +34,9 @@ KVOID Kylin::GameFrame::Destroy()
 	if (KylinRoot::Initialized())
 		KDEL KylinRoot::GetSingletonPtr();
 
+	if (PhyX::PhysicalSystem::Initialized())
+		KDEL PhyX::PhysicalSystem::GetSingletonPtr();
+
 	AppFrame::Destroy();
 }
 
@@ -41,8 +44,9 @@ KVOID Kylin::GameFrame::OnIdle( KFLOAT fElapsed )
 {
 	AppFrame::OnIdle(fElapsed);
 	
-	if (m_pActiveStatus)
-		m_pActiveStatus->Tick(fElapsed);
+	SAFE_CALL(PhyX::PhysicalSystem::GetSingletonPtr(),Tick(fElapsed));
+	
+	SAFE_CALL(m_pActiveStatus,Tick(fElapsed));
 }
 
 extern int tolua_script_open(lua_State* tolua_S);
@@ -57,6 +61,11 @@ KVOID Kylin::GameFrame::CreateWidgets()
 {
 	AppFrame::CreateWidgets();
 
+	//////////////////////////////////////////////////////////////////////////
+	if (!PhyX::PhysicalSystem::Initialized())
+		KNEW PhyX::PhysicalSystem();
+	PhyX::PhysicalSystem::GetSingletonPtr()->CreateMotionSimulator();
+	//////////////////////////////////////////////////////////////////////////
 	if (!KylinRoot::Initialized())
 		KNEW KylinRoot();
 
