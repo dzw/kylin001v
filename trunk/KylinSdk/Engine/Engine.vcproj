@@ -212,6 +212,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\rOgreUtils.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ScriptVM.cpp"
 				>
 			</File>
@@ -275,6 +279,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\rOgreRoot.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rOgreUtils.h"
 				>
 			</File>
 			<File
