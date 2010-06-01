@@ -4,7 +4,6 @@
 #include "KylinRoot.h"
 #include "uiOptionMenu.h"
 #include "CameraControl.h"
-#include "CCSCameraControlSystem.h"
 
 
 Kylin::ClGame::ClGame()
