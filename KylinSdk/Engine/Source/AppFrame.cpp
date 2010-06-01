@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "CameraControl.h"
 #include "ScriptVM.h"
+#include "FileUtils.h"
 #include "EffectManager.h"
 #include "uiLoadingProgress.h"
 
@@ -25,7 +26,9 @@ namespace Kylin
 		, m_bShutDown(false)
 		, m_bPaused(false)
 	{
-		
+		KCHAR szDir[MAX_PATH] = {0};
+		::GetCurrentDirectoryA(MAX_PATH,szDir);
+		FileUtils::SetExePath(szDir);
 	}
 
 	AppFrame::~AppFrame()
@@ -175,7 +178,7 @@ namespace Kylin
 		if (!EffectManager::Initialized())
 			KNEW EffectManager();
 		EffectManager::GetSingletonPtr()->Initialize();
-		//////////////////////////////////////////////////////////////////////////
+
 	}
 
 	KVOID AppFrame::OnExit()
@@ -216,7 +219,7 @@ namespace Kylin
 	KVOID AppFrame::OnIdle( KFLOAT fElapsed )
 	{
 		SAFE_CALL(EffectManager::GetSingletonPtr(),Render(fElapsed));
-
+		
 		//SAFE_CALL(m_pCameraCtrl,Update(fElapsed));
 
 		m_pGuiMgr->Update(fElapsed);
