@@ -6,6 +6,8 @@
 #include "Property.h"
 #include "KylinRoot.h"
 #include "DataLoader.h"
+#include "rOgreRoot.h"
+#include "ScriptVM.h"
 
 
 Kylin::Entity* Kylin::KylinHelper::SpawnCharactor( KUINT uGid, ClassID uCid )
@@ -46,18 +48,22 @@ Kylin::Entity* Kylin::KylinHelper::SpawnCharactor( KUINT uGid, ClassID uCid )
 		Ogre::MaterialManager::getSingletonPtr()->parseScript(stream,"General");
 	}
 	//////////////////////////////////////////////////////////////////////////
+	
+	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile("./Data/script/charactor/char_1.lua");
 
+	//////////////////////////////////////////////////////////////////////////
 	PropertySet kProp;
 	kProp.SetValue("$CLASS_ID",(KUINT)uCid);
 	kProp.SetValue("$Mesh",sName);
 	kProp.SetValue("$Materials",sMaterials);
+	kProp.SetValue("$GID",uGid);
 
 	//kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
 	//kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
 	//kProp.SetValue("$COLLISION",false);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
-
+	//////////////////////////////////////////////////////////////////////////
 
 	return pEnt;
 }

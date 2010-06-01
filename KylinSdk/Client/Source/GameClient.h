@@ -8,7 +8,7 @@ namespace Kylin
 	{
 	public:
 		
-		virtual KVOID	Entrance();
+		virtual KVOID	Entrance(KCHAR *argv);
 		virtual KVOID 	DataTableLoading();
 
 	protected:

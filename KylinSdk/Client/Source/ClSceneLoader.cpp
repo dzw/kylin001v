@@ -27,8 +27,12 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	KUINT uGid;
 	if (!kProp.GetUIntValue("$PlayerID",uGid))
 	{
-		assert(!"无法获得角色ID");
+#ifdef _DEBUG
+		uGid = 1;
+#else
+		assert(!"无法获得角色ID"); // log to file
 		return false;
+#endif
 	}
 	
 	// 创建角色
