@@ -189,15 +189,10 @@ KBOOL Kylin::OgreRoot::IsOpenConsole()
 	return false;
 }
 
-KSTR Kylin::OgreRoot::GetRootMedia()
-{
-	return "./Media";
-}
-
 KVOID Kylin::OgreRoot::LoadResource( KSTR sRes )
 {
 	Ogre::ResourceGroupManager::getSingleton().addResourceLocation(
-		GetRootMedia() + sRes, "FileSystem", "General");
+		sRes, "FileSystem", "General");
 }
 
 Ogre::RenderWindow* Kylin::OgreRoot::GetMainWindow()
