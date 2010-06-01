@@ -228,11 +228,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\rCollisionMonitor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\RegisterClass.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\RemoteEvents.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rMotionSimulator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rPhyXSystem.cpp"
 				>
 			</File>
 			<File
@@ -326,11 +338,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\rCollisionMonitor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\RegisterClass.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\RemoteEvents.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rMotionSimulator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rPhyXSystem.h"
 				>
 			</File>
 			<File
