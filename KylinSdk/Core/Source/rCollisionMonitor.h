@@ -63,7 +63,7 @@ namespace Kylin
 				
 				KFLOAT		m_fRadius;
 				KFLOAT		m_fHeight;
-				
+
 				friend class CollisionMonitor;
 			};
 

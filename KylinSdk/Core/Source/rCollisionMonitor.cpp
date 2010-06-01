@@ -41,19 +41,30 @@ KVOID Kylin::PhyX::CollisionMonitor::Commit( CollisionData* pData )
 
 KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFLOAT fRadius )
 {
-	
 	KPoint3 kSrc(kPos.x,kPos.y + fRadius,kPos.z);	
 	Ogre::Ray kRay(kSrc,kDir);
-
+	
+	// 检测该射线是否与地面相交
 	KPoint3 kRet;
 	if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kRet))
 	{
-		if (kRet.squaredDistance(kPos) <= fRadius*fRadius)
+		//if (kRet.squaredDistance(kPos) <= fRadius*fRadius)
 		{
-			kPos = kRet - kPos;
+			kPos -= kRet;
 			KFLOAT fDeg = kPos.angleBetween(KPoint3::UNIT_Y).valueDegrees();
-
-			if (fDeg < 50)
+			// 如果(p2->p1)与(p2->p0)的倾斜角度小于40，认为无法行走
+			// 
+			// p1<-------+p0
+			//    \       |
+			//	   \	  |
+			//      \     |
+			//		 \	  |
+			//		  \   |
+			//		   \  |
+			//			\ |
+			//			 \|
+			//			  + p2
+			if (fDeg < 40)
 				return false;
 		}
 	}

@@ -6,10 +6,15 @@ namespace Script
 {
 //tolua_begin
 	
-	void lua_break(const char * sDebugInfo);
-
-	extern void lua_test(int i);
+	extern void lua_break(const char * sDebugInfo);
 	
+	// 设置Entity动画
+	extern void set_next_anim(unsigned int uEntID, const char* sAnim, float fTimes);
+	// 设置Entity特效
+	extern void set_effect( unsigned int uEntID, unsigned int uEffectID);
+	// 设置全局特效
+	extern void set_global_effect( unsigned int uEffectID );
+
 //tolua_end
 };
 

@@ -5,6 +5,8 @@
 #include "rOgreUtils.h"
 #include "Entity.h"
 #include "rOgreRoot.h"
+#include "rPhyxSystem.h"
+#include "rCollisionMonitor.h"
 
 
 KVOID Kylin::PhyX::MotionDummy::Touchdown()
@@ -14,7 +16,7 @@ KVOID Kylin::PhyX::MotionDummy::Touchdown()
 
 KBOOL Kylin::PhyX::MotionDummy::IsImmobile()
 {
-	return m_kSpeed == KPoint3::ZERO && m_kPreSpeed == KPoint3::ZERO;
+	return m_kSpeed == KPoint3::ZERO && m_kPreSpeed == KPoint3::ZERO && !m_bIsInAir;
 }
 
 #include "ScriptVM.h"
@@ -24,10 +26,10 @@ KVOID Kylin::PhyX::MotionDummy::Repose()
 	// test code
 	KUINT uGID = -1;
 	Kylin::Entity* pEnt = static_cast<Kylin::Entity*>(m_pHost);
-	if ( pEnt->GetPropertyRef().GetUIntValue("$PlayerID",uGID) )
+	if ( pEnt->GetPropertyRef().GetUIntValue("$GID",uGID) )
 	{
 		KSTR sModule = "char_";
-		sModule += uGID;
+		sModule += Ogre::StringConverter::toString(uGID);
 
 		KVEC<KCCHAR *> kModules;
 		kModules.push_back(sModule.data());
@@ -114,35 +116,50 @@ KVOID Kylin::PhyX::MotionSimulator::SetGravity( KFLOAT fG )
 
 KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFLOAT fElapsed )
 {
-	if (pDummy->m_kSpeed == KPoint3::ZERO)
+	if (pDummy->m_kSpeed == KPoint3::ZERO && !pDummy->m_bIsInAir)
 	{
 		pDummy->m_kPreSpeed = KPoint3::ZERO;
 		pDummy->Repose();
 		return;
 	}
+
 	// 计算位置
  	KPoint3 kOffset = pDummy->m_kSpeed * fElapsed;
  	kOffset -= m_fGravity * KPoint3::UNIT_Y * fElapsed;
  	pDummy->m_kSpeed -= m_fGravity * KPoint3::UNIT_Y * fElapsed;
-	// 设置位置
+
+	//---------------------------------------------------------------
+	// 设置位置，保存老位置
+	KPoint3 kOldPos		= pDummy->m_pHost->GetTranslate();
  	pDummy->m_pHost->GetSceneNode()->translate(kOffset,Ogre::Node::TS_LOCAL);
+	KPoint3 kCurrPos	= pDummy->m_pHost->GetTranslate();
 	
-	KPoint3 kCurrPos		= pDummy->m_pHost->GetTranslate();
-	KFLOAT	fInAirHeight	= pDummy->m_pHost->GetTranslate().y;
-	//-------------------------------------------
+	//---------------------------------------------------------------
+	// 获得实体大小
+	KFLOAT r	= OgreUtils::GetEntitySize(pDummy->m_pHost->GetEntityPtr(),pDummy->m_pHost->GetScale()).y * KHALF;
+	KPoint3 dir = pDummy->m_pHost->GetRotation() * Ogre::Vector3::UNIT_Z;
+
+	// 计算场景碰撞
+	if (!PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->QueryScene(kCurrPos,dir,r))
+	{	// 若碰到障碍设置成原位置
+		pDummy->m_kSpeed = KPoint3::ZERO;
+		pDummy->m_pHost->SetTranslate(kOldPos);
+	}
+
+	KFLOAT	fInAirHeight = kCurrPos.y;
+	//---------------------------------------------------------------
 	// 获得地面高度
 	kCurrPos.y = 50000.0f;
 	if (KylinRoot::GetSingletonPtr()->HitTest(kCurrPos,KPoint3(KPoint3::NEGATIVE_UNIT_Y),kCurrPos))
 	{
-		Ogre::Real r = OgreUtils::GetEntitySize(pDummy->m_pHost->GetEntityPtr(),pDummy->m_pHost->GetScale()).y * KHALF;
-		kCurrPos.y += r - KHALF;
+		//kCurrPos.y += r - KHALF;
 	}
 
 	// 跳跃下落状态
 	if (pDummy->m_kSpeed.y < 0)
 	{
 		if( kCurrPos.y >= fInAirHeight )
-		{ //已经落地了
+		{ //已经落地
 			pDummy->m_pHost->SetTranslate(kCurrPos);
 			pDummy->Touchdown();
 		}
@@ -162,7 +179,7 @@ KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFL
 		pDummy->m_bIsInAir = true;
 	}
 	
-	//-------------------------------------------
+	//---------------------------------------------------------------
 	if (!pDummy->m_bIsInAir)
 	{	// 保存上一帧数据
 		pDummy->m_kPreSpeed = pDummy->m_kSpeed;

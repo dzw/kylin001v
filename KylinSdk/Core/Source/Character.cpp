@@ -4,10 +4,11 @@
 #include "RemoteEvents.h"
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
+#include "ScriptVM.h"
 
 #include "CollisionWrapper.h"
 #include "ActionDispatcher.h"
-
+#include "rOgreUtils.h"
 
 #define CH_HEIGHT 1.0f;
 
@@ -215,6 +216,22 @@ KBOOL Kylin::Character::Init( const PropertySet& kProp )
 	return true;
 }
 
+
+KVOID Kylin::Character::PostSpawn()
+{
+	Entity::PostSpawn();
+
+	//////////////////////////////////////////////////////////////////////////
+	KSTR sModule = "char_";
+	sModule += "1"; // add gid
+
+	KVEC<KCCHAR *> kModules;
+	kModules.push_back(sModule.data());
+
+	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_spawn",true,"i",this->GetID());
+
+}
+
 KVOID Kylin::Character::SetActionFactory( ActionFactory* pActFactory )
 {
 	assert(pActFactory);
@@ -240,7 +257,7 @@ KVOID Kylin::Character::SetTranslateToTerrain( KPoint3 vPos )
 	vPos.y = 50000.0f;
 	if (KylinRoot::GetSingletonPtr()->HitTest(vPos,Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Y),vPos))
 	{
-		Ogre::Real r = m_pOgreNode->_getWorldAABB().getSize().y * KHALF;
+		Ogre::Real r = OgreUtils::GetEntitySize(this->GetEntityPtr(),this->GetScale()).y * KHALF;
 		vPos.y += r - KHALF;
 
 		this->SetTranslate(vPos);

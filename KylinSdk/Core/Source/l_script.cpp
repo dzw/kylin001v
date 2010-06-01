@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 04/08/10 17:19:02.
+** Generated automatically by tolua++-1.0.92 on 05/29/10 16:43:37.
 */
 
 #ifndef __cplusplus
@@ -53,29 +53,33 @@ static int tolua_script_lua_break00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
-/* function: lua_test */
-#ifndef TOLUA_DISABLE_tolua_script_lua_test00
-static int tolua_script_lua_test00(lua_State* tolua_S)
+/* function: set_next_anim */
+#ifndef TOLUA_DISABLE_tolua_script_set_next_anim00
+static int tolua_script_set_next_anim00(lua_State* tolua_S)
 {
 #ifndef TOLUA_RELEASE
  tolua_Error tolua_err;
  if (
      !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,2,&tolua_err)
+     !tolua_isstring(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,4,&tolua_err)
  )
   goto tolua_lerror;
  else
 #endif
  {
-  int i = ((int)  tolua_tonumber(tolua_S,1,0));
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  const char* sAnim = ((const char*)  tolua_tostring(tolua_S,2,0));
+  float fTimes = ((float)  tolua_tonumber(tolua_S,3,0));
   {
-   lua_test(i);
+   set_next_anim(uEntID,sAnim,fTimes);
   }
  }
  return 0;
 #ifndef TOLUA_RELEASE
  tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'lua_test'.",&tolua_err);
+ tolua_error(tolua_S,"#ferror in function 'set_next_anim'.",&tolua_err);
  return 0;
 #endif
 }
@@ -89,7 +93,7 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
  tolua_module(tolua_S,NULL,0);
  tolua_beginmodule(tolua_S,NULL);
   tolua_function(tolua_S,"lua_break",tolua_script_lua_break00);
-  tolua_function(tolua_S,"lua_test",tolua_script_lua_test00);
+  tolua_function(tolua_S,"set_next_anim",tolua_script_set_next_anim00);
  tolua_endmodule(tolua_S);
  return 1;
 }
