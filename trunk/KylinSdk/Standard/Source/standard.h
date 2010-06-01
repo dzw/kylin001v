@@ -23,6 +23,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include <algorithm>
 
 using namespace std;
 
@@ -47,24 +48,25 @@ using namespace std;
 #define KMAP	std::map
 #define KLIST	std::list
 
-typedef int				KINT;
-typedef const int		KCINT;
-typedef unsigned int	KUINT;
-typedef size_t			KUINT64;
-typedef float			KFLOAT;
-typedef const float		KCFLOAT;
-typedef char			KCHAR;
-typedef bool			KBOOL;
-typedef const char		KCCHAR;
-typedef unsigned char	KBYTE;
-typedef unsigned short	KWORD;
-typedef long			KLONG;
-typedef std::string		KSTR;
-typedef void			KVOID;
-typedef double			KDOUBLE;
-typedef unsigned long	KDWORD;
+typedef int					KINT;
+typedef const int			KCINT;
+typedef unsigned int		KUINT;
+typedef size_t				KUINT64;
+typedef float				KFLOAT;
+typedef const float			KCFLOAT;
+typedef char				KCHAR;
+typedef bool				KBOOL;
+typedef const char			KCCHAR;
+typedef unsigned char		KBYTE;
+typedef unsigned short		KWORD;
+typedef long				KLONG;
+typedef std::string			KSTR;
+typedef const std::string	KCSTR;
+typedef void				KVOID;
+typedef double				KDOUBLE;
+typedef unsigned long		KDWORD;
 
-typedef unsigned short int KINT2;
+typedef unsigned short int	KINT2;
 
 //////////////////////////////////////////////////////////////////////////
 namespace Kylin
