@@ -31,7 +31,7 @@ namespace Kylin
 		
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
-		//virtual KVOID UpdateMovement(KFLOAT fElapsed);
+		virtual KVOID PostSpawn();
 		
 		virtual KVOID Destroy();
 
@@ -39,10 +39,6 @@ namespace Kylin
 		// multiple player...
 		KBOOL	IsMyself(){ return true; }
 		
-	protected:
-		//virtual KVOID OnLButtonDown(KINT nX, KINT nY);
-		//virtual KVOID OnRButtonDown(KINT nX, KINT nY);
-
 		// ∂Øª≠¥¶¿Ì
 	protected:
 		//OgreOpcode::CharacterController* mCharacter;

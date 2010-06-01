@@ -108,7 +108,7 @@ KVOID Kylin::LevelController::EV_LVLInit( EventPtr ev )
 	Kylin::Entity * pEntity = KylinRoot::GetSingletonPtr()->GetEntity(id);
 	if(pEntity)
 	{
-		std::vector<KCCHAR *>modules;
+		KVEC<KCCHAR *>modules;
 		modules.push_back("level");
 		modules.push_back(pEntity->GetName());
 		
@@ -120,7 +120,7 @@ KVOID Kylin::LevelController::ExecuteScriptFunc( Entity * pEnt, const EventTempl
 {
 	if(m_levelReg.HasRegisteredEvent(pEnt->GetID(), pTemplate))
 	{
-		std::vector<KCCHAR *>modules;
+		KVEC<KCCHAR *>modules;
 		modules.push_back("level");
 		modules.push_back(pEnt->GetName());
 		va_list vl;
@@ -132,7 +132,7 @@ KVOID Kylin::LevelController::ExecuteScriptFunc( Entity * pEnt, const EventTempl
 
 KVOID Kylin::LevelController::ExecuteScriptFunc( Entity * pEnt, KCCHAR * sScriptName, KCCHAR * sig, ... )
 {
-	std::vector<KCCHAR *>modules;
+	KVEC<KCCHAR *>modules;
 	modules.push_back("level");
 	modules.push_back(pEnt->GetName());
 	va_list vl;
@@ -143,7 +143,7 @@ KVOID Kylin::LevelController::ExecuteScriptFunc( Entity * pEnt, KCCHAR * sScript
 
 KVOID Kylin::LevelController::ExecuteScriptFunc1Param( Entity * pEnt, KCCHAR * sScriptName, KCCHAR * sig ,KINT nParam )
 {
-	std::vector<KCCHAR *>modules;
+	KVEC<KCCHAR *>modules;
 	modules.push_back("level");
 	modules.push_back(pEnt->GetName());
 	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(modules, sScriptName, false, sig, nParam);

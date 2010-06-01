@@ -123,7 +123,13 @@ KVOID Kylin::KylinRoot::DebugHideTerrain( KBOOL bFlag )
 	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
 	{
 		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
-		//pStatus->m_pWorldManager->m_pActiveScene->m_pSceneLoader->getTerrainGroup()->getTerrainIterator()
+		Scene* pScene = pStatus->m_pWorldManager->m_pActiveScene;
+		assert(pScene);
+		Ogre::Terrain* pTerr = pScene->m_pSceneLoader->getTerrainGroup()->getTerrain(0,0); // 默认地图在0，0点
+		if (pTerr)
+		{
+			pTerr->setVisibilityFlags(bFlag);
+		}
 	}
 }
 

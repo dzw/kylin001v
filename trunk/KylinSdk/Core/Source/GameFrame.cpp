@@ -65,6 +65,7 @@ KVOID Kylin::GameFrame::CreateWidgets()
 	if (!PhyX::PhysicalSystem::Initialized())
 		KNEW PhyX::PhysicalSystem();
 	PhyX::PhysicalSystem::GetSingletonPtr()->CreateMotionSimulator();
+	PhyX::PhysicalSystem::GetSingletonPtr()->CreateCollisionMonitor();
 	//////////////////////////////////////////////////////////////////////////
 	if (!KylinRoot::Initialized())
 		KNEW KylinRoot();
