@@ -17,10 +17,12 @@ namespace Kylin
 		
 		KVOID	SetActionFactory(ActionFactory*);
 		ActionDispatcher* GetActionDispatcher();
-	
+		
+		Avatar*	GetAvatar();
+
 	public:
 		// 将位置设置到地面
-		virtual KVOID	SetTranslateToTerrain(KPoint3 vPos);
+		//virtual KVOID	SetTranslateToTerrain(KPoint3 vPos);
 
 	protected:
 		KVOID	EV_Picked(EventPtr spEV);
@@ -41,11 +43,11 @@ namespace Kylin
 		
 		// 动画处理
 	protected:
-		//OgreOpcode::CharacterController* mCharacter;
-		KPoint3 m_kDestination;
-		KFLOAT  m_fDistance;
 		
+		// 装备信息
+		Avatar*				m_pAvatar;
+
 		// 行为派发
-		ActionDispatcher* m_pActDispatcher;
+		ActionDispatcher*	m_pActDispatcher;
 	};
 }

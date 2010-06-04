@@ -1,10 +1,67 @@
 #include "corepch.h"
 #include "Avatar.h"
+#include "Node.h"
+#include "DataItem.h"
+#include "DataLoader.h"
+#include "DataManager.h"
+#include "Character.h"
+#include "FileUtils.h"
+#include "rOgreUtils.h"
 
 
-
-KVOID Kylin::Avatar::Exchange( Node* pNode, KUINT uGID )
+Kylin::Avatar::Avatar(Character* pChar)
+: m_pHost(pChar)
+, m_pLWeapon(NULL)
+, m_pRWeapon(NULL)
 {
+
+}
+
+Kylin::Avatar::~Avatar()
+{
+	DetachWeapon(AP_RWEAPON);
+	DetachWeapon(AP_LWEAPON);
+}
+
+KVOID Kylin::Avatar::Exchange( KUINT uGID )
+{
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
+		return;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的Avatar信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(uGID,dbItem))
+		return;
+
+	DataItem::DataField dbField;
+	dbItem.QueryField("TYPE",dbField);
+	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
+	dbItem.QueryField("MATERIAL",dbField);
+	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+	
+	AvatarPart eType;
+	if (sType == "chest")
+		eType = AP_CHEST;
+	else if (sType == "helmet")
+		eType = AP_HELMET;
+	else if (sType == "shoulders")
+		eType = AP_SHOULDERS;
+	else if (sType == "face")
+		eType = AP_FACE;
+	else if (sType == "gloves")
+		eType = AP_GLOVES;
+	else if (sType == "boots")
+		eType = AP_BOOTS;
+	else
+	{
+		AssertEx(NULL,"装备类型错误！");
+		return;
+	}
+
+	Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
 
 }
 
@@ -43,5 +100,89 @@ FLAG_T:
 	}
 
 FLAG_F:
-	assert(!"装备类型错误或此模型不可以换装！");
+	AssertEx(NULL,"装备类型错误或此模型不可以换装！");
+}
+
+//////////////////////////////////////////////////////////////////////////
+KVOID Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RWEAPON*/ )
+{
+	DetachWeapon(ePart);
+
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
+		return;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的Avatar信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(uGID,dbItem))
+		return;
+
+	DataItem::DataField dbField;
+	dbItem.QueryField("TYPE",dbField);
+	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
+	if (sType != "weapon")
+		return;
+
+	dbItem.QueryField("MESH",dbField);
+	KSTR sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
+	dbItem.QueryField("MATERIAL",dbField);
+	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	// 注： 路径前不可有 "\"
+	if (!FileUtils::IsFileExist(sMesh))
+		return;
+
+	OgreUtils::DynamicLoadMesh(sMesh);
+
+	//////////////////////////////////////////////////////////////////////////
+	KSTR sName = FileUtils::GetFileNameWithSuffix(sMesh);
+
+	PropertySet kProp;
+	kProp.SetValue("$Mesh",sName);
+	kProp.SetValue("$Materials",sMaterials);
+	kProp.SetValue("$GID",uGID);
+	kProp.SetValue("$Shadows",true);
+
+	Node* pWeapon = KNEW Node();
+
+	if ( !pWeapon->Load(kProp) )
+	{
+		SAFE_DEL(pWeapon);
+		return;
+	}
+
+	if (ePart == AP_RWEAPON)
+	{
+		m_pRWeapon = pWeapon;
+		m_pHost->AttachMesh(pWeapon->GetEntityPtr(),"tag_righthand");
+	}
+	else
+	{
+		m_pLWeapon = pWeapon;
+		m_pHost->AttachMesh(pWeapon->GetEntityPtr(),"tag_lefthand");
+	}
+
+	
+}
+
+KVOID Kylin::Avatar::DetachWeapon( AvatarPart ePart )
+{
+	if (ePart == AP_RWEAPON)
+	{
+		if (m_pRWeapon)
+		{
+			m_pHost->DetachMesh(m_pRWeapon->GetEntityPtr());
+			SAFE_DEL(m_pRWeapon);
+		}
+	}
+	else
+	{
+		if (m_pLWeapon)
+		{
+			m_pHost->DetachMesh(m_pLWeapon->GetEntityPtr());
+			SAFE_DEL(m_pLWeapon);
+		}
+	}
 }
