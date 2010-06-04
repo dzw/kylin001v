@@ -7,10 +7,9 @@
 
 
 Kylin::LobbyMenu::LobbyMenu()
+: GuiBase(CLASS_TO(LobbyMenu))
 {
 	initialiseByAttributes(this);
-
-	m_sGuiName = "LobbyMenu";
 }
 
 KBOOL Kylin::LobbyMenu::Initialize()

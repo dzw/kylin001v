@@ -3,7 +3,6 @@
 #include "rOgreRoot.h"
 #include "ClLobby.h"
 #include "DataManager.h"
-#include "KylinHelper.h"
 #include "DataLoader.h"
 #include "CommandLineParser.h"
 #include "KylinRoot.h"
@@ -34,8 +33,6 @@ public:
 
 KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 {
-	if (!KylinHelper::Initialized())
-		KNEW KylinHelper();
 	//////////////////////////////////////////////////////////////////////////
 	// 加载数据表
 	DataTableLoading();
@@ -58,8 +55,6 @@ KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 KVOID Kylin::GameClient::Destroy()
 {
 	GameFrame::Destroy();
-
-	KDEL KylinHelper::GetSingletonPtr();
 }
 
 KVOID Kylin::GameClient::DataTableLoading()
@@ -75,5 +70,8 @@ KVOID Kylin::GameClient::DataTableLoading()
 		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
 	
 	if (DataManager::GetSingletonPtr()->GetGlobalValue("FACTOR_DB",sValue))
+		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
+
+	if (DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
 		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
 }

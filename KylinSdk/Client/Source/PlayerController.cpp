@@ -17,17 +17,27 @@
 Kylin::PlayerController::PlayerController()
 : InputListener()
 , m_pHost(NULL)
+, m_bCanRot(false)
 , m_bMoveForward(true)
 , m_kKeyDirection(KPoint3::ZERO)
 , m_kMousePickPos(KPoint3::ZERO)
 {
+	//-----------------------------------------------------
 	m_pCamera = KNEW GameCamera( OgreRoot::GetSingletonPtr()->GetCamera("$MainCamera"),
 								 OgreRoot::GetSingletonPtr()->GetSceneManager()	);
+	
+	//-----------------------------------------------------
+	// 创建射线交集
+	OgreRoot::GetSingletonPtr()->CreateSceneRay();
 }
 
 
 Kylin::PlayerController::~PlayerController()
 {
+	//-----------------------------------------------------
+	// 销毁射线交集
+	OgreRoot::GetSingletonPtr()->DestroySceneRay();
+	//-----------------------------------------------------
 	m_pCamera->Destroy();
 	SAFE_DEL(m_pCamera);
 }
@@ -97,7 +107,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 
 KVOID Kylin::PlayerController::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
 {
-	if (OgreRoot::GetSingletonPtr()->GetMouseState().buttonDown(OIS::MB_Right))
+	if (OgreRoot::GetSingletonPtr()->GetMouseState().buttonDown(OIS::MB_Left) && m_bCanRot)
 	{
 		m_pCamera->UpdateCameraGoal(-0.05f * fX, -0.05f * fY, -0.0005f * fZ);
 	}
@@ -117,16 +127,8 @@ KVOID Kylin::PlayerController::OnKeyUp( KUINT uKey )
 
 KVOID Kylin::PlayerController::OnKeyDown( KUINT uKey )
 {
-	if (uKey == OIS::KC_1)   // switch  1
-	{
-		//changeCameraDistance(3);
-	}
-	if (uKey == OIS::KC_2)   // switch  1
-	{
-		//changeCameraDistance(-3);
-	}
 	// keep track of the player's intended direction
-	else if (uKey == OIS::KC_W) m_kKeyDirection.z = -1;
+	if (uKey == OIS::KC_W) m_kKeyDirection.z = -1;
 	else if (uKey == OIS::KC_A) m_kKeyDirection.x = -1;
 	else if (uKey == OIS::KC_S) m_kKeyDirection.z = 1;
 	else if (uKey == OIS::KC_D) m_kKeyDirection.x = 1;
@@ -176,6 +178,20 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
 	{
+		Ogre::Entity* pEnt = NULL;
+		if ( OgreRoot::GetSingletonPtr()->PickOgreEntity(kRay,&pEnt, KylinRoot::KR_CHAR_MASK) )
+		{
+			// 如果选中的是自己
+			if (pEnt && pEnt == m_pHost->GetEntityPtr())
+			{	// 可以旋转摄像机
+				m_bCanRot = true;
+				// 改变鼠标
+
+				return;
+			}
+		}
+		
+		//////////////////////////////////////////////////////////////////////////
 		KPoint3 vPos;
 		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
 		{
@@ -194,7 +210,18 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 		{
 			m_kMousePickPos = vPos;
 			m_fDistance = (m_kMousePickPos - m_pHost->GetTranslate()).length();
-			
+			// 超过可视距离不可移动
+			if ( m_fDistance > VISIBLE_DISTANCE )
+			{
+				// 提示声音
+				return;
+			}
+			else
+			{
+				// 在选中位置播放动画
+
+			}
+
 			//////////////////////////////////////////////////////////////////////////
 			// 旋转到拾取的方向
 			KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
@@ -213,5 +240,15 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 				m_pHost->GetSceneNode()->rotate(kQuat);                                                    
 			}
 		}
+	}
+}
+
+KVOID Kylin::PlayerController::OnLButtonUp( KINT nX, KINT nY )
+{
+	if (m_bCanRot)
+	{
+		m_bCanRot = false;
+		// 改变鼠标
+
 	}
 }
