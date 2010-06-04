@@ -11,31 +11,31 @@ namespace Kylin
 		virtual ~OgreRoot();
 		
 		// 获得窗口句柄
-		HWND  GetWindowHandle();
+		HWND					GetWindowHandle();
 		
 		// 获得窗口大小
-		KVOID GetWindowSize(KUINT&,KUINT&);
+		KVOID					GetWindowSize(KUINT&,KUINT&);
 		
 		// 判断是否按下某键
-		KBOOL IsKeyDown(KUINT uKeyCode);
+		KBOOL					IsKeyDown(KUINT uKeyCode);
 		
 		// 是否可以输入
-		KBOOL IsOpenConsole();
+		KBOOL					IsOpenConsole();
 
 		// 是否暂停
-		KBOOL IsPaused();
+		KBOOL					IsPaused();
 		// 暂停
-		KVOID Pause();
+		KVOID					Pause();
 		// 恢复
-		KVOID Resume();
+		KVOID					Resume();
 		// 退出
-		KVOID ShutDown();
+		KVOID					ShutDown();
 		// 截屏
-		KVOID ScreenShot();
+		KVOID					ScreenShot();
 		//获得资源跟目录
-		KSTR GetRootMedia();
+		KSTR					GetRootMedia();
 		//加载资源
-		KVOID LoadResource(KSTR sRes);
+		KVOID					LoadResource(KSTR sRes);
 		//获得脚步指针
 		ScriptVM*			GetScriptVM();
 		// 获得鼠标状态
@@ -66,7 +66,7 @@ namespace Kylin
 		Ogre::TerrainGroup* CreateTerrainGroup(KINT nMapSize, KFLOAT fWorldSize);
 		// 创建场景射线
 		Ogre::RaySceneQuery* CreateSceneRay();
-		//
+		// 销毁场景射线
 		KVOID				DestroySceneRay();
 		// 
 		CameraControl*		CreateCameraControl(Ogre::Camera* pCamera);
@@ -79,6 +79,7 @@ namespace Kylin
 		KVOID UnregOptListener(InputListener* pl);
 
 	protected:
+		// 鼠标射线和场景交集
 		Ogre::RaySceneQuery* m_pRaySceneQuery;
 	};
 }
