@@ -2,7 +2,10 @@
 #include "ClGame.h"
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
+#include "uiShortcutMenu.h"
 #include "uiOptionMenu.h"
+#include "uiCharInfoMenu.h"
+#include "uiKitbagMenu.h"
 #include "CameraControl.h"
 
 
@@ -21,13 +24,16 @@ KBOOL Kylin::ClGame::Initialize()
 		//OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
 		OgreRoot::GetSingletonPtr()->CreateCameraControl(pCam);
 	}
+	
+	//-----------------------------------------------------
+	// ³õÊ¼»¯UI
+	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 
+	//-----------------------------------------------------
 	if (!GSGame::Initialize())
 		return false;
 
-	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 
-	
 	return true;
 }
 
@@ -42,9 +48,21 @@ KVOID Kylin::ClGame::Destroy()
 
 KVOID Kylin::ClGame::UiLoader()
 {
+	Kylin::ShortcutMenu* pShortcut = KNEW Kylin::ShortcutMenu();
+	pShortcut->Initialize();
+
+	Kylin::CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
+	pCharInfo->Initialize();
+
+	KitbagMenu* pKitbag = KNEW KitbagMenu();
+	pKitbag->Initialize();
+
 	Kylin::OptionMenu* pOption = KNEW Kylin::OptionMenu();
 	pOption->Initialize();	
 
 	//////////////////////////////////////////////////////////////////////////
+	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pShortcut);
+	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
+	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);
 }

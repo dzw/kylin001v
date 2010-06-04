@@ -3,7 +3,7 @@
 #include "Factor.h"
 #include "ActionDispatcher.h"
 #include "registerclass.h"
-#include "KylinHelper.h"
+#include "KylinRoot.h"
 
 
 Kylin::ActSkill::ActSkill( ActionDispatcher* pDispatcher )

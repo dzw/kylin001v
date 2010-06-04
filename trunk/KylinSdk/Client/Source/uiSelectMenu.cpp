@@ -20,7 +20,7 @@ KBOOL Kylin::SelectMenu::Initialize()
 {
 	MyGUI::FactoryManager::getInstance().registerFactory<ResourceItemInfo>("Resource");
 
-	MyGUI::Gui::getInstance().load("Resources.xml");
+	MyGUI::Gui::getInstance().load("lobby_imageset.xml");
 	MyGUI::Gui::getInstance().load("ItemBox_skin.xml");
 	
 	mToolTip = KNEW TipMenu();

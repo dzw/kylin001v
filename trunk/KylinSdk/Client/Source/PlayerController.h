@@ -9,6 +9,7 @@
 #define ANIM_FADE_SPEED 7.5f   // animation crossfade speed in % of full weight per second
 #define JUMP_ACCEL 20.0f       // character jump acceleration in upward units per squared second
 #define GRAVITY 90.0f          // gravity in downward units per squared second
+#define VISIBLE_DISTANCE 50
 
 namespace Kylin
 {
@@ -39,6 +40,7 @@ namespace Kylin
 		virtual KVOID	OnKeyUp(KUINT uKey);
 
 		virtual KVOID	OnLButtonDown(KINT nX, KINT nY);
+		virtual KVOID	OnLButtonUp(KINT nX, KINT nY);
 		virtual KVOID	OnRButtonDown(KINT nX, KINT nY);
 		virtual KVOID	OnMouseMove(KFLOAT fX, KFLOAT fY, KFLOAT fZ);
 		
@@ -52,7 +54,9 @@ namespace Kylin
 		
 		KFLOAT		m_fDistance;
 		KBOOL		m_bMoveForward;
-		
+		KBOOL		m_bCanRot;
+
+		// ÉãÏñ»ú
 		GameCamera* m_pCamera;
 	};
 }

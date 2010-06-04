@@ -6,11 +6,11 @@
 #include "CameraControl.h"
 #include "GameStatus.h"
 #include "kylinroot.h"
-#include "KylinHelper.h"
 #include "Character.h"
 #include "ClActionFactory.h"
 #include "PlayerController.h"
 #include "Scene.h"
+#include "uiCharInfoMenu.h"
 
 
 Kylin::ClSceneLoader::ClSceneLoader()
@@ -36,12 +36,9 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	}
 	
 	// 创建角色
-	Kylin::Entity * pMyself = KylinHelper::GetSingletonPtr()->SpawnCharactor(uGid,id_character);
+	Kylin::Entity * pMyself = KylinRoot::GetSingletonPtr()->SpawnCharactor(uGid,id_character);
 	if (pMyself)
 	{
-		//OgreRoot::GetSingletonPtr()->GetCameraController()->SetTarget(pMyself->GetSceneNode());
-		//OgreRoot::GetSingletonPtr()->GetCameraController()->SetMode("ChasePerson");
-
 		Character* pChar = BtDynamicCast(Character,pMyself);
 		SAFE_CALL(pChar,SetActionFactory(KNEW ClActionFactory(pChar->GetActionDispatcher())));
 
@@ -51,7 +48,8 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 		if (kProp.GetValue("$BirthPosition",var))
 		{
 			KPoint3 kPos = boost::any_cast<KPoint3>(var);
-			SAFE_CALL(pChar,SetTranslateToTerrain(kPos));
+			pChar->SetTranslate(kPos);
+			//SAFE_CALL(pChar,SetTranslateToTerrain(kPos));
 		}
 		if (kProp.GetValue("$BirthRotation",var))
 		{
@@ -63,6 +61,9 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 		// 设置角色控制器
 		m_pController = KNEW PlayerController();
 		m_pController->SetTarget(pChar);
+		//-------------------------------------------------
+		CharInfoMenu* pMenu = (CharInfoMenu*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("CharInfoMenu"));
+		pMenu->SetRenderMyself(pMyself->GetEntityPtr());
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
