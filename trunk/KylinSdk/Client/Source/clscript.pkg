@@ -1,0 +1,10 @@
+//////////////////////////////////////////////////////////////////////////
+$#include "cltpch.h"
+$#include "tolua++.h"
+
+$#pragma warning(disable : 4800) //forcing value to bool warning
+
+$cfile "clScriptFunction.h"
+
+
+$using namespace Script;
