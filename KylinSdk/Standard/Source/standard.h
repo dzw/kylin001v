@@ -61,6 +61,7 @@ typedef unsigned char		KBYTE;
 typedef unsigned short		KWORD;
 typedef long				KLONG;
 typedef std::string			KSTR;
+typedef std::wstring		KWSTR;
 typedef const std::string	KCSTR;
 typedef void				KVOID;
 typedef double				KDOUBLE;
@@ -75,3 +76,6 @@ namespace Kylin
 	class CSVFile;
 	class MemoryArchive;
 }
+
+//////////////////////////////////////////////////////////////////////////
+#include "AssertX.h"
