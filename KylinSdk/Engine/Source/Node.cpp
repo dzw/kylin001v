@@ -56,7 +56,7 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		KFLOAT fRenderDisance = -1.0f;
 		if (kProp.GetFloatValue("$RENDER_DISTANCE",fRenderDisance) && fRenderDisance > 0)
 			m_pOgreEntity->setRenderingDistance(fRenderDisance);
-
+		
 		// 设置动画
 		m_pAnimProxy->SetTarget(m_pOgreEntity);
 	}
@@ -154,6 +154,8 @@ KVOID Kylin::Node::Destroy()
 
 	//--------------------------------------------------------
 	SAFE_DEL(m_pAnimProxy);
+	
+	SAFE_CALL(m_pOgreNode,detachAllObjects());
 
 	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
@@ -207,4 +209,24 @@ KVOID Kylin::Node::SetRotation( KQuaternion kQua )
 KQuaternion Kylin::Node::GetRotation()
 {
 	return m_pOgreNode->getOrientation();
+}
+
+KBOOL Kylin::Node::AttachMesh( Ogre::Entity* pEnt, KSTR sBone )
+{
+
+	if (m_pOgreEntity->getSkeleton()->hasBone(sBone))
+	{
+		pEnt->detachFromParent();
+
+		if (m_pOgreEntity->attachObjectToBone(sBone,pEnt))
+			return true;
+	}
+
+	AssertEx(NULL,"骨骼顶点不存在！");
+	return false;
+}
+
+KVOID Kylin::Node::DetachMesh( Ogre::Entity* pEnt )
+{
+	m_pOgreEntity->detachObjectFromBone(pEnt);
 }

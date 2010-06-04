@@ -19,22 +19,13 @@ namespace Kylin
 
 		virtual KVOID Tick(KFLOAT fElapsed);
 		
-// 		Node*	CreateChildNode(KCCHAR* pNodeName);
-// 		KVOID	DestroyChildNode(KCCHAR* pNodeName);
-// 		Node*	QueryChildNode(KCCHAR* pNodeName);
-// 
-// 		KVOID	AttachNode(Node* pNode,KCCHAR* pNodeName = NULL);
-// 		KVOID	DetachNode(Node* pNode);
-// 		KVOID	DetachParentNode();
-// 
+		virtual KBOOL	AttachMesh(Ogre::Entity* pEnt, KSTR sBone);
+		virtual KVOID	DetachMesh(Ogre::Entity* pEnt);
+
 		KVOID	AttachEffect(KSTR sName, KUINT uType = 1, KPoint3 kPos = KPoint3::ZERO);
 		KVOID	DetachAndDestroyEffect(KSTR sName);
 		KVOID	ActivateEffect(KSTR sName, KBOOL bFlag);
-
-// 		KUINT	GetChildrenCount();
-// 		Node*	GetChildByIndex(KUINT uIndex);
-// 		Node*	GetParent();
-// 
+		
  		virtual KVOID SetTranslate(KPoint3 kPos);
  		KPoint3 GetTranslate();
 

@@ -1,6 +1,6 @@
 #include "engpch.h"
 #include "GuiManager.h"
-#include "CursorEx.h"
+#include "uiCursorEx.h"
 #include "uiFrameStats.h"
 #include "uiConsole.h"
 #include "CommandHandler.h"
@@ -37,6 +37,11 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 	m_pGUI = KNEW MyGUI::Gui();
 	m_pGUI->initialise(m_sResource);
 	
+	//////////////////////////////////////////////////////////////////////////
+	MyGUI::LanguageManager::getInstance().loadUserTags("core_theme_black_blue_tag.xml");
+	MyGUI::Gui::getInstance().load("core_skin.xml");
+	
+	MyGUI::Gui::getInstance().load("game_imageset.xml");
 	//////////////////////////////////////////////////////////////////////////
 
 	return true;
