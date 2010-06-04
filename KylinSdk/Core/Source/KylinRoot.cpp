@@ -10,6 +10,11 @@
 #include "Entity.h"
 #include "Zone.h"
 #include "GameStatus.h"
+#include "DataManager.h"
+#include "DataItem.h"
+#include "DataLoader.h"
+#include "FileUtils.h"
+#include "rOgreUtils.h"
 
 
 extern Kylin::AppFrame* g_theApp;
@@ -141,3 +146,49 @@ KVOID Kylin::KylinRoot::DestroyEntity( KUINT uEntID )
 		pStatus->m_pWorldManager->m_pActiveScene->m_pEntityManager->DestroyEntity(uEntID);
 }
 
+//////////////////////////////////////////////////////////////////////////
+Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
+{
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("CHAR_DB",sValue))
+		return NULL;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的角色信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(uGid,dbItem))
+		return false;
+
+	DataItem::DataField dbField;
+	dbItem.QueryField("MESH",dbField);
+	KSTR sModel = boost::any_cast<KSTR>(dbField.m_aValue);
+	dbItem.QueryField("MATERIAL",dbField);
+	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	// 注： 路径前不可有 "\"
+	if (!FileUtils::IsFileExist(sModel))
+		return false;
+
+	OgreUtils::DynamicLoadMesh(sModel);
+	
+	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile("./Data/script/charactor/char_1.lua");
+
+	//////////////////////////////////////////////////////////////////////////
+	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
+
+	PropertySet kProp;
+	kProp.SetValue("$CLASS_ID",(KUINT)uCid);
+	kProp.SetValue("$Mesh",sName);
+	kProp.SetValue("$Materials",sMaterials);
+	kProp.SetValue("$GID",uGid);
+	kProp.SetValue("$Shadows",true);
+	//kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
+	//kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
+	//kProp.SetValue("$COLLISION",false);
+
+	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
+	//////////////////////////////////////////////////////////////////////////
+
+	return pEnt;
+}

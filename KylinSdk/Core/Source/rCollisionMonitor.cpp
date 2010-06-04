@@ -50,7 +50,7 @@ KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFL
 	{
 		//if (kRet.squaredDistance(kPos) <= fRadius*fRadius)
 		{
-			kPos -= kRet;
+			kPos = kRet - kPos;
 			KFLOAT fDeg = kPos.angleBetween(KPoint3::UNIT_Y).valueDegrees();
 			// 如果(p2->p1)与(p2->p0)的倾斜角度小于40，认为无法行走
 			// 

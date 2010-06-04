@@ -5,6 +5,8 @@
 #include "KylinRoot.h"
 #include "Entity.h"
 #include "AnimationProxy.h"
+#include "Character.h"
+#include "Avatar.h"
 
 
 namespace Script
@@ -35,5 +37,27 @@ namespace Script
 	extern void set_global_effect( unsigned int uEffectID )
 	{
 		int i = 0;
+	}
+
+	extern void bind_weapon( unsigned int uEntID, unsigned int uWeaponID , const char* sNode )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::Character,pEnt))
+		{
+			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
+			pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_LWEAPON : Kylin::Avatar::AP_RWEAPON);
+		}
+	}
+
+	extern void exchange_avatar( unsigned int uEntID, unsigned int uAvatarID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::Character,pEnt))
+		{
+			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
+			pChar->GetAvatar()->Exchange(uAvatarID);
+		}
 	}
 }

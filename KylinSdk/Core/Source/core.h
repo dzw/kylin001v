@@ -29,6 +29,8 @@ namespace Kylin
 	class Action;
 	class ActionDispatcher;
 	class ActionFactory;
+
+	class Avatar;
 }
 
 class EventTemplate;
