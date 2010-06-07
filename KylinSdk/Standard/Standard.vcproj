@@ -157,6 +157,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\AssertX.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\CCRC32.cpp"
 				>
 			</File>
@@ -208,6 +212,10 @@
 			>
 			<File
 				RelativePath=".\Source\Archive.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\AssertX.h"
 				>
 			</File>
 			<File
