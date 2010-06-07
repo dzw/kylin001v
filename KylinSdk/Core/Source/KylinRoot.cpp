@@ -15,9 +15,17 @@
 #include "DataLoader.h"
 #include "FileUtils.h"
 #include "rOgreUtils.h"
+#include "GameCamera.h"
 
 
 extern Kylin::AppFrame* g_theApp;
+
+
+Kylin::KylinRoot::KylinRoot()
+: m_pCamera(NULL)
+{
+
+}
 
 Kylin::Entity * Kylin::KylinRoot::GetEntity( KUINT uID )
 {
@@ -191,4 +199,14 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 	//////////////////////////////////////////////////////////////////////////
 
 	return pEnt;
+}
+
+KVOID Kylin::KylinRoot::SetActiveCamera( GameCamera* pCam )
+{
+	m_pCamera = pCam;
+}
+
+Kylin::GameCamera* Kylin::KylinRoot::GetActiveCamera()
+{
+	return m_pCamera;
 }
