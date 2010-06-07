@@ -30,6 +30,8 @@ namespace Kylin
 	class ActionDispatcher;
 	class ActionFactory;
 
+	class EffectDecal;
+
 	class Avatar;
 }
 

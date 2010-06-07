@@ -9,24 +9,20 @@
 Kylin::ActionDispatcher::ActionDispatcher( KUINT uHostID )
 : m_uHostID(uHostID)
 , m_pActionFactory(NULL)
+, m_bBusy(false)
 {
 
 }
 
 
-Kylin::Action* Kylin::ActionDispatcher::SpawnAction( KUINT uGID ,const KPoint3& kPos)
+Kylin::Action* Kylin::ActionDispatcher::SpawnAction( KUINT uGID)
 {
 	assert(m_pActionFactory);
 	Action* pAct = GetActionPtr(uGID);
 	if (!pAct)
 	{
 		pAct = m_pActionFactory->Generate(uGID);
-	}
-	
-	if (pAct)
-	{
-		Factor* pFactor = pAct->SpawnFactor();
-		SAFE_CALL(pFactor,SetTranslate(kPos));
+		m_kActionList.push_back(pAct);
 	}
 	
 	return pAct;
@@ -100,4 +96,18 @@ KVOID Kylin::ActionDispatcher::SetFactory( ActionFactory* pFactory )
 {
 	assert(pFactory);
 	m_pActionFactory = pFactory;
+}
+
+Kylin::Action* Kylin::ActionDispatcher::Fire( KUINT uGID,const KPoint3& kPos )
+{
+	Action* pAct = GetActionPtr(uGID);
+	if (pAct)
+	{
+		Factor* pFactor = pAct->SpawnFactor();
+		SAFE_CALL(pFactor,SetTranslate(kPos));
+		//-----------------------------------------------------------
+
+	}
+
+	return pAct;
 }
