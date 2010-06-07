@@ -9,27 +9,6 @@
 #include "ClGame.h"
 #include "ClLobby.h"
 
-// 根据命令行参数处理流程
-class GameCmdLineParam : public ICmdLineParam
-{
-public:
-	virtual KBOOL Parse(KSTR argument,KSTR value)
-	{
-		if (argument == "m")
-		{
-			if (value == "0")
-			{
-				Kylin::KylinRoot::GetSingletonPtr()->GetGameFramePtr()->SwitchStatus(KNEW Kylin::ClGame());
-				return false;
-			}
-		}
-		
-		Kylin::KylinRoot::GetSingletonPtr()->GetGameFramePtr()->SwitchStatus(KNEW Kylin::ClLobby());
-		return false;
-	}
-
-	virtual KSTR GetError() { return ""; }
-};
 
 KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 {
@@ -38,18 +17,10 @@ KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 	DataTableLoading();
 	//////////////////////////////////////////////////////////////////////////
 	// 命令行解析
-	CCommandLineParser kParser;
-	GameCmdLineParam* pCmd = KNEW GameCmdLineParam(); 
-	kParser.PutValueCommand("m",pCmd);
-	kParser.SetDefaultCommand(pCmd);
-	kParser.SetErrorCommand(pCmd);
-	kParser.ParseArguments(argv);
-	
-	KDEL pCmd;
-	pCmd = NULL;
-
-// 	if (!bRet)
-// 		SwitchStatus(KNEW ClLobby());
+	if (strcmp(argv,"-m 0") == 0)
+		SwitchStatus(KNEW ClGame());
+	else
+ 		SwitchStatus(KNEW ClLobby());
 }
 
 KVOID Kylin::GameClient::Destroy()
@@ -74,4 +45,12 @@ KVOID Kylin::GameClient::DataTableLoading()
 
 	if (DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
 		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
+}
+
+extern int tolua_clscript_open(lua_State* tolua_S);
+KVOID Kylin::GameClient::OpenScriptBinding( lua_State *L )
+{
+	GameFrame::OpenScriptBinding(L);
+
+	tolua_clscript_open(L);
 }

@@ -4,6 +4,8 @@
 #include "ActionDispatcher.h"
 #include "registerclass.h"
 #include "KylinRoot.h"
+#include "Entity.h"
+#include "AnimationProxy.h"
 
 
 Kylin::ActSkill::ActSkill( ActionDispatcher* pDispatcher )
@@ -37,6 +39,19 @@ KVOID Kylin::ActSkill::Destroy()
 
 Kylin::Factor* Kylin::ActSkill::SpawnFactor()
 {
+	//-----------------------------------------------------
+	// ²¥·Å½ÇÉ«¶¯»­
+	KSTR sAnim;
+	if (m_kProperty.GetStrValue("$Animation",sAnim))
+	{
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostID());
+		if (pEnt)
+		{
+			pEnt->GetAnimationProxy()->Play(sAnim);
+		}
+	}
+	
+	//-----------------------------------------------------
 	KUINT uFactorGId = 0;
 	if (!m_kProperty.GetUIntValue("$FactorID",uFactorGId))
 		return NULL;

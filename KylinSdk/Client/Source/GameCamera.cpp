@@ -2,7 +2,7 @@
 #include "GameCamera.h"
 
 #define CAMERA_DIS 10.0f
-#define MAX_CAM_DIS 50
+#define MAX_CAM_DIS 35
 #define MIN_CAM_DIS 10
 
 Kylin::GameCamera::GameCamera( Ogre::Camera* pCam,Ogre::SceneManager* pSceneMgr )

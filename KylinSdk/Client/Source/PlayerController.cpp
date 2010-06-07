@@ -11,7 +11,7 @@
 #include "rPhyXSystem.h"
 #include "rMotionSimulator.h"
 #include "ScriptVM.h"
-
+#include "EffectDecal.h"
 
 
 Kylin::PlayerController::PlayerController()
@@ -21,11 +21,16 @@ Kylin::PlayerController::PlayerController()
 , m_bMoveForward(true)
 , m_kKeyDirection(KPoint3::ZERO)
 , m_kMousePickPos(KPoint3::ZERO)
+, m_pGuideEffect(NULL)
 {
 	//-----------------------------------------------------
 	m_pCamera = KNEW GameCamera( OgreRoot::GetSingletonPtr()->GetCamera("$MainCamera"),
 								 OgreRoot::GetSingletonPtr()->GetSceneManager()	);
-	
+
+	//-----------------------------------------------------
+	// 贴花特效
+	m_pGuideEffect = KNEW EffectDecal( OgreRoot::GetSingletonPtr()->GetSceneManager(),
+		"Game/ReachAble",1 );
 	//-----------------------------------------------------
 	// 创建射线交集
 	OgreRoot::GetSingletonPtr()->CreateSceneRay();
@@ -38,6 +43,7 @@ Kylin::PlayerController::~PlayerController()
 	// 销毁射线交集
 	OgreRoot::GetSingletonPtr()->DestroySceneRay();
 	//-----------------------------------------------------
+	SAFE_DEL(m_pGuideEffect);
 	m_pCamera->Destroy();
 	SAFE_DEL(m_pCamera);
 }
@@ -99,6 +105,9 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		}
 		else 
 		{
+			if (m_fDistance < 5 && m_pGuideEffect->IsVisible())
+				m_pGuideEffect->SetVisible(false);
+
 			// move in current body direction (not the goal direction)
 			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, 0, RUN_SPEED));
 		}
@@ -107,9 +116,9 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 
 KVOID Kylin::PlayerController::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
 {
-	if (OgreRoot::GetSingletonPtr()->GetMouseState().buttonDown(OIS::MB_Left) && m_bCanRot)
+	if (OgreRoot::GetSingletonPtr()->GetMouseState().buttonDown(OIS::MB_Right))
 	{
-		m_pCamera->UpdateCameraGoal(-0.05f * fX, -0.05f * fY, -0.0005f * fZ);
+		m_pCamera->UpdateCameraGoal(-0.5f * fX, -0.5f * fY, -0.0005f * fZ);
 	}
 	else
 		m_pCamera->UpdateCameraGoal(0, 0, -0.0005f * fZ);
@@ -151,6 +160,9 @@ KVOID Kylin::PlayerController::OnKeyDown( KUINT uKey )
 
 			OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_walk",true,"i",m_pHost->GetID());
 		}
+		//-----------------------------------------------------------
+		m_kMousePickPos = KPoint3::ZERO;
+		m_pGuideEffect->SetVisible(false);
 	}
 }
 
@@ -175,33 +187,31 @@ KBOOL Kylin::PlayerController::IsMove()
 
 KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 {
-	Ogre::Ray kRay;
-	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
-	{
-		Ogre::Entity* pEnt = NULL;
-		if ( OgreRoot::GetSingletonPtr()->PickOgreEntity(kRay,&pEnt, KylinRoot::KR_CHAR_MASK) )
-		{
-			// 如果选中的是自己
-			if (pEnt && pEnt == m_pHost->GetEntityPtr())
-			{	// 可以旋转摄像机
-				m_bCanRot = true;
-				// 改变鼠标
+// 	Ogre::Ray kRay;
+// 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
+// 	{
+// 		Ogre::Entity* pEnt = NULL;
+// 		if ( OgreRoot::GetSingletonPtr()->PickOgreEntity(kRay,&pEnt, KylinRoot::KR_CHAR_MASK) )
+// 		{
+// 			// 如果选中的是自己
+// 			if (pEnt && pEnt == m_pHost->GetEntityPtr())
+// 			{	// 可以旋转摄像机
+// 				m_bCanRot = true;
+// 				// 改变鼠标
+// 
+// 				return;
+// 			}
+// 		}
+// 		
+// 		//////////////////////////////////////////////////////////////////////////
+// 		KPoint3 vPos;
+// 		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
+// 		{
+// 			SAFE_CALL(m_pHost->GetActionDispatcher(),SpawnAction(1,vPos));
+// 		}
+// 	}
 
-				return;
-			}
-		}
-		
-		//////////////////////////////////////////////////////////////////////////
-		KPoint3 vPos;
-		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
-		{
-			SAFE_CALL(m_pHost->GetActionDispatcher(),SpawnAction(1,vPos));
-		}
-	}
-}
-
-KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
-{
+	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
 	{
@@ -219,7 +229,21 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 			else
 			{
 				// 在选中位置播放动画
+				m_pGuideEffect->MoveTo(vPos);
+				m_pGuideEffect->SetVisible(true);
+				
+				// 播放角色动画
+				KUINT uGID = -1;
+				if ( m_pHost->GetPropertyRef().GetUIntValue("$GID",uGID) )
+				{
+					KSTR sModule = "char_";
+					sModule += Ogre::StringConverter::toString(uGID);
 
+					KVEC<KCCHAR *> kModules;
+					kModules.push_back(sModule.data());
+
+					OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_walk",true,"i",m_pHost->GetID());
+				}
 			}
 
 			//////////////////////////////////////////////////////////////////////////
@@ -230,17 +254,22 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 			kDir.y = 0;
 			kSrc.normalise(); 
 
-			if ((1.0f + kSrc.dotProduct(kDir)) < KZERO)						// Work around 180 degree quaternion rotation quirk                         
-			{                                                                           
-				m_pHost->GetSceneNode()->yaw(Ogre::Degree(180));                                                
-			}                                                                           
-			else                                                                        
+// 			if ((1.0f + kSrc.dotProduct(kDir)) < KZERO)						// Work around 180 degree quaternion rotation quirk                         
+// 			{                                                                           
+// 				m_pHost->GetSceneNode()->yaw(Ogre::Degree(180));                                                
+// 			}                                                                           
+// 			else                                                                        
 			{                                                                           
 				Quaternion kQuat = kSrc.getRotationTo(kDir);                        
 				m_pHost->GetSceneNode()->rotate(kQuat);                                                    
 			}
 		}
 	}
+}
+
+KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
+{
+
 }
 
 KVOID Kylin::PlayerController::OnLButtonUp( KINT nX, KINT nY )

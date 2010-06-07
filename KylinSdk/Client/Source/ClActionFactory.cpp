@@ -29,19 +29,23 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 
 	dbItem.QueryField("ANIMATION",dbField);
 	KSTR sAnim = boost::any_cast<KSTR>(dbField.m_aValue);	
-
+	
+	dbItem.QueryField("ICON",dbField);
+	KSTR sIcon = boost::any_cast<KSTR>(dbField.m_aValue);	
 
 	PropertySet kProp;
 	kProp.SetValue("$GID",uGID);
 	kProp.SetValue("$FactorID",uFactor);
+	kProp.SetValue("$Animation",sAnim);
+	kProp.SetValue("$Icon",sIcon);
 	//////////////////////////////////////////////////////////////////////////
 	Action* pAct = NULL;
 	if (sClass == "ActSkill")
 	{
 		pAct = KNEW ActSkill(m_pDispatcher);
-		pAct->Init(kProp);
 	}
-
+	
+	pAct->Init(kProp);
 
 	return pAct;
 }

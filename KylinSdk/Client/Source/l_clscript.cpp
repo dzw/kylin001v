@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 06/04/10 09:31:45.
+** Generated automatically by tolua++-1.0.92 on 06/04/10 16:22:40.
 */
 
 #ifndef __cplusplus
@@ -52,6 +52,36 @@ static int tolua_clscript_ui_reg_char_info00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: to_learn_skill */
+#ifndef TOLUA_DISABLE_tolua_clscript_to_learn_skill00
+static int tolua_clscript_to_learn_skill00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,3,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  unsigned int uActID = ((unsigned int)  tolua_tonumber(tolua_S,2,0));
+  {
+   to_learn_skill(uEntID,uActID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'to_learn_skill'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
 {
@@ -60,6 +90,7 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
  tolua_module(tolua_S,NULL,0);
  tolua_beginmodule(tolua_S,NULL);
   tolua_function(tolua_S,"ui_reg_char_info",tolua_clscript_ui_reg_char_info00);
+  tolua_function(tolua_S,"to_learn_skill",tolua_clscript_to_learn_skill00);
  tolua_endmodule(tolua_S);
  return 1;
 }

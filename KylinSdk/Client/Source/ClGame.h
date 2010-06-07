@@ -10,12 +10,10 @@ namespace Kylin
 	public:
 		ClGame();
 
-		virtual KBOOL Initialize();
-		virtual KVOID Destroy();
+		virtual KBOOL		Initialize();
+		virtual KVOID		Destroy();
 		
-		virtual KVOID UiLoader();
+		virtual KVOID		UiLoader();
 
-	protected:
-		
 	};
 }
