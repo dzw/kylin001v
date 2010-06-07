@@ -10,20 +10,23 @@ namespace Kylin
 		Action(ActionDispatcher* pDispatcher);
 		virtual ~Action();
 
-		virtual KBOOL Init(const PropertySet& kProp);
+		virtual KBOOL	Init(const PropertySet& kProp);
 
-		virtual KVOID Tick(KFLOAT fElapsed);
-		virtual KVOID Destroy();
+		virtual KVOID	Tick(KFLOAT fElapsed);
+		virtual KVOID	Destroy();
 		
-		virtual KBOOL IsComplete();
+		virtual KBOOL	IsComplete();
 		
 		virtual Factor* SpawnFactor();
 		virtual KVOID	RemoveFactor(KUINT uFactorID);
 
-		virtual KUINT GetGID();
+		virtual KUINT	GetGID();
+		
+		virtual KSTR	GetIcon();
+		virtual KSTR	GetExplain();
 
 	protected:
-		virtual KVOID OnTriggered(Factor* pFactor);
+		virtual KVOID	OnTriggered(Factor* pFactor);
 		
 	protected:
 		friend class ActionDispatcher;

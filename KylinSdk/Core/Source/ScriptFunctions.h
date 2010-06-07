@@ -6,6 +6,23 @@ namespace Script
 {
 //tolua_begin
 	
+	//-----------------------------------------------------
+	// ŒÌ…Ë÷√
+	extern void set_fog_color(float r, float g, float b);
+	extern void set_fog_distance(float d);
+	extern void set_fog_intensity(float i);
+	extern void set_fog_near(float n);
+	extern void set_fog_far(float f);
+	extern void set_fog_enable(bool b);
+	
+	//-----------------------------------------------------
+	extern void set_camera_near(float n);
+	extern void set_camera_far(float f);
+	//extern void set_rander_distance(float d);
+	extern void set_visible_distance(float d);
+	extern void set_viewport_back(float r, float g, float b);
+
+	//-----------------------------------------------------
 	extern void lua_break(const char * sDebugInfo);
 	
 	// …Ë÷√Entity∂Øª≠

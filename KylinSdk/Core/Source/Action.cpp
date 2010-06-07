@@ -171,3 +171,18 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 	return pFactor;
 }
 
+KSTR Kylin::Action::GetIcon()
+{
+	KSTR sValue = "";
+	m_kProperty.GetStrValue("$Icon",sValue);
+
+	return sValue;
+}
+
+KSTR Kylin::Action::GetExplain()
+{
+	KSTR sValue = "";
+	//m_kProperty.GetStrValue("$Icon",sValue);
+
+	return sValue;
+}

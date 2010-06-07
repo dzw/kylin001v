@@ -2,6 +2,7 @@
 
 #include ".\scriptfunctions.h"
 #include "ScriptVM.h"
+#include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "Entity.h"
 #include "AnimationProxy.h"
@@ -46,7 +47,7 @@ namespace Script
 		if (BtIsKindOf(Kylin::Character,pEnt))
 		{
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
-			pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_LWEAPON : Kylin::Avatar::AP_RWEAPON);
+			pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
 		}
 	}
 
@@ -59,5 +60,56 @@ namespace Script
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 			pChar->GetAvatar()->Exchange(uAvatarID);
 		}
+	}
+
+	//-----------------------------------------------------
+	extern void set_fog_color( float r, float g, float b )
+	{
+		
+	}
+
+	extern void set_fog_distance( float d )
+	{
+
+	}
+
+	extern void set_fog_intensity( float i )
+	{
+
+	}
+
+	extern void set_fog_near( float n )
+	{
+
+	}
+
+	extern void set_fog_far( float f )
+	{
+
+	}
+
+	extern void set_fog_enable( bool b )
+	{
+		
+	}
+
+	extern void set_camera_near( float n )
+	{
+
+	}
+
+	extern void set_camera_far( float f )
+	{
+
+	}
+
+	extern void set_visible_distance( float d )
+	{
+
+	}
+
+	extern void set_viewport_back( float r, float g, float b )
+	{
+
 	}
 }

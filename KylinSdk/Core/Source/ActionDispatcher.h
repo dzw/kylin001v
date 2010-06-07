@@ -7,8 +7,9 @@ namespace Kylin
 	public:
 		ActionDispatcher(KUINT uHostID);
 		
+		virtual Action* Fire(KUINT uGID,const KPoint3& kPos);
 		virtual KVOID	SetFactory(ActionFactory* pFactory);
-		virtual Action* SpawnAction(KUINT uGID,const KPoint3& kPos);
+		virtual Action* SpawnAction(KUINT uGID);
 
 		virtual KVOID	DestroyAction(Action* pAct);
 		virtual KVOID	DestroyAllAction();
@@ -17,6 +18,7 @@ namespace Kylin
 
 	public:
 		KVOID SetHost(Entity* pEnt);
+		KUINT GetHostID() { return m_uHostID; }
 
 	protected:
 		Action* GetActionPtr(KUINT uGID);
@@ -26,7 +28,12 @@ namespace Kylin
 		ActionList		m_kActionList;
 
 		ActionFactory*	m_pActionFactory;
+
+		// host id
 		KUINT			m_uHostID;
+		
+		// ÊÇ·ñ·±Ã¦
+		KBOOL			m_bBusy;
 	};
 }
 
