@@ -11,14 +11,15 @@ namespace Kylin
 	class KylinRoot : public Singleton<KylinRoot>
 	{
 	public:
-		enum ENTITY_TYPE_MASK 
+		KylinRoot();
+
+		enum ENTITY_QUERY_MASK 
 		{ 
-			KR_NO_MASK = 1,
-			KR_MONSTER_MASK = 1<<1, 
+			KR_NO_MASK = 0,
+			KR_SCENE_OBJ = 1,
+			KR_NPC_MASK = 1<<1, 
 			KR_ITEM_MASK = 1<<2, 
-			KR_NPC_MASK = 1<<3, 
-			KR_PLAYER_MASK = 1<<4,
-			KR_CHAR_MASK = 1<<5,
+			KR_PLAYER_MASK = 1<<3, 
 			KR_MASK_COUNT 
 		}; 
 
@@ -52,7 +53,10 @@ namespace Kylin
 		// 获得当前状态
 		GameStatus*	GetCurrentGameStatus();
 		//
+		KVOID		SetActiveCamera(GameCamera* pCam);
+		GameCamera* GetActiveCamera();
 
 	protected:
+		GameCamera* m_pCamera;
 	};
 }
