@@ -226,7 +226,7 @@ Ogre::RaySceneQuery* Kylin::OgreRoot::CreateSceneRay()
 {
 	if (!m_pRaySceneQuery)
 		m_pRaySceneQuery = OgreRoot::GetSingletonPtr()->GetSceneManager()->createRayQuery(Ogre::Ray());
-
+	
 	return m_pRaySceneQuery;
 }
 
@@ -279,4 +279,9 @@ KBOOL Kylin::OgreRoot::PickOgreEntity( Ogre::Ray &rRay, Ogre::Entity **ppResult,
 	}
 	
 	return false;
+}
+
+Ogre::RaySceneQuery* Kylin::OgreRoot::GetSceneRay()
+{
+	return m_pRaySceneQuery;
 }

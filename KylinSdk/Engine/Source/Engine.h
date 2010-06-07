@@ -40,12 +40,12 @@ namespace Kylin
 	class AnimationProxy;
 	
 	class SkyXWapper;
-	
+		
 	class EffectObject;
 	class EffectParticle;
 	class EffectCompositor;
 	class EffectManager;
-
+	
 	extern AppFrame* g_theApp;
 }
 
