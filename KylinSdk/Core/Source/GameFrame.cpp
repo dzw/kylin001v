@@ -42,6 +42,8 @@ KVOID Kylin::GameFrame::Destroy()
 
 KVOID Kylin::GameFrame::OnIdle( KFLOAT fElapsed )
 {
+	if (fElapsed > 0.1f) fElapsed = 0.003f;
+
 	AppFrame::OnIdle(fElapsed);
 	
 	SAFE_CALL(PhyX::PhysicalSystem::GetSingletonPtr(),Tick(fElapsed));
@@ -64,6 +66,7 @@ KVOID Kylin::GameFrame::CreateWidgets()
 	//////////////////////////////////////////////////////////////////////////
 	if (!PhyX::PhysicalSystem::Initialized())
 		KNEW PhyX::PhysicalSystem();
+	PhyX::PhysicalSystem::GetSingletonPtr()->CreateCoverMonitor();
 	PhyX::PhysicalSystem::GetSingletonPtr()->CreateMotionSimulator();
 	PhyX::PhysicalSystem::GetSingletonPtr()->CreateCollisionMonitor();
 	//////////////////////////////////////////////////////////////////////////
