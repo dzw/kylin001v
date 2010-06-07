@@ -62,8 +62,6 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 		m_pController = KNEW PlayerController();
 		m_pController->SetTarget(pChar);
 		//-------------------------------------------------
-		CharInfoMenu* pMenu = (CharInfoMenu*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("CharInfoMenu"));
-		pMenu->SetRenderMyself(pMyself->GetEntityPtr());
 	}
 	
 	//////////////////////////////////////////////////////////////////////////

@@ -13,5 +13,6 @@ namespace Kylin
 
 	protected:
 		virtual KVOID	Destroy();
+		virtual KVOID	OpenScriptBinding(lua_State *L);
 	};
 }

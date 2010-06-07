@@ -9,27 +9,28 @@
 
 Kylin::CharInfoMenu::CharInfoMenu()
 : GuiBase(CLASS_TO(CharInfoMenu))
-//, m_pTarget(NULL)
-, m_pMyself(NULL)
-, m_pMainWindow(NULL)
 {
+	initialiseByAttributes(this);
+
 	m_pRenderBox = KNEW wraps::RenderBoxScene();
 }
 
 KBOOL Kylin::CharInfoMenu::Initialize()
 {
 	//////////////////////////////////////////////////////////////////////////
-	const MyGUI::IntSize& size = MyGUI::Gui::getInstance().getViewSize();
-
-	m_pMainWindow = MyGUI::Gui::getInstance().createWidget<MyGUI::Window>("WindowCS", MyGUI::IntCoord(size.width - 300, 100, 280, 350), MyGUI::Align::Default, "Main");
-	m_pMainWindow->setCaption(StringUtils::s2ws("角色信息"));
-	m_pMainWindow->setMinSize(280, 350);
+// 	const MyGUI::IntSize& size = MyGUI::Gui::getInstance().getViewSize();
+// 
+// 	m_pMainWindow = MyGUI::Gui::getInstance().createWidget<MyGUI::Window>("WindowCS", MyGUI::IntCoord(size.width - 300, 100, 280, 350), MyGUI::Align::Default, "Main");
+// 	m_pMainWindow->setCaption(StringUtils::s2ws("角色信息"));
+// 	m_pMainWindow->setMinSize(280, 350);
+// 	m_pMainWindow->setNeedKeyFocus(false);
+// 
+// 	MyGUI::Canvas* canvas2 = m_pMainWindow->createWidget<MyGUI::Canvas>("Canvas", MyGUI::IntCoord(0, 0, m_pMainWindow->getClientCoord().width, m_pMainWindow->getClientCoord().height), MyGUI::Align::Stretch);
+ 	
 	m_pMainWindow->setNeedKeyFocus(false);
-
-	MyGUI::Canvas* canvas2 = m_pMainWindow->createWidget<MyGUI::Canvas>("Canvas", MyGUI::IntCoord(0, 0, m_pMainWindow->getClientCoord().width, m_pMainWindow->getClientCoord().height), MyGUI::Align::Stretch);
-	canvas2->setPointer("hand");
-
-	m_pRenderBox->setCanvas(canvas2);
+	
+	m_pCanvas->setPointer("hand");
+	m_pRenderBox->setCanvas(m_pCanvas);
 	m_pRenderBox->setMouseRotation(true);
 	
 	//-------------------------------------------

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BaseLayout/BaseLayout.h"
 #include "GuiManager.h"
 #include "InputListener.h"
 
@@ -10,8 +11,10 @@ namespace wraps
 
 namespace Kylin
 {
+	ATTRIBUTE_CLASS_LAYOUT(CharInfoMenu, "CharInfo.layout");
 	class CharInfoMenu : public GuiBase
 					   , public InputListener
+					   , public wraps::BaseLayout
 	{
 	public:
 		CharInfoMenu();
@@ -28,9 +31,13 @@ namespace Kylin
 		virtual KVOID OnKeyDown(KUINT uKey);
 
 	protected:
-		wraps::RenderBoxScene*	m_pRenderBox;
+		ATTRIBUTE_FIELD_WIDGET_NAME(CharInfoMenu, m_pMainWindow, "_Main");
 		MyGUI::Window*			m_pMainWindow;
+		ATTRIBUTE_FIELD_WIDGET_NAME(CharInfoMenu, m_pCanvas, "render_box");
+		MyGUI::Canvas*			m_pCanvas;
 
+		wraps::RenderBoxScene*	m_pRenderBox;
+		
 		//Ogre::Entity* m_pTarget;
 		Ogre::Entity* m_pMyself;
 	};

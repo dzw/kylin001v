@@ -46,17 +46,19 @@ namespace Kylin
 		
 	protected:
 		
-		Character*	m_pHost;
+		Character*		m_pHost;
 
-		KPoint3		m_kKeyDirection;      // player's local intended direction based on WASD keys
-		KPoint3		m_kGoalDirection;     // actual intended direction in world-space
-		KPoint3		m_kMousePickPos;
+		KPoint3			m_kKeyDirection;      // player's local intended direction based on WASD keys
+		KPoint3			m_kGoalDirection;     // actual intended direction in world-space
+		KPoint3			m_kMousePickPos;
 		
-		KFLOAT		m_fDistance;
-		KBOOL		m_bMoveForward;
-		KBOOL		m_bCanRot;
-
+		KFLOAT			m_fDistance;
+		KBOOL			m_bMoveForward;
+		KBOOL			m_bCanRot;
+		
+		// 贴花特效
+		EffectDecal*	m_pGuideEffect;
 		// 摄像机
-		GameCamera* m_pCamera;
+		GameCamera*		m_pCamera;
 	};
 }
