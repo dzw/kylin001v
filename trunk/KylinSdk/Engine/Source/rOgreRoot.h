@@ -66,6 +66,7 @@ namespace Kylin
 		Ogre::TerrainGroup* CreateTerrainGroup(KINT nMapSize, KFLOAT fWorldSize);
 		// 创建场景射线
 		Ogre::RaySceneQuery* CreateSceneRay();
+		Ogre::RaySceneQuery* GetSceneRay();
 		// 销毁场景射线
 		KVOID				DestroySceneRay();
 		// 
