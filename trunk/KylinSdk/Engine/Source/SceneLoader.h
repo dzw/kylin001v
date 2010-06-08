@@ -25,10 +25,11 @@ namespace Kylin
 		virtual KVOID Unload(SceneHag* pHag)
 		{
 			SAFE_DEL(m_pSkyWapper);
-			if(m_pTerrainGroup)
-			{
+			if (m_pTerrainGroup)
 				OGRE_DELETE m_pTerrainGroup;
-			}
+
+			// 清空场景管理器
+			OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
 		}
 
 		Ogre::TerrainGroup* getTerrainGroup() { return m_pTerrainGroup; }

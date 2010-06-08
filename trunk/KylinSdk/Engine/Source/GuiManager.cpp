@@ -95,14 +95,14 @@ KVOID Kylin::GuiManager::InitShell(GuiShell* pShell)
 		pShell->UiLoader();
 	
 	//////////////////////////////////////////////////////////////////////////
-	Kylin::DebugFrameStats* pFrameStats = KNEW Kylin::DebugFrameStats();
+	DebugFrameStats* pFrameStats = KNEW DebugFrameStats();
 	pFrameStats->Initialize();	
 
-	Kylin::DebugConsole* pConsole = KNEW Kylin::DebugConsole();
+	DebugConsole* pConsole = KNEW DebugConsole();
 	pConsole->Initialize();
 	pConsole->SetHandler(KNEW CommandHandler());
 
-	Kylin::CursorEx* pCursor = KNEW Kylin::CursorEx();
+	CursorEx* pCursor = KNEW CursorEx();
 	pCursor->Initialize();
 	
 	RegisterGui(pFrameStats);
