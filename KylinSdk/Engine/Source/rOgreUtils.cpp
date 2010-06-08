@@ -43,11 +43,11 @@ KVOID Kylin::OgreUtils::DynamicLoadMesh( KSTR sMesh )
 	//-------------------------------------------------------------------------
 }
 //-----------------------------------------------------------------------------------------
-KBOOL Kylin::OgreUtils::PickEntity( Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, const Ogre::StringVector& excludeobjects, KFLOAT max_distance /*= -1.0f*/ )
+KBOOL Kylin::OgreUtils::PickEntity( Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, KUINT uQueryType /* = 0*/ , KFLOAT max_distance /*= -1.0f*/ )
 {
 	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetSceneRay();
 	mRaySceneQuery->setRay(ray);
-	//mRaySceneQuery->setQueryMask(QUERYFLAG_MOVABLE);
+	mRaySceneQuery->setQueryMask(uQueryType);
 	mRaySceneQuery->setSortByDistance(true);
 
 	KUINT mVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();
@@ -85,19 +85,6 @@ KBOOL Kylin::OgreUtils::PickEntity( Ogre::Ray &ray, Ogre::Entity **result, KPoin
 				continue;
 
 			Ogre::String pname = pentity->getName();
-
-			KBOOL foundinlist = false;
-			for(KUINT lit = 0;lit < excludeobjects.size();lit++)
-			{
-				if(excludeobjects[lit] == pname)
-				{
-					foundinlist = true;
-					break;
-				}
-			}
-
-			if(foundinlist)
-				continue;
 
 			// mesh data to retrieve
 			size_t vertex_count;
@@ -457,4 +444,129 @@ KINT Kylin::OgreUtils::PickSubMesh(Ogre::Ray& ray, Ogre::Entity* pEntity)
 		}
 	}
 	return -1;
+}
+
+KBOOL Kylin::OgreUtils::PickEntities( Ogre::Ray &ray, KVEC<Ogre::Entity *>& result, KUINT uQueryType, KFLOAT max_distance)
+{
+	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetSceneRay();
+	mRaySceneQuery->setRay(ray);
+	mRaySceneQuery->setQueryMask(uQueryType);
+	mRaySceneQuery->setSortByDistance(true);
+
+	KUINT mVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();
+
+	if (mRaySceneQuery->execute().size() <= 0) return (false);
+
+	// at this point we have raycast to a series of different objects bounding boxes.
+	// we need to test these different objects to see which is the first polygon hit.
+	// there are some minor optimizations (distance based) that mean we wont have to
+	// check all of the objects most of the time, but the worst case scenario is that
+	// we need to test every triangle of every object.
+	Ogre::RaySceneQueryResult &query_result = mRaySceneQuery->getLastResults();
+
+	for (size_t qr_idx = 0; qr_idx < query_result.size(); qr_idx++)
+	{
+		if ((max_distance >= 0.0f) && (max_distance < query_result[qr_idx].distance))
+		{
+			break;
+		}
+
+		// only check this result if its a hit against an entity
+		if ((query_result[qr_idx].movable != NULL) && (query_result[qr_idx].movable->getMovableType().compare("Entity") == 0))
+		{
+			// get the entity to check
+			Ogre::Entity *pentity = static_cast<Ogre::Entity*>(query_result[qr_idx].movable);
+
+			if(!(pentity->getVisibilityFlags() & mVisibilityMask))
+				continue;
+
+			if(!pentity->getVisible()) 
+				continue;
+
+			Ogre::String pname = pentity->getName();
+
+			// mesh data to retrieve
+			size_t vertex_count;
+			size_t index_count;
+
+			// get the mesh information
+			GetMeshData(pentity->getMesh(), vertex_count, index_count, 
+				pentity->getParentNode()->_getDerivedPosition(),
+				pentity->getParentNode()->_getDerivedOrientation(),
+				pentity->getParentNode()->_getDerivedScale());
+
+			// test for hitting individual triangles on the mesh
+			KBOOL new_closest_found = false;
+			for (KINT i = 0; i < static_cast<KINT>(index_count); i += 3)
+			{
+				// check for a hit against this triangle
+				std::pair<KBOOL, KFLOAT> hit = Ogre::Math::intersects(ray, mVertexBuffer[mIndexBuffer[i]],
+					mVertexBuffer[mIndexBuffer[i+1]], mVertexBuffer[mIndexBuffer[i+2]], true, false);
+
+				// if it was a hit check if its the closest
+				if (hit.first)
+				{
+					//if ((max_distance < 0.0f) || (hit.second < max_distance))
+					{
+						// this is the closest so far, save it off
+					//	max_distance = hit.second;
+						new_closest_found = true;
+						break;
+					}
+				}
+			}
+
+			// if we found a new closest raycast for this object, update the
+			// closest_result before moving on to the next object.
+			if (new_closest_found)
+			{
+				result.push_back(pentity);
+			}
+		}
+	}
+
+	// return the result
+	if (result.size() > 0)
+	{
+		return true;
+	}
+	else // raycast failed
+	{
+		return false;
+	}
+}
+
+KVOID Kylin::OgreUtils::SetDefaultMaterial( Ogre::Entity* pEnt )
+{
+	SubEntity* pSub = NULL;
+	String sName	= "";
+	for(int i = 0 ; i < pEnt->getNumSubEntities(); i++)
+	{
+		pSub = pEnt->getSubEntity(i);
+		if (pSub)
+		{		
+			sName = pSub->getSubMesh()->getMaterialName();
+			pSub->setMaterialName(sName);
+		}
+	}
+}
+
+KPoint2 Kylin::OgreUtils::Point3To2( KPoint3 kP3, Ogre::Camera* pCam )
+{
+	KPoint2 ret;
+
+	KPoint3 eyeSpacePos = pCam->getViewMatrix(true) * kP3;
+	if (eyeSpacePos.z < 0)
+	{
+		KPoint3 screenSpacePos = pCam->getProjectionMatrix() * eyeSpacePos;
+		ret.x = screenSpacePos.x;
+		ret.y = screenSpacePos.y;
+	}
+	else
+	{
+		ret.x = (-eyeSpacePos.x > 0) ? -1 : 1;
+		ret.y = (-eyeSpacePos.y > 0) ? -1 : 1;
+	}
+
+	return ret;
 }

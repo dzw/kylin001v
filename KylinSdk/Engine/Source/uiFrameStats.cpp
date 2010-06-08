@@ -50,7 +50,7 @@ KVOID Kylin::DebugFrameStats::Render( KFLOAT fElapsed )
 				const Ogre::RenderTarget::FrameStats& stats = OgreRoot::GetSingletonPtr()->GetSystemStats();
 
 				std::ostringstream stream;
-
+				
 				stream << "FPS" << " : " << MyGUI::utility::toString<int>((int)stats.avgFPS);
 				stream << "\n";
 				stream << "Triangle" << " : " << MyGUI::utility::toString<int>((int)stats.triangleCount);

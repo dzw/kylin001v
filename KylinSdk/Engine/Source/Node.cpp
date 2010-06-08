@@ -1,14 +1,17 @@
 #include "engpch.h"
 #include "Node.h"
 #include "rOgreRoot.h"
+#include "rOgreUtils.h"
 #include "AnimationProxy.h"
 #include "EffectManager.h"
+#include "EntityMaterialInstance.h"
 
 
 Kylin::Node::Node()
 : m_pOgreNode(NULL)
 , m_pOgreEntity(NULL)
 , m_pAnimProxy(NULL)
+, m_pTransparency(NULL)
 {
 	m_pAnimProxy = KNEW AnimationProxy();
 }
@@ -30,7 +33,7 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	KSTR sMesh, sMaterials;
 	if (kProp.GetStrValue("$Mesh",sMesh) && !sMesh.empty())
 	{
-		kProp.GetStrValue("$Materials",sMaterials);
+		//kProp.GetStrValue("$Materials",sMaterials);
 		// 加载模型资源
 		if (uID != -1)
 			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(Ogre::StringConverter::toString(uID),sMesh,"General");
@@ -38,8 +41,9 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
 
 		// 设置模型贴图
-		if (!sMaterials.empty())
-			m_pOgreEntity->setMaterialName(sMaterials);
+		OgreUtils::SetDefaultMaterial(m_pOgreEntity);
+		//if (!sMaterials.empty())
+		//	m_pOgreEntity->setMaterialName(sMaterials);
 		
 		if (!m_pOgreNode || !m_pOgreEntity) return false;
 		// 挂接对象
@@ -51,6 +55,12 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 			m_pOgreEntity->setCastShadows(bShadows);
 		else
 			m_pOgreEntity->setCastShadows(false);
+		
+		//--------------------------------------------------------
+		// 透明度
+		if (!m_pTransparency)
+			m_pTransparency = KNEW EntityMaterialInstance (m_pOgreEntity);
+		//--------------------------------------------------------
 
 		// 设置渲染距离
 		KFLOAT fRenderDisance = -1.0f;
@@ -88,7 +98,7 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 
 KVOID Kylin::Node::Unload()
 {
-
+	
 }
 
 KVOID Kylin::Node::Tick( KFLOAT fElapsed )
@@ -148,15 +158,18 @@ Kylin::AnimationProxy* Kylin::Node::GetAnimationProxy()
 
 KVOID Kylin::Node::Destroy()
 {
+	//--------------------------------------------------------
+	SAFE_DEL(m_pTransparency);
+	//--------------------------------------------------------
 	for (KUINT i = 0; i < m_kEffectList.size(); i++)
 		EffectManager::GetSingletonPtr()->DestroyEffect(m_kEffectList[i]->GetName());
 	m_kEffectList.clear();
 
 	//--------------------------------------------------------
 	SAFE_DEL(m_pAnimProxy);
-	
-	SAFE_CALL(m_pOgreNode,detachAllObjects());
 
+	SAFE_CALL(m_pOgreNode,removeAndDestroyAllChildren());
+	//--------------------------------------------------------
 	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
 	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
@@ -229,4 +242,14 @@ KBOOL Kylin::Node::AttachMesh( Ogre::Entity* pEnt, KSTR sBone )
 KVOID Kylin::Node::DetachMesh( Ogre::Entity* pEnt )
 {
 	m_pOgreEntity->detachObjectFromBone(pEnt);
+}
+
+KVOID Kylin::Node::SetTransparency( KFLOAT fAlph )
+{
+	SAFE_CALL(m_pTransparency,setTransparency(fAlph));
+}
+
+KFLOAT Kylin::Node::GetTransparency()
+{
+	return m_pTransparency->getTransparency();
 }

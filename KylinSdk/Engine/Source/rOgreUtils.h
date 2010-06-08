@@ -7,9 +7,15 @@ namespace Kylin
 	{
 	public:
 		static KPoint3	GetEntitySize(Ogre::MovableObject* pObj, KFLOAT fScale = 1.0f);
+		
+		// 设置默认材质
+		static KVOID	SetDefaultMaterial(Ogre::Entity* pEnt);
 
 		// 动态加载模型
 		static KVOID	DynamicLoadMesh(KSTR sMesh);
+		
+		// point3 to point2
+		static KPoint2	Point3To2(KPoint3 kP3, Ogre::Camera* pCam);
 
 		/**
 		* Attempts to pick an entity within scene using ray cast from the mouse
@@ -22,7 +28,8 @@ namespace Kylin
 		* @param excludeobject the name of the object to exclude from hit test
 		* @return true if any entity was intersected with the ray, otherwise false
 		*/
-		static KBOOL PickEntity(Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, const Ogre::StringVector& excludeobjects, KFLOAT max_distance = -1.0f);
+		static KBOOL PickEntity(Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, KUINT uQueryType = 0, KFLOAT max_distance = -1.0f);
+		static KBOOL PickEntities(Ogre::Ray &ray, KVEC<Ogre::Entity *>& result, KUINT uQueryType = 0, KFLOAT max_distance = -1.0f);
 		/**
 		* Fetches information about OGRE-based mesh
 		* @param mesh mesh to retrieve information about

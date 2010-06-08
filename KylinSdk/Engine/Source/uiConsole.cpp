@@ -4,7 +4,8 @@
 
 //////////////////////////////////////////////////////////////////////////
 Kylin::DebugConsole::DebugConsole()
-: m_spContentWidget(NULL)
+: GuiBase(CLASS_TO(DebugConsole))
+, m_spContentWidget(NULL)
 , m_spCmdWidget(NULL)
 , m_pCmdHandler(NULL)
 , m_nCurrIndex(0)
@@ -14,8 +15,6 @@ Kylin::DebugConsole::DebugConsole()
 
 KBOOL Kylin::DebugConsole::Initialize()
 {
-	m_sGuiName = "DebugConsole";
-
 	//////////////////////////////////////////////////////////////////////////
 	//
 	const MyGUI::IntSize& rViewSize = MyGUI::Gui::getInstance().getViewSize();

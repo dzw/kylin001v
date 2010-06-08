@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine.h"
+//#include "Engine.h"
 #include "property.h"
 
 #include "CollisionWrapper.h"
@@ -35,8 +35,8 @@ namespace Kylin
  		KVOID	 SetYaw(KFLOAT fYaw);
  		KMatrix3 GetRotate();
 // 
-// 		virtual KVOID SetTransparency(KFLOAT fAlph);
-// 		KFLOAT	GetTransparency();
+ 		virtual KVOID SetTransparency(KFLOAT fAlph);
+ 		KFLOAT	GetTransparency();
 // 
  		virtual KVOID SetVisible(KBOOL bFlag);
  		KBOOL	GetVisible();
@@ -58,10 +58,12 @@ namespace Kylin
 		AnimationProxy*	 GetAnimationProxy();
 
 	protected:
-		KUINT			 m_uWID;
-		Ogre::SceneNode* m_pOgreNode;
-		Ogre::Entity*	 m_pOgreEntity;
-		AnimationProxy*	 m_pAnimProxy;
+		KUINT				m_uWID;
+		Ogre::SceneNode*	m_pOgreNode;
+		Ogre::Entity*		m_pOgreEntity;
+		AnimationProxy*		m_pAnimProxy;
+		
+		EntityMaterialInstance* m_pTransparency;
 
 		//---------------------------------------
 		KVEC<EffectObject*> m_kEffectList;
