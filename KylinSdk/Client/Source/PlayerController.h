@@ -58,6 +58,11 @@ namespace Kylin
 		
 		// 贴花特效
 		EffectDecal*	m_pGuideEffect;
+		// 选中对象特效
+		EffectDecal*	m_pFocusEffect;
+		// 被选中的entity
+		Ogre::Entity*	m_pFocusEntity;
+
 		// 摄像机
 		GameCamera*		m_pCamera;
 	};

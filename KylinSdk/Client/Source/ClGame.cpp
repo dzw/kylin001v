@@ -6,7 +6,9 @@
 #include "uiOptionMenu.h"
 #include "uiCharInfoMenu.h"
 #include "uiKitbagMenu.h"
+#include "uiConsole.h"
 #include "CameraControl.h"
+#include "UserCommandHandler.h"
 
 
 Kylin::ClGame::ClGame()
@@ -21,7 +23,6 @@ KBOOL Kylin::ClGame::Initialize()
 	if (pCam)
 	{
 		pCam->setNearClipDistance(1.0f);
-		//OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
 		OgreRoot::GetSingletonPtr()->CreateCameraControl(pCam);
 	}
 	
@@ -29,6 +30,9 @@ KBOOL Kylin::ClGame::Initialize()
 	// 初始化UI
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 
+	// 设置控制台命令接口
+	DebugConsole* pConsole = (DebugConsole*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("DebugConsole"));
+	pConsole->SetHandler(KNEW UserCommandHandler());
 	//-----------------------------------------------------
 	if (!GSGame::Initialize())
 		return false;
@@ -65,4 +69,5 @@ KVOID Kylin::ClGame::UiLoader()
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);
+
 }

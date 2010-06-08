@@ -3,6 +3,7 @@
 
 #include "RemoteEvents.h"
 #include "rOgreRoot.h"
+#include "rOgreUtils.h"
 #include "KylinRoot.h"
 
 #include "Character.h"
@@ -22,15 +23,20 @@ Kylin::PlayerController::PlayerController()
 , m_kKeyDirection(KPoint3::ZERO)
 , m_kMousePickPos(KPoint3::ZERO)
 , m_pGuideEffect(NULL)
+, m_pFocusEffect(NULL)
+, m_pFocusEntity(NULL)
 {
 	//-----------------------------------------------------
 	m_pCamera = KNEW GameCamera( OgreRoot::GetSingletonPtr()->GetCamera("$MainCamera"),
 								 OgreRoot::GetSingletonPtr()->GetSceneManager()	);
 
+	KylinRoot::GetSingletonPtr()->SetActiveCamera(m_pCamera);
 	//-----------------------------------------------------
 	// 贴花特效
 	m_pGuideEffect = KNEW EffectDecal( OgreRoot::GetSingletonPtr()->GetSceneManager(),
 		"Game/ReachAble",1 );
+	m_pFocusEffect = KNEW EffectDecal( OgreRoot::GetSingletonPtr()->GetSceneManager(),
+		"Game/UnitSelect",1 );
 	//-----------------------------------------------------
 	// 创建射线交集
 	OgreRoot::GetSingletonPtr()->CreateSceneRay();
@@ -43,6 +49,7 @@ Kylin::PlayerController::~PlayerController()
 	// 销毁射线交集
 	OgreRoot::GetSingletonPtr()->DestroySceneRay();
 	//-----------------------------------------------------
+	SAFE_DEL(m_pFocusEffect);
 	SAFE_DEL(m_pGuideEffect);
 	m_pCamera->Destroy();
 	SAFE_DEL(m_pCamera);
@@ -63,6 +70,9 @@ KVOID Kylin::PlayerController::Tick( KFLOAT fElapsed )
 	UpdateBody(fElapsed);
 
 	m_pCamera->Update(fElapsed);
+
+	if (m_pFocusEntity && m_pFocusEffect->IsVisible())
+		m_pFocusEffect->MoveTo(m_pFocusEntity->getParentSceneNode()->getPosition());
 }
 
 KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
@@ -105,7 +115,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		}
 		else 
 		{
-			if (m_fDistance < 5 && m_pGuideEffect->IsVisible())
+			if (m_fDistance < 3 && m_pGuideEffect->IsVisible())
 				m_pGuideEffect->SetVisible(false);
 
 			// move in current body direction (not the goal direction)
@@ -218,8 +228,7 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 		KPoint3 vPos;
 		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
 		{
-			m_kMousePickPos = vPos;
-			m_fDistance = (m_kMousePickPos - m_pHost->GetTranslate()).length();
+			m_fDistance = (vPos - m_pHost->GetTranslate()).length();
 			// 超过可视距离不可移动
 			if ( m_fDistance > VISIBLE_DISTANCE )
 			{
@@ -228,6 +237,8 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 			}
 			else
 			{
+				m_kMousePickPos = vPos;
+
 				// 在选中位置播放动画
 				m_pGuideEffect->MoveTo(vPos);
 				m_pGuideEffect->SetVisible(true);
@@ -269,7 +280,18 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 
 KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 {
-
+	Ogre::Ray kRay;
+	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
+	{
+		KPoint3 kHit;
+		Ogre::Entity* pEnt = NULL;
+		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+		{
+			m_pFocusEffect->MoveTo(pEnt->getParentSceneNode()->getPosition());
+			m_pFocusEffect->SetVisible(true);
+			m_pFocusEntity = pEnt;
+		}
+	}
 }
 
 KVOID Kylin::PlayerController::OnLButtonUp( KINT nX, KINT nY )
