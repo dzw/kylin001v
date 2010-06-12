@@ -159,6 +159,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\BulletFactor.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClActionFactory.cpp"
 				>
 			</File>
@@ -171,7 +175,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ClRegisterClass.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClSceneLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClScriptFunction.cpp"
 				>
 			</File>
 			<File
@@ -195,15 +207,11 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Source\GameCamera.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\GameClient.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Source\KylinHelper.cpp"
+				RelativePath=".\Source\l_clscript.cpp"
 				>
 			</File>
 			<File
@@ -229,6 +237,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\BulletFactor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClActionFactory.h"
 				>
 			</File>
@@ -241,7 +253,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ClRegisterClass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClSceneLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClScriptFunction.h"
 				>
 			</File>
 			<File
@@ -249,15 +269,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\GameCamera.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\GameClient.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\KylinHelper.h"
 				>
 			</File>
 			<File
@@ -270,6 +282,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\Showgirl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\UserCommandHandler.h"
 				>
 			</File>
 		</Filter>
@@ -291,6 +307,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\uiCharInfoMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiCharInfoMenu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\uiitemboxcontainer.cpp"
 				>
 			</File>
@@ -308,6 +332,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\uiItemMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiKitbagMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiKitbagMenu.h"
 				>
 			</File>
 			<File
@@ -340,6 +372,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\uiSelectMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiShortcutMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiShortcutMenu.h"
 				>
 			</File>
 			<File
