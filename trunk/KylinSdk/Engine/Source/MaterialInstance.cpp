@@ -1,4 +1,6 @@
+#include "engpch.h"
 #include "MaterialInstance.h"
+
 
 MaterialInstance::MaterialInstance () {
 	mCurrentTransparency = 0.0f;

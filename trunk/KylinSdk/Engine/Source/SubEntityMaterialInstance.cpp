@@ -1,3 +1,4 @@
+#include "engpch.h"
 #include "SubEntityMaterialInstance.h"
 
 SubEntityMaterialInstance::SubEntityMaterialInstance (SubEntity *se) : MaterialInstance () {

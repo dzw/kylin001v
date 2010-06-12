@@ -18,6 +18,7 @@ KBOOL Kylin::EffectManager::Initialize()
 // 		CreateCompositors();
 // 	}
 	//KNEW ParticleUniverse::ParticleSystemManager();
+	Ogre::ParticleSystem::setDefaultNonVisibleUpdateTimeout(5);
 
 	Generate("Bloom","",ET_COMPOSITOR);
 	Generate(KNEW EffectFade());
@@ -106,8 +107,10 @@ KVOID Kylin::EffectManager::Render( KFLOAT fElapsed )
 //////////////////////////////////////////////////////////////////////////
 Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate)
 : EffectObject(sName)
+, m_pRoot(NULL)
 , m_sTemplate(sTemplate)
-, m_pSystem(NULL)
+, m_pParticleHandle(NULL)
+//, m_pParticleSystemEx(NULL)
 {
 	m_uType = EffectManager::ET_PARTICLE;
 }
@@ -119,55 +122,87 @@ Kylin::EffectParticle::~EffectParticle()
 
 KBOOL Kylin::EffectParticle::Initialize()
 {
-	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
 	Ogre::SceneManager* pSceneMngr = OgreRoot::GetSingletonPtr()->GetSceneManager();
+	
+	if ( pSceneMngr->hasParticleSystem(m_sName) )
+		m_pParticleHandle = pSceneMngr->getParticleSystem(m_sName);
+	else
+		m_pParticleHandle = pSceneMngr->createParticleSystem(m_sName, m_sTemplate);
+	
+	m_pParticleHandle->setCastShadows(false);
+	// 若要使粒子特效缩放有效请打开此项
+	m_pParticleHandle->setKeepParticlesInLocalSpace(true);
+	
+	m_pRoot = pSceneMngr->getRootSceneNode()->createChildSceneNode();
+	m_pRoot->attachObject(m_pParticleHandle);
 
-	m_pSystem = pPSManager->getParticleSystem(m_sName);
-	if (!m_pSystem)
-		m_pSystem = pPSManager->createParticleSystem(m_sName, m_sTemplate, pSceneMngr);
+// 	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
+// 	
+// 	m_pParticleSystemEx = pPSManager->getParticleSystem(m_sName);
+// 	if (!m_pParticleSystemEx)
+// 		m_pParticleSystemEx = pPSManager->createParticleSystem(m_sName, m_sTemplate, pSceneMngr);
 	
 	return true;
 }
 
 KVOID Kylin::EffectParticle::Destroy()
 {
-	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
-	Ogre::SceneManager* pSceneMngr = OgreRoot::GetSingletonPtr()->GetSceneManager();
-	
-	if (m_pSystem->getParentSceneNode())
-		m_pSystem->getParentSceneNode()->detachObject(m_pSystem);
+// 	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
+// 	Ogre::SceneManager* pSceneMngr = OgreRoot::GetSingletonPtr()->GetSceneManager();
+// 	
+// 	if (m_pParticleSystemEx->getParentSceneNode())
+// 		m_pParticleSystemEx->getParentSceneNode()->detachObject(m_pParticleSystemEx);
+// 
+// 	pPSManager->destroyParticleSystem(m_pParticleSystemEx,pSceneMngr);
+// 	m_pParticleSystemEx = NULL;
 
-	pPSManager->destroyParticleSystem(m_pSystem,pSceneMngr);
-	m_pSystem = NULL;
+	Ogre::SceneManager* pSceneMngr = OgreRoot::GetSingletonPtr()->GetSceneManager();
+
+	m_pParticleHandle->detachFromParent();
+	pSceneMngr->destroyParticleSystem(m_pParticleHandle);
+	m_pParticleHandle = NULL;
+	
+	if (m_pRoot->getParentSceneNode())
+		m_pRoot->getParentSceneNode()->removeChild(m_pRoot);
+	pSceneMngr->destroySceneNode(m_pRoot);
+	m_pRoot = NULL;
 }
 
 KVOID Kylin::EffectParticle::Activate( KBOOL bFlag )
 {
-	if (m_pSystem)
-	{
-		if (bFlag)
-		{
-			if (m_pSystem->getState() != ParticleUniverse::ParticleSystem::PSS_STARTED)
-				m_pSystem->start();
-		}
-		else if (m_pSystem->getState() != ParticleUniverse::ParticleSystem::PSS_STOPPED)
-			m_pSystem->stop();
-	}
+// 	if (m_pParticleSystemEx)
+// 	{
+// 		if (bFlag)
+// 		{
+// 			if (m_pParticleSystemEx->getState() != ParticleUniverse::ParticleSystem::PSS_STARTED)
+// 				m_pParticleSystemEx->start();
+// 		}
+// 		else if (m_pParticleSystemEx->getState() != ParticleUniverse::ParticleSystem::PSS_STOPPED)
+// 			m_pParticleSystemEx->stop();
+// 	}
+
+	SAFE_CALL(m_pParticleHandle,setVisible(bFlag));
+
 }
 
 KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset )
 {
-	assert(pNode);
-	if (m_pSystem->getParentSceneNode())
-		m_pSystem->getParentSceneNode()->detachObject(m_pSystem);
-	pNode->attachObject(m_pSystem);
+	Assert(pNode);
+// 	if (m_pParticleSystemEx->getParentSceneNode())
+// 		m_pParticleSystemEx->getParentSceneNode()->detachObject(m_pParticleSystemEx);
+// 	pNode->attachObject(m_pParticleSystemEx);
 
-	pNode->setPosition(kOffset);
+	if (m_pRoot->getParentSceneNode())
+		m_pRoot->getParentSceneNode()->removeChild(m_pRoot);
+
+	pNode->addChild(m_pRoot);
+	m_pRoot->setPosition(kOffset);
 }
 
 KVOID Kylin::EffectParticle::SetScale( KFLOAT fScale )
 {
-	SAFE_CALL(m_pSystem,setScale(KPoint3(fScale,fScale,fScale)));
+	//SAFE_CALL(m_pParticleSystemEx,setScale(KPoint3(fScale,fScale,fScale)));
+	SAFE_CALL(m_pRoot,setScale(KPoint3(fScale,fScale,fScale)));
 }
 
 //////////////////////////////////////////////////////////////////////////

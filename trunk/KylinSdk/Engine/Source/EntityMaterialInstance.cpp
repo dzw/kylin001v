@@ -1,6 +1,7 @@
+#include "engpch.h"
 #include "EntityMaterialInstance.h"
 
-EntityMaterialInstance::EntityMaterialInstance (Entity *e) {
+EntityMaterialInstance::EntityMaterialInstance (Entity *e) : mHost(e) {
 	for (unsigned int i = 0; i < e->getNumSubEntities (); i++) {
 		mSEMIs.push_back (new SubEntityMaterialInstance (e->getSubEntity (i)));
 	}
@@ -46,4 +47,14 @@ void EntityMaterialInstance::setTransparency (Real transparency) {
 
 SubEntityMaterialInstancesIterator EntityMaterialInstance::getSubEntityMaterialInstancesIterator () {
 	return SubEntityMaterialInstancesIterator (mSEMIs.begin (), mSEMIs.end ());
+}
+
+Ogre::Real EntityMaterialInstance::getTransparency()
+{
+	return mCurrentTransparency;
+}
+
+Ogre::Entity* EntityMaterialInstance::getHost()
+{
+	return mHost;
 }
