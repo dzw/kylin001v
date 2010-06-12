@@ -84,7 +84,7 @@ KBOOL Kylin::Character::Init( const PropertySet& kProp )
 	if (!Entity::Init(kProp))
 		return false;
 	
-	this->GetEntityPtr()->setQueryFlags(KylinRoot::KR_CHAR_MASK);
+	this->GetEntityPtr()->setQueryFlags(KylinRoot::KR_NPC_MASK);
 	//////////////////////////////////////////////////////////////////////////
 	//SetTranslateToTerrain(this->GetTranslate());
 	m_pAvatar = KNEW Avatar(this);

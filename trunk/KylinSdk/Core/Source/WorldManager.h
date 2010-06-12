@@ -16,7 +16,7 @@ namespace Kylin
 			WS_ENTER_ING,				//正在进入一个场景(已经发送了CGEnterScene)
 			WS_ENTER,					//成功进入一个场景
 			WS_RELIVE,					//死亡复活
-			WS_ASK_CHANGE_SCANE,		//要求切换到一个新的场景(已经发送了CGAskChangeScene)
+			WS_ASK_SWITCH_SCANE,		//要求切换到一个新的场景(已经发送了CGAskSwitchScene)
 		};	
 		
 		virtual KBOOL			Initialize(KCCHAR* pWorldCfg);
@@ -32,7 +32,7 @@ namespace Kylin
 		*/
 		virtual KBOOL			EnterScene(KINT nSceneID);
 		// 游戏过程中切换场景
-		virtual KVOID			ChangeScene(KINT idTargetScene, const KPoint2& fvPos, KINT nDirection, BYTE bFlag);
+		virtual KVOID			SwitchScene(KINT idTargetScene);
 		// 取得当前状态
 		virtual WORLD_STATION	GetStation(KVOID) const	{ return m_eStation; }
 		// 取得当前激活的场景

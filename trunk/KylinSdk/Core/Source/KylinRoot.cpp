@@ -91,7 +91,6 @@ Kylin::Entity * Kylin::KylinRoot::SpawnEntity( PropertySet& rProp )
 				pStatus->m_pWorldManager->m_pActiveScene->m_pEntityManager->DestroyEntity(pEnt->GetID());
 				return NULL;
 			}
-			//pEnt->PostSpawn();
 		}	
 	}
 
@@ -200,13 +199,39 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 
 	return pEnt;
 }
-
+//-------------------------------------------------------------------
 KVOID Kylin::KylinRoot::SetActiveCamera( GameCamera* pCam )
 {
 	m_pCamera = pCam;
 }
-
+//-------------------------------------------------------------------
 Kylin::GameCamera* Kylin::KylinRoot::GetActiveCamera()
 {
 	return m_pCamera;
+}
+//-------------------------------------------------------------------
+KVOID Kylin::KylinRoot::SwitchScene( KUINT uSceneID )
+{
+	Assert(GetGameFramePtr()->m_pActiveStatus);
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		return pStatus->m_pWorldManager->SwitchScene(uSceneID);
+	}
+}
+//-------------------------------------------------------------------
+KVOID Kylin::KylinRoot::NotifyScriptEntity( Kylin::Entity* pEnt, KCSTR& sFunc )
+{
+	// ²¥·Å½ÇÉ«¶¯»­
+	KUINT uGID = -1;
+	if ( pEnt->GetPropertyRef().GetUIntValue("$GID",uGID) )
+	{
+		KSTR sModule = "char_";
+		sModule += Ogre::StringConverter::toString(uGID);
+
+		KVEC<KCCHAR *> kModules;
+		kModules.push_back(sModule.data());
+
+		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,sFunc.data(),true,"i",pEnt->GetID());
+	}
 }

@@ -8,6 +8,7 @@
 #include "AnimationProxy.h"
 #include "Character.h"
 #include "Avatar.h"
+#include "NpcObject.h"
 
 
 namespace Script
@@ -111,5 +112,16 @@ namespace Script
 	extern void set_viewport_back( float r, float g, float b )
 	{
 
+	}
+
+	extern void add_pathway_pos( unsigned int uEntID, float x, float z )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::NpcObject,pEnt))
+		{
+			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
+			SAFE_CALL(pNpc->GetAIHandler(),AddPathwayPos(KPoint3(x,0,z)));
+		}
 	}
 }

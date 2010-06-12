@@ -1,7 +1,9 @@
 #include "corepch.h"
 #include "WorldManager.h"
 #include "Scene.h"
+#include "XmlStream.h"
 
+#define CFG_WORLD "Data/world/World.xml"
 
 Kylin::WorldManager::WorldManager()
 : m_pActiveScene(NULL)
@@ -17,19 +19,48 @@ Kylin::WorldManager::~WorldManager()
 
 KBOOL Kylin::WorldManager::Initialize( KCCHAR* pWorldCfg )
 {
-	SceneHag* hag = new SceneHag;
-	hag->m_sSceneFile = "level_em.xml";
-	hag->m_uSceneID = 10000000;
-	hag->m_sName = "111";
-	hag->m_uType = 1;
-	hag->m_bPass = false;
-	hag->m_uLevel= 1;
-	
-	m_kSceneInfo.insert(std::pair<KUINT,SceneHag*>(hag->m_uSceneID,hag));
+	XmlStream kXml(CFG_WORLD);
+	if (!kXml.Open(XmlStream::Read))
+		return false;
 	
 	//////////////////////////////////////////////////////////////////////////
-	//
-	EnterScene(10000000);
+	// 读取入口信息
+	kXml.SetToFirstChild("Entry");
+	KUINT uEntry = kXml.GetInt(-1);
+	if (uEntry < 0 ) return false;
+	kXml.SetToParent();
+
+	//////////////////////////////////////////////////////////////////////////
+	// 加载所有场景配置
+	KBOOL bScene = kXml.SetToFirstChild("Scene");
+	while (bScene)
+	{
+		SceneHag* hag = KNEW SceneHag;
+		
+		hag->m_uSceneID		= kXml.GetAttrInt("id");
+		hag->m_sName		= kXml.GetAttrString("name");
+		hag->m_uType		= kXml.GetAttrInt("type");
+
+		kXml.SetToFirstChild("File");
+		hag->m_sSceneFile	= kXml.GetString("");
+
+		kXml.SetToParent();
+		kXml.SetToFirstChild("Level");
+		hag->m_uLevel		= kXml.GetInt(0);
+
+		kXml.SetToParent();
+
+		hag->m_bPass = false;
+
+		m_kSceneInfo.insert(std::pair<KUINT,SceneHag*>(hag->m_uSceneID,hag));
+
+		bScene = kXml.SetToNextChild("Scene");
+	}
+
+	kXml.Close();
+	//////////////////////////////////////////////////////////////////////////
+	// 加载场景
+	EnterScene(uEntry);
 
 	return true;
 }
@@ -60,13 +91,12 @@ KBOOL Kylin::WorldManager::EnterScene( KINT nSceneID )
 	return true;
 }
 
-KVOID Kylin::WorldManager::ChangeScene( KINT idTargetScene, const KPoint2& fvPos, KINT nDirection, BYTE bFlag )
+KVOID Kylin::WorldManager::SwitchScene( KINT idTargetScene )
 {
 	m_pActiveScene->LeaveScene();
-	KDEL m_pActiveScene;
+	SAFE_DEL(m_pActiveScene);
 	
 	EnterScene(idTargetScene);
-	m_pActiveScene->EnterScene();
 }
 
 Kylin::Scene* Kylin::WorldManager::GetActiveScene( KVOID )
