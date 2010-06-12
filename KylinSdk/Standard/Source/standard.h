@@ -44,6 +44,7 @@ using namespace std;
 
 #define KZERO	0.0001f
 #define KHALF	0.5f
+
 #define KVEC	std::vector
 #define KMAP	std::map
 #define KLIST	std::list
