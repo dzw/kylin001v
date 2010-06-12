@@ -15,6 +15,7 @@
 #include "EffectDecal.h"
 
 
+
 Kylin::PlayerController::PlayerController()
 : InputListener()
 , m_pHost(NULL)
@@ -159,17 +160,7 @@ KVOID Kylin::PlayerController::OnKeyDown( KUINT uKey )
 
 	if (m_kKeyDirection.z != 0 || m_kKeyDirection.x != 0)
 	{
-		KUINT uGID = -1;
-		if ( m_pHost->GetPropertyRef().GetUIntValue("$GID",uGID) )
-		{
-			KSTR sModule = "char_";
-			sModule += Ogre::StringConverter::toString(uGID);
-
-			KVEC<KCCHAR *> kModules;
-			kModules.push_back(sModule.data());
-
-			OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_walk",true,"i",m_pHost->GetID());
-		}
+		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
 		//-----------------------------------------------------------
 		m_kMousePickPos = KPoint3::ZERO;
 		m_pGuideEffect->SetVisible(false);
@@ -244,17 +235,7 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 				m_pGuideEffect->SetVisible(true);
 				
 				// ²¥·Å½ÇÉ«¶¯»­
-				KUINT uGID = -1;
-				if ( m_pHost->GetPropertyRef().GetUIntValue("$GID",uGID) )
-				{
-					KSTR sModule = "char_";
-					sModule += Ogre::StringConverter::toString(uGID);
-
-					KVEC<KCCHAR *> kModules;
-					kModules.push_back(sModule.data());
-
-					OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_walk",true,"i",m_pHost->GetID());
-				}
+				KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
 			}
 
 			//////////////////////////////////////////////////////////////////////////
@@ -285,7 +266,7 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 	{
 		KPoint3 kHit;
 		Ogre::Entity* pEnt = NULL;
-		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_SCENE_OBJ,VISIBLE_DISTANCE) )
 		{
 			m_pFocusEffect->MoveTo(pEnt->getParentSceneNode()->getPosition());
 			m_pFocusEffect->SetVisible(true);
