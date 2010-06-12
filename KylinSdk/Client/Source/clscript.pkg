@@ -5,6 +5,6 @@ $#include "tolua++.h"
 $#pragma warning(disable : 4800) //forcing value to bool warning
 
 $cfile "clScriptFunction.h"
-
+$cfile "ClRegisterClass.h"
 
 $using namespace Script;

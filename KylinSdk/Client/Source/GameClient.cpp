@@ -8,10 +8,13 @@
 #include "KylinRoot.h"
 #include "ClGame.h"
 #include "ClLobby.h"
+#include "ClRegisterClass.h"
 
 
 KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 {
+	//////////////////////////////////////////////////////////////////////////
+	ClRegisterClasses();
 	//////////////////////////////////////////////////////////////////////////
 	// 加载数据表
 	DataTableLoading();

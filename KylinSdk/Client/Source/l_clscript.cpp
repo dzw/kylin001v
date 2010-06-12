@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 06/04/10 16:22:40.
+** Generated automatically by tolua++-1.0.92 on 06/08/10 14:09:14.
 */
 
 #ifndef __cplusplus
@@ -17,6 +17,7 @@ TOLUA_API int  tolua_clscript_open (lua_State* tolua_S);
 #include "tolua++.h"
 #pragma warning(disable : 4800) //forcing value to bool warning
 #include "clScriptFunction.h"
+#include "ClRegisterClass.h"
 using namespace Script;
 
 /* function to register type */
@@ -91,6 +92,8 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
  tolua_beginmodule(tolua_S,NULL);
   tolua_function(tolua_S,"ui_reg_char_info",tolua_clscript_ui_reg_char_info00);
   tolua_function(tolua_S,"to_learn_skill",tolua_clscript_to_learn_skill00);
+  tolua_constant(tolua_S,"id_cl_entity",id_cl_entity);
+  tolua_constant(tolua_S,"id_bullet_factor",id_bullet_factor);
  tolua_endmodule(tolua_S);
  return 1;
 }
