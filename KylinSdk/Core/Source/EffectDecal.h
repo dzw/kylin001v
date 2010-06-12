@@ -10,7 +10,7 @@ namespace Kylin
 	class EffectDecal
 	{
 	public:
-		EffectDecal( Ogre::SceneManager *sceneMgr, KCSTR &matName, const KFLOAT &radius, KFLOAT heightOffset = 0.2, KINT resolution = 4 )
+		EffectDecal( Ogre::SceneManager *sceneMgr, KCSTR &matName, const KFLOAT &radius, KFLOAT heightOffset = 0.1, KINT resolution = 4 )
 			: mSceneMgr(sceneMgr)
 			, mRadius(radius)
 			, mHeightOffset(heightOffset)

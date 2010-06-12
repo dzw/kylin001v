@@ -35,6 +35,8 @@ namespace Script
 	extern void bind_weapon( unsigned int uEntID, unsigned int uWeaponID, const char* sNode );
 	// 换装
 	extern void exchange_avatar( unsigned int uEntID, unsigned int uAvatarID );
+	// 为非玩家添加路径点
+	extern void add_pathway_pos( unsigned int uEntID, float x, float z);
 
 //tolua_end
 };

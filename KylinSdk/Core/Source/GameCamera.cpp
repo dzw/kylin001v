@@ -12,7 +12,7 @@ Kylin::GameCamera::GameCamera( Ogre::Camera* pCam,Ogre::SceneManager* pSceneMgr 
 , m_pCameraPivot(NULL)
 , m_pCameraGoal(NULL)
 , m_pCameraNode(NULL)
-, m_fCamPosY(.0f)
+, m_fCamPosY(0.8f)
 , m_fCameraDistance(CAMERA_DIS)
 , m_eMode(CM_NULL)
 {

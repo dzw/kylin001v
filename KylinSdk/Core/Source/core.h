@@ -22,7 +22,8 @@ namespace Kylin
 	class Zone;
 	class GameStatus;
 	class GameFrame;	
-	
+	class GameCamera;
+
 	class LevelController;
 	
 	class Factor;
@@ -33,6 +34,7 @@ namespace Kylin
 	class EffectDecal;
 
 	class Avatar;
+	class BaseAI;
 }
 
 class EventTemplate;

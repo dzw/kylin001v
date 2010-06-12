@@ -4,10 +4,7 @@
 #include "Level.h"
 #include "Character.h"
 #include "Factor.h"
-
-
-#define RegEntity(classname) EntitiesFactory::RegisterCreatorFunction(classname::m_RTTI.GetClassID(), classname::CreateInstance); \
-	classname::ConstructFuncMap();
+#include "NpcObject.h"
 
 
 using namespace Kylin;
@@ -18,6 +15,7 @@ KVOID RegisterClasses()
 	RegEntity(Level);
 	RegEntity(Character);
 	RegEntity(Factor);
+	RegEntity(NpcObject);
 
 //	RegEntity(EntitySpawner);
 // 	RegMessage(M_SpawnEntity);

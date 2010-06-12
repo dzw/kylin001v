@@ -45,6 +45,8 @@ namespace Kylin
 		KVOID		PostMessage(KUINT uEntID,const EventPtr spEvent);
 		// 切换状态
 		KVOID		SwitchStatus(GameStatus* pStatus);
+		// 切换场景
+		KVOID		SwitchScene(KUINT uSceneID);
 
 		// debug
 		KVOID		DebugHideEntities(KBOOL bFlag);
@@ -55,6 +57,9 @@ namespace Kylin
 		//
 		KVOID		SetActiveCamera(GameCamera* pCam);
 		GameCamera* GetActiveCamera();
+		
+		// 通知脚步中的entity 函数
+		KVOID		NotifyScriptEntity(Kylin::Entity* pEnt, KCSTR& sFunc);
 
 	protected:
 		GameCamera* m_pCamera;

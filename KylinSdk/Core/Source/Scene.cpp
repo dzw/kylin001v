@@ -69,6 +69,7 @@ KVOID Kylin::Scene::LeaveScene( KVOID )
 
 KVOID Kylin::Scene::SpawnScene()
 {
+	Assert(KylinRoot::GetSingletonPtr()->GetGameFramePtr());
 	m_pSceneLoader = KylinRoot::GetSingletonPtr()->GetGameFramePtr()->CreateSceneLoader();
 
 	Ogre::FileInfoListPtr resPtr = Ogre::ResourceGroupManager::getSingletonPtr()->findResourceFileInfo("General", m_kSceneHag.m_sSceneFile);
@@ -79,7 +80,7 @@ KVOID Kylin::Scene::SpawnScene()
 
 	if (!m_pSceneLoader->LoadScene(m_kSceneHag.m_sSceneFile))
 	{
-		assert(!"场景加载失败！");
+		AssertEx(NULL,"场景加载失败！");
 		return;
 	}
 	// 加载玩家

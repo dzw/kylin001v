@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 06/04/10 15:02:33.
+** Generated automatically by tolua++-1.0.92 on 06/11/10 16:21:13.
 */
 
 #ifndef __cplusplus
@@ -493,6 +493,38 @@ static int tolua_script_exchange_avatar00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: add_pathway_pos */
+#ifndef TOLUA_DISABLE_tolua_script_add_pathway_pos00
+static int tolua_script_add_pathway_pos00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,4,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  float x = ((float)  tolua_tonumber(tolua_S,2,0));
+  float z = ((float)  tolua_tonumber(tolua_S,3,0));
+  {
+   add_pathway_pos(uEntID,x,z);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'add_pathway_pos'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_script_open (lua_State* tolua_S)
 {
@@ -516,6 +548,7 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_function(tolua_S,"set_global_effect",tolua_script_set_global_effect00);
   tolua_function(tolua_S,"bind_weapon",tolua_script_bind_weapon00);
   tolua_function(tolua_S,"exchange_avatar",tolua_script_exchange_avatar00);
+  tolua_function(tolua_S,"add_pathway_pos",tolua_script_add_pathway_pos00);
  tolua_endmodule(tolua_S);
  return 1;
 }
