@@ -59,7 +59,13 @@ public:
 	* @return The SubEntityMaterialInstances iterator.
 	*/
 	SubEntityMaterialInstancesIterator getSubEntityMaterialInstancesIterator ();
+
+	Real getTransparency();
+	
+	Ogre::Entity* getHost();
+
 protected:
+	Ogre::Entity* mHost;
 };
 
 #endif // __ENTITYMATERIALINSTANCE_H__

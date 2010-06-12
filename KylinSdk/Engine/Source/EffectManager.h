@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Singleton.h"
-#include "ParticleUniverseSystem.h"
+//#include "ParticleUniverseSystem.h"
 #include "Property.h"
 
 
@@ -60,8 +60,11 @@ namespace Kylin
 		virtual KVOID SetScale(KFLOAT fScale);
 
 	protected:
-		ParticleUniverse::ParticleSystem* m_pSystem;	// 粒子特效句柄
-		KSTR	m_sTemplate;							// 特效模板
+		//ParticleUniverse::ParticleSystem*	m_pParticleSystemEx;	// 扩展粒子特效句柄
+		Ogre::ParticleSystem*		m_pParticleHandle;		// 
+		Ogre::SceneNode*			m_pRoot;
+
+		KSTR	m_sTemplate;								// 特效模板
 	};
 	
 	//////////////////////////////////////////////////////////////////////////

@@ -61,6 +61,8 @@ namespace MyGUI
 }
 
 struct lua_State;
+
+class EntityMaterialInstance;
 //---------------------------------------------------------
 
 using namespace Ogre;
