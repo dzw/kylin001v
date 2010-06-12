@@ -185,6 +185,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\mersenne.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\mother.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\sfmt.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdpch.cpp"
 				>
 				<FileConfiguration
@@ -203,6 +215,10 @@
 						UsePrecompiledHeader="1"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Source\userintf.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
@@ -251,7 +267,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\randomc.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\RTTI.H"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\sfmt.h"
 				>
 			</File>
 			<File
