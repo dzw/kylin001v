@@ -164,6 +164,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\AI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Avatar.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Character.cpp"
 				>
 			</File>
@@ -204,6 +212,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\GameCamera.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\GameFrame.cpp"
 				>
 			</File>
@@ -228,7 +240,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\NpcObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\rCollisionMonitor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rCoverMonitor.cpp"
 				>
 			</File>
 			<File
@@ -282,6 +302,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\Avatar.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Character.h"
 				>
 			</File>
@@ -291,6 +315,10 @@
 			</File>
 			<File
 				RelativePath=".\corepch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EffectDecal.h"
 				>
 			</File>
 			<File
@@ -311,6 +339,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\Factor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\GameCamera.h"
 				>
 			</File>
 			<File
@@ -338,7 +370,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\NpcObject.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\rCollisionMonitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rCoverMonitor.h"
 				>
 			</File>
 			<File
