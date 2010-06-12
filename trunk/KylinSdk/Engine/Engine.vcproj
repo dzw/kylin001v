@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm153"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../../Dependencies/ParticleUniverse/include;&quot;../../Dependencies/SkyX-v0.1/SkyX&quot;"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../../Dependencies/ParticleUniverse/include;&quot;../../Dependencies/SkyX-v0.1/SkyX&quot;;../../Dependencies\Extras\DirectShow\Include;&quot;D:\Program Files\Microsoft DirectX SDK (August 2009)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -196,11 +196,19 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Source\EntityMaterialInstance.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\InputListener.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\InputManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MaterialInstance.cpp"
 				>
 			</File>
 			<File
@@ -221,6 +229,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\SkyXWapper.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SubEntityMaterialInstance.cpp"
 				>
 			</File>
 			<File
@@ -262,11 +274,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\EntityMaterialInstance.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\InputListener.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\InputManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\MaterialInstance.h"
 				>
 			</File>
 			<File
@@ -298,6 +318,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\SubEntityMaterialInstance.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\XmlStream.h"
 				>
 			</File>
@@ -316,14 +340,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\CursorEx.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\CursorEx.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\GuiManager.cpp"
 				>
 			</File>
@@ -332,11 +348,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\RenderBox.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\renderboxscene.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\RenderBoxScene.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\uiConsole.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\uiConsole.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiCursorEx.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiCursorEx.h"
 				>
 			</File>
 			<File
@@ -405,6 +441,22 @@
 			</File>
 			<File
 				RelativePath=".\Source\EffectMotionBlur.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="util"
+			>
+			<File
+				RelativePath=".\Source\UtilsOgreDshow.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\UtilsOgreDshow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\UtilsOgreDshow_private.h"
 				>
 			</File>
 		</Filter>
