@@ -16,10 +16,10 @@ namespace Kylin
 		enum ENTITY_QUERY_MASK 
 		{ 
 			KR_NO_MASK = 0,
-			KR_SCENE_OBJ = 1,
-			KR_NPC_MASK = 1<<1, 
-			KR_ITEM_MASK = 1<<2, 
-			KR_PLAYER_MASK = 1<<3, 
+			KR_SCENE_OBJ = 1<<4,
+			KR_NPC_MASK = 1<<5, 
+			KR_ITEM_MASK = 1<<6, 
+			KR_PLAYER_MASK = 1<<7, 
 			KR_MASK_COUNT 
 		}; 
 
@@ -54,6 +54,8 @@ namespace Kylin
 		KVOID		DebugHideTerrain(KBOOL bFlag);
 		// 获得当前状态
 		GameStatus*	GetCurrentGameStatus();
+		// 获得当前场景
+		Scene*		GetCurrentScene();
 		//
 		KVOID		SetActiveCamera(GameCamera* pCam);
 		GameCamera* GetActiveCamera();

@@ -14,7 +14,7 @@ EventTemplate ev_post_attack			("ev_post_attack");
 EventTemplate ev_post_damage			("ev_post_damage");
 EventTemplate ev_post_picked			("ev_post_picked");
 EventTemplate ev_post_pick_terrain		("ev_post_pick_terrain");
-
+EventTemplate ev_post_touchdown			("ev_post_touchdown");
 
 EventTemplate ev_post_killed			("ev_post_killed");
 EventTemplate ev_post_destroy			("ev_post_destroy");

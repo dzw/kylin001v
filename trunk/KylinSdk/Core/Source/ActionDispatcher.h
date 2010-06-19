@@ -7,7 +7,7 @@ namespace Kylin
 	public:
 		ActionDispatcher(KUINT uHostID);
 		
-		virtual Action* Fire(KUINT uGID,const KPoint3& kPos);
+		virtual Action* Fire(KUINT uGID/*,const KPoint3& kPos*/);
 		virtual KVOID	SetFactory(ActionFactory* pFactory);
 		virtual Action* SpawnAction(KUINT uGID);
 

@@ -41,17 +41,6 @@ namespace Script
 		int i = 0;
 	}
 
-	extern void bind_weapon( unsigned int uEntID, unsigned int uWeaponID , const char* sNode )
-	{
-		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
-
-		if (BtIsKindOf(Kylin::Character,pEnt))
-		{
-			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
-			pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
-		}
-	}
-
 	extern void exchange_avatar( unsigned int uEntID, unsigned int uAvatarID )
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
@@ -121,7 +110,7 @@ namespace Script
 		if (BtIsKindOf(Kylin::NpcObject,pEnt))
 		{
 			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
-			SAFE_CALL(pNpc->GetAIHandler(),AddPathwayPos(KPoint3(x,0,z)));
+			SAFE_CALL(pNpc->GetAIHandler(),AddPathwayPos(KPoint3(x,0,z)));	
 		}
 	}
 }

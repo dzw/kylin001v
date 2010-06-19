@@ -179,8 +179,15 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 
 	OgreUtils::DynamicLoadMesh(sModel);
 	
-	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile("./Data/script/charactor/char_1.lua");
-
+	//---------------------------------------------------------------
+	//
+	KSTR sScript = "./Data/script/charactor/char_";
+	sScript += Ogre::StringConverter::toString(uGid);
+	sScript += ".lua";
+	if (FileUtils::IsFileExist(sModel))
+	{
+		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile(sScript.data());
+	}
 	//////////////////////////////////////////////////////////////////////////
 	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
 
@@ -234,4 +241,15 @@ KVOID Kylin::KylinRoot::NotifyScriptEntity( Kylin::Entity* pEnt, KCSTR& sFunc )
 
 		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,sFunc.data(),true,"i",pEnt->GetID());
 	}
+}
+
+Kylin::Scene* Kylin::KylinRoot::GetCurrentScene()
+{
+	Assert(GetGameFramePtr()->m_pActiveStatus);
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		return pStatus->m_pWorldManager->m_pActiveScene;
+	}
+	return NULL;
 }

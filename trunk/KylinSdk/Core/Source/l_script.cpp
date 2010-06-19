@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 06/11/10 16:21:13.
+** Generated automatically by tolua++-1.0.92 on 06/17/10 13:11:24.
 */
 
 #ifndef __cplusplus
@@ -17,6 +17,7 @@ TOLUA_API int  tolua_script_open (lua_State* tolua_S);
 #include "tolua++.h"
 #pragma warning(disable : 4800) //forcing value to bool warning
 #include "core.h"
+#include "RegisterClass.h"
 #include "ScriptFunctions.h"
 using namespace Script;
 
@@ -431,38 +432,6 @@ static int tolua_script_set_global_effect00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
-/* function: bind_weapon */
-#ifndef TOLUA_DISABLE_tolua_script_bind_weapon00
-static int tolua_script_bind_weapon00(lua_State* tolua_S)
-{
-#ifndef TOLUA_RELEASE
- tolua_Error tolua_err;
- if (
-     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
-     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
-     !tolua_isstring(tolua_S,3,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,4,&tolua_err)
- )
-  goto tolua_lerror;
- else
-#endif
- {
-  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
-  unsigned int uWeaponID = ((unsigned int)  tolua_tonumber(tolua_S,2,0));
-  const char* sNode = ((const char*)  tolua_tostring(tolua_S,3,0));
-  {
-   bind_weapon(uEntID,uWeaponID,sNode);
-  }
- }
- return 0;
-#ifndef TOLUA_RELEASE
- tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'bind_weapon'.",&tolua_err);
- return 0;
-#endif
-}
-#endif //#ifndef TOLUA_DISABLE
-
 /* function: exchange_avatar */
 #ifndef TOLUA_DISABLE_tolua_script_exchange_avatar00
 static int tolua_script_exchange_avatar00(lua_State* tolua_S)
@@ -532,6 +501,12 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
  tolua_reg_types(tolua_S);
  tolua_module(tolua_S,NULL,0);
  tolua_beginmodule(tolua_S,NULL);
+  tolua_constant(tolua_S,"id_entity",id_entity);
+  tolua_constant(tolua_S,"id_level",id_level);
+  tolua_constant(tolua_S,"id_character",id_character);
+  tolua_constant(tolua_S,"id_npc",id_npc);
+  tolua_constant(tolua_S,"id_factor",id_factor);
+  tolua_constant(tolua_S,"id_last",id_last);
   tolua_function(tolua_S,"set_fog_color",tolua_script_set_fog_color00);
   tolua_function(tolua_S,"set_fog_distance",tolua_script_set_fog_distance00);
   tolua_function(tolua_S,"set_fog_intensity",tolua_script_set_fog_intensity00);
@@ -546,7 +521,6 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_function(tolua_S,"set_next_anim",tolua_script_set_next_anim00);
   tolua_function(tolua_S,"set_effect",tolua_script_set_effect00);
   tolua_function(tolua_S,"set_global_effect",tolua_script_set_global_effect00);
-  tolua_function(tolua_S,"bind_weapon",tolua_script_bind_weapon00);
   tolua_function(tolua_S,"exchange_avatar",tolua_script_exchange_avatar00);
   tolua_function(tolua_S,"add_pathway_pos",tolua_script_add_pathway_pos00);
  tolua_endmodule(tolua_S);

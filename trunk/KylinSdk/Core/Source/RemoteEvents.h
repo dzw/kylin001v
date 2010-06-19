@@ -17,6 +17,7 @@ extern EventTemplate ev_post_destroy;
 extern EventTemplate ev_post_picked;
 
 extern EventTemplate ev_post_pick_terrain;
+extern EventTemplate ev_post_touchdown;			// 触地消息
 
 // 用于同步的消息(位置，旋转，缩放，时间) 前缀 ev_sync_
 extern EventTemplate ev_sync_translate;

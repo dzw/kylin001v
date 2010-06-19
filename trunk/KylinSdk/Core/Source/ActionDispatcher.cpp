@@ -3,7 +3,7 @@
 #include "Action.h"
 #include "Factor.h"
 #include "ActionFactory.h"
-
+#include "KylinRoot.h"
 
 
 Kylin::ActionDispatcher::ActionDispatcher( KUINT uHostID )
@@ -98,13 +98,19 @@ KVOID Kylin::ActionDispatcher::SetFactory( ActionFactory* pFactory )
 	m_pActionFactory = pFactory;
 }
 
-Kylin::Action* Kylin::ActionDispatcher::Fire( KUINT uGID,const KPoint3& kPos )
+Kylin::Action* Kylin::ActionDispatcher::Fire( KUINT uGID/*,const KPoint3& kPos*/ )
 {
 	Action* pAct = GetActionPtr(uGID);
 	if (pAct)
 	{
 		Factor* pFactor = pAct->SpawnFactor();
-		SAFE_CALL(pFactor,SetTranslate(kPos));
+		//SAFE_CALL(pFactor,SetTranslate(kPos));
+		
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uHostID);
+		if (pEnt)
+		{
+			SAFE_CALL(pFactor,SetRotation(pEnt->GetRotation()));
+		}
 		//-----------------------------------------------------------
 
 	}

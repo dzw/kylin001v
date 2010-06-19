@@ -31,8 +31,6 @@ namespace Script
 	extern void set_effect( unsigned int uEntID, unsigned int uEffectID);
 	// 设置全局特效
 	extern void set_global_effect( unsigned int uEffectID );
-	// 绑定武器
-	extern void bind_weapon( unsigned int uEntID, unsigned int uWeaponID, const char* sNode );
 	// 换装
 	extern void exchange_avatar( unsigned int uEntID, unsigned int uAvatarID );
 	// 为非玩家添加路径点

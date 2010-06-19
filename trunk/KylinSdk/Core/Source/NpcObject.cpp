@@ -24,6 +24,12 @@ namespace Kylin
 		if ( !Character::Init(kProp) )
 			return false;
 		
+		//-----------------------------------------------------------------
+		// …Ë÷√ƒ¨»œAI
+		m_pAIHandler = KNEW BaseAI(this);
+		
+		//-----------------------------------------------------------------
+
 		return true;
 	}
 
@@ -37,7 +43,8 @@ namespace Kylin
 	KVOID NpcObject::PostSpawn()
 	{
 		Character::PostSpawn();
-
+		
+		SAFE_CALL(m_pAIHandler,Init());
 	}
 
 	KVOID NpcObject::Destroy()
@@ -49,6 +56,7 @@ namespace Kylin
 
 	KVOID NpcObject::SetAIHandler( BaseAI* pAI )
 	{
+		Assert(pAI);
 		SAFE_DEL(m_pAIHandler);
 		m_pAIHandler = pAI;
 		
