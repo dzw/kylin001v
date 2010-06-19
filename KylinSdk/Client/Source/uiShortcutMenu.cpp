@@ -1,6 +1,10 @@
 #include "cltpch.h"
 #include "uiShortcutMenu.h"
 
+#include "ClSceneLoader.h"
+#include "KylinRoot.h"
+#include "Scene.h"
+#include "PlayerController.h"
 
 Kylin::ShortcutMenu::ShortcutMenu()
 : GuiBase(CLASS_TO(ShortcutMenu))
@@ -38,6 +42,9 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 	SetWidgetHeightPct("image_health",0.6f);
 	
 	SetWidgetWidthPct("image_experience",0.6f);
+	
+	//-----------------------------------------------------
+	m_pImageSkill_L->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill_L);
 
 	return true;
 }
@@ -106,5 +113,15 @@ KVOID Kylin::ShortcutMenu::SetSkillIcon( KSTR sIcon,KCHAR cP )
 	pImage->setItemResourcePtr(resource_img);
 	pImage->setItemGroup("States");
 
+}
+
+KVOID Kylin::ShortcutMenu::NotifyClick_Skill_L( MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id )
+{
+	// test code skill
+	ClSceneLoader* pLoader = (ClSceneLoader*)KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+	if (pLoader)
+	{
+		pLoader->GetController()->UseSkill(4);
+	}
 }
 //-----------------------------------------------------------------------------

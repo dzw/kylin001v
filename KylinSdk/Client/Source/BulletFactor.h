@@ -16,12 +16,17 @@ namespace Kylin
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
 		
+		virtual KVOID Moving(KFLOAT fElapsed);
+	
+	protected:
+		virtual KVOID EV_PostTouchdown(EventPtr spEV);
 
 	protected:
 		virtual KVOID PostSpawn();
 		virtual KVOID PostDestroy();
 	
 	protected:
-
+		KFLOAT m_fVelocity;		// ËÙ¶È
+		
 	};
 }

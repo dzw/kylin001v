@@ -27,6 +27,9 @@ namespace Kylin
 		KBOOL			IsMoveForwardEnabled();
 		KBOOL			IsMove();
 		
+		// test
+		KVOID			UseSkill(KUINT uActID);
+
 	public:
 		virtual KVOID	Tick(KFLOAT fElapsed);
 

@@ -52,18 +52,6 @@ Kylin::Factor* Kylin::ActSkill::SpawnFactor()
 	}
 	
 	//-----------------------------------------------------
-	KUINT uFactorGId = 0;
-	if (!m_kProperty.GetUIntValue("$FactorID",uFactorGId))
-		return NULL;
-
-	//////////////////////////////////////////////////////////////////////////
-	// test code
-// 	Factor* pFactor = BtStaticCast(Factor,KylinHelper::GetSingletonPtr()->SpawnCharactor(uFactorGId,id_factor));
-// 
-// 	SAFE_CALL(pFactor,SetHostAction(this));
-// 	
-// 	return pFactor;
-
 	return Action::SpawnFactor();
 }
 

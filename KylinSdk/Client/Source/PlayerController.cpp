@@ -188,30 +188,6 @@ KBOOL Kylin::PlayerController::IsMove()
 
 KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 {
-// 	Ogre::Ray kRay;
-// 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
-// 	{
-// 		Ogre::Entity* pEnt = NULL;
-// 		if ( OgreRoot::GetSingletonPtr()->PickOgreEntity(kRay,&pEnt, KylinRoot::KR_CHAR_MASK) )
-// 		{
-// 			// 如果选中的是自己
-// 			if (pEnt && pEnt == m_pHost->GetEntityPtr())
-// 			{	// 可以旋转摄像机
-// 				m_bCanRot = true;
-// 				// 改变鼠标
-// 
-// 				return;
-// 			}
-// 		}
-// 		
-// 		//////////////////////////////////////////////////////////////////////////
-// 		KPoint3 vPos;
-// 		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
-// 		{
-// 			SAFE_CALL(m_pHost->GetActionDispatcher(),SpawnAction(1,vPos));
-// 		}
-// 	}
-
 	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
@@ -266,7 +242,7 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 	{
 		KPoint3 kHit;
 		Ogre::Entity* pEnt = NULL;
-		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_SCENE_OBJ,VISIBLE_DISTANCE) )
+		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
 		{
 			m_pFocusEffect->MoveTo(pEnt->getParentSceneNode()->getPosition());
 			m_pFocusEffect->SetVisible(true);
@@ -283,4 +259,11 @@ KVOID Kylin::PlayerController::OnLButtonUp( KINT nX, KINT nY )
 		// 改变鼠标
 
 	}
+}
+
+KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
+{
+	//KPoint3 vPos = m_pHost->GetTranslate();
+	//vPos.y += 3;
+	SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
 }

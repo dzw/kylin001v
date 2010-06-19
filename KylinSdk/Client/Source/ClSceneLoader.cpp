@@ -66,6 +66,12 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	
 	//////////////////////////////////////////////////////////////////////////
 	// test code, when mulit-player to set local player
+	// test spawn npc
+	Kylin::Entity * pNpc = KylinRoot::GetSingletonPtr()->SpawnCharactor(2,id_npc);
+	if (pNpc)
+	{
+		pNpc->SetTranslate(KPoint3(pMyself->GetTranslate().x -1 , 0 , pMyself->GetTranslate().z -1));
+	}
 
 	return true;
 }
@@ -90,4 +96,9 @@ KVOID Kylin::ClSceneLoader::Unload( SceneHag* pHag )
 	SAFE_DEL(m_pController);
 
 	SceneLoader::Unload(pHag);
+}
+
+Kylin::PlayerController* Kylin::ClSceneLoader::GetController()
+{	
+	return m_pController;
 }
