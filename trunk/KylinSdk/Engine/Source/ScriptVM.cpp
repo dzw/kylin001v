@@ -453,7 +453,6 @@ failed:
 	return NULL;
 }
 
-//Wang Hongliang:
 //由tolua注册过的类名创建对象
 KVOID *	ScriptVM::CreateObjectByTypeName(KCCHAR * sTypeName)
 {
@@ -470,7 +469,6 @@ KVOID *	ScriptVM::CreateObjectByTypeName(KCCHAR * sTypeName)
 	return ret;
 }
 
-//Wang Hongliang:
 //获得全局表中常量
 KDOUBLE ScriptVM::GetGlobalTableNumber(KCCHAR *sTableName,KCCHAR* key)
 {

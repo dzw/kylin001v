@@ -48,6 +48,7 @@ KBOOL Kylin::OgreUtils::PickEntity( Ogre::Ray &ray, Ogre::Entity **result, KPoin
 	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetSceneRay();
 	mRaySceneQuery->setRay(ray);
 	mRaySceneQuery->setQueryMask(uQueryType);
+	mRaySceneQuery->setQueryTypeMask(Ogre::SceneManager::ENTITY_TYPE_MASK);
 	mRaySceneQuery->setSortByDistance(true);
 
 	KUINT mVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();

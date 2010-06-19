@@ -25,6 +25,7 @@ namespace Kylin
 		, m_pCameraCtrl(NULL)
 		, m_bShutDown(false)
 		, m_bPaused(false)
+		, m_bStartTick(true)
 	{
 		KCHAR szDir[MAX_PATH] = {0};
 		::GetCurrentDirectoryA(MAX_PATH,szDir);
@@ -77,8 +78,6 @@ namespace Kylin
 	{
 		if (m_pRoot)
 		{
-			if (m_pGuiMgr->GetGuiBase("LoadingProgress"))
-				m_pGuiMgr->GetGuiBase("LoadingProgress")->SetVisible(false);
 			//////////////////////////////////////////////////////////////////////////
 			m_pRoot->startRendering();
 		}
@@ -188,6 +187,9 @@ namespace Kylin
 	
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
 	{
+		if (m_bStartTick)
+			OnStartTick();
+
 		if(m_pWindow->isClosed())
 			return false;
 		
@@ -198,7 +200,7 @@ namespace Kylin
 
 		if (!m_bPaused)
 			OnIdle(evt.timeSinceLastFrame);
-	
+		
 		return true;
 	}
 
@@ -233,5 +235,13 @@ namespace Kylin
 	KVOID AppFrame::Resume(KVOID)
 	{
 		m_bPaused = false;
+	}
+
+	KVOID AppFrame::OnStartTick()
+	{
+		if (m_pGuiMgr->GetGuiBase("LoadingProgress"))
+			m_pGuiMgr->GetGuiBase("LoadingProgress")->SetVisible(false);
+		//-----------------------------------------------------------
+		m_bStartTick = false;
 	}
 }

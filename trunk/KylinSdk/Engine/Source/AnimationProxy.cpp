@@ -25,6 +25,12 @@ Kylin::AnimationProxy::~AnimationProxy()
 
 KVOID Kylin::AnimationProxy::Play( KSTR sAnim, KBOOL bL /*= false*/, BlendingTransition eTransition /*= BlendSwitch*/, KFLOAT fDuration /*= 1.0*/ )
 {
+	if (!m_pEntity->getAnimationState( sAnim ))
+	{
+		AssertEx(NULL,KSTR("不存在此动画： " + sAnim).data());
+		return;
+	}
+
 	m_bLoop = bL; //设置是否需要循环
 	if( eTransition == AnimationProxy::BlendSwitch )
 	{	//如果混合方式为直接切换，改变m_pSource 即可

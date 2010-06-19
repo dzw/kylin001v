@@ -185,7 +185,7 @@ KVOID Kylin::EffectParticle::Activate( KBOOL bFlag )
 
 }
 
-KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset )
+KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset , KFLOAT fScale)
 {
 	Assert(pNode);
 // 	if (m_pParticleSystemEx->getParentSceneNode())
@@ -197,6 +197,7 @@ KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset )
 
 	pNode->addChild(m_pRoot);
 	m_pRoot->setPosition(kOffset);
+	m_pRoot->setScale(KPoint3(fScale,fScale,fScale));
 }
 
 KVOID Kylin::EffectParticle::SetScale( KFLOAT fScale )

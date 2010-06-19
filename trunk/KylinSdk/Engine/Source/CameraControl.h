@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CCSCameraControlSystem.h"
+//#include "CCSCameraControlSystem.h"
 
 namespace Kylin
 {
@@ -21,14 +21,14 @@ namespace Kylin
 
 		KVOID SetTarget(Ogre::SceneNode* pNode);
 		KVOID SetMode(KSTR sMode);
-		CCS::CameraControlSystem::CameraMode* GetMode(KSTR sMode);
+		//CCS::CameraControlSystem::CameraMode* GetMode(KSTR sMode);
 
 		KVOID Update(KFLOAT fElapsed);
 
 		Camera* GetActiveCamera();
 
 	protected:
-		CCS::CameraControlSystem* m_pCameraCS;
+		//CCS::CameraControlSystem* m_pCameraCS;
 
 	};
 }

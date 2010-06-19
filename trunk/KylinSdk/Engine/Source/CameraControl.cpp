@@ -1,19 +1,19 @@
 #include "engpch.h"
 #include "CameraControl.h"
-#include "CCSBasicCameraModes.h"
-#include "CCSFreeCameraMode.h"
+// #include "CCSBasicCameraModes.h"
+// #include "CCSFreeCameraMode.h"
 #include "rOgreRoot.h"
 
 
 Kylin::CameraControl::CameraControl()
-: m_pCameraCS(NULL)
+//: m_pCameraCS(NULL)
 {
 
 }
 
 Kylin::CameraControl::~CameraControl()
 {
-	SAFE_DEL(m_pCameraCS);
+	//SAFE_DEL(m_pCameraCS);
 }
 
 KBOOL Kylin::CameraControl::Initialize( SceneManager* pSceneMgr, Camera* pCamera, KSTR sName/*="kylin_camera_control"*/ )
@@ -41,14 +41,14 @@ KBOOL Kylin::CameraControl::Initialize( SceneManager* pSceneMgr, Camera* pCamera
 KVOID Kylin::CameraControl::SetTarget( Ogre::SceneNode* pNode )
 {
 	// Set the camera target
-	m_pCameraCS->setCameraTarget(pNode);
+	//m_pCameraCS->setCameraTarget(pNode);
 }
 
 KVOID Kylin::CameraControl::SetMode( KSTR sMode )
 {
-	CCS::CameraControlSystem::CameraMode* pMode = m_pCameraCS->getCameraMode(sMode);
-	if (pMode)
-		m_pCameraCS->setCurrentCameraMode(pMode);
+// 	CCS::CameraControlSystem::CameraMode* pMode = m_pCameraCS->getCameraMode(sMode);
+// 	if (pMode)
+// 		m_pCameraCS->setCurrentCameraMode(pMode);
 }
 
 KVOID Kylin::CameraControl::Update( KFLOAT fElapsed )
@@ -56,53 +56,53 @@ KVOID Kylin::CameraControl::Update( KFLOAT fElapsed )
 	if (OgreRoot::GetSingletonPtr()->IsOpenConsole())
 		return;
 
-	m_pCameraCS->update(fElapsed);
-
-	if(m_pCameraCS->getCameraModeName(m_pCameraCS->getCurrentCameraMode()) == "Free")
-	{
-		CCS::FreeCameraMode* freeCameraMode = (CCS::FreeCameraMode*)m_pCameraCS->getCameraMode("Free");
-
-		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_A))
-			freeCameraMode->goLeft();
-
-		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_D))
-			freeCameraMode->goRight();
-
-		if( OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_UP) 
-			|| OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_W) )
-			freeCameraMode->goForward();
-
-		if( OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_DOWN) 
-			|| OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_S) )
-			freeCameraMode->goBackward();
-
-		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_E))
-			freeCameraMode->goUp();
-
-		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_Q))
-			freeCameraMode->goDown();
-
-		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_RIGHT))
-			freeCameraMode->yaw(-1);
-
-		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_LEFT))
-			freeCameraMode->yaw(1);
-
-		const OIS::MouseState &ms = OgreRoot::GetSingletonPtr()->GetMouseState();
-		if( ms.buttonDown( OIS::MB_Right ) )
-		{
-			freeCameraMode->yaw(ms.X.rel);
-			freeCameraMode->pitch(ms.Y.rel);
-		}
-	}
+// 	m_pCameraCS->update(fElapsed);
+// 
+// 	if(m_pCameraCS->getCameraModeName(m_pCameraCS->getCurrentCameraMode()) == "Free")
+// 	{
+// 		CCS::FreeCameraMode* freeCameraMode = (CCS::FreeCameraMode*)m_pCameraCS->getCameraMode("Free");
+// 
+// 		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_A))
+// 			freeCameraMode->goLeft();
+// 
+// 		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_D))
+// 			freeCameraMode->goRight();
+// 
+// 		if( OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_UP) 
+// 			|| OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_W) )
+// 			freeCameraMode->goForward();
+// 
+// 		if( OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_DOWN) 
+// 			|| OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_S) )
+// 			freeCameraMode->goBackward();
+// 
+// 		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_E))
+// 			freeCameraMode->goUp();
+// 
+// 		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_Q))
+// 			freeCameraMode->goDown();
+// 
+// 		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_RIGHT))
+// 			freeCameraMode->yaw(-1);
+// 
+// 		if(OgreRoot::GetSingletonPtr()->IsKeyDown(OIS::KC_LEFT))
+// 			freeCameraMode->yaw(1);
+// 
+// 		const OIS::MouseState &ms = OgreRoot::GetSingletonPtr()->GetMouseState();
+// 		if( ms.buttonDown( OIS::MB_Right ) )
+// 		{
+// 			freeCameraMode->yaw(ms.X.rel);
+// 			freeCameraMode->pitch(ms.Y.rel);
+// 		}
+// 	}
 }
 
 Camera* Kylin::CameraControl::GetActiveCamera()
 {
-	return m_pCameraCS->getOgreCamera();
+	return NULL;//m_pCameraCS->getOgreCamera();
 }
 
-CCS::CameraControlSystem::CameraMode* Kylin::CameraControl::GetMode( KSTR sMode )
-{
-	return m_pCameraCS->getCameraMode(sMode);
-}
+// CCS::CameraControlSystem::CameraMode* Kylin::CameraControl::GetMode( KSTR sMode )
+// {
+// 	return m_pCameraCS->getCameraMode(sMode);
+//*}*/

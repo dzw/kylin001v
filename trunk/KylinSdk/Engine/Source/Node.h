@@ -22,9 +22,9 @@ namespace Kylin
 		virtual KBOOL	AttachMesh(Ogre::Entity* pEnt, KSTR sBone);
 		virtual KVOID	DetachMesh(Ogre::Entity* pEnt);
 
-		KVOID	AttachEffect(KSTR sName, KUINT uType = 1, KPoint3 kPos = KPoint3::ZERO);
-		KVOID	DetachAndDestroyEffect(KSTR sName);
-		KVOID	ActivateEffect(KSTR sName, KBOOL bFlag);
+		Kylin::EffectObject*	AttachEffect(KSTR sName, KUINT uType = 1, KPoint3 kPos = KPoint3::ZERO);
+		KVOID					DetachAndDestroyEffect(KSTR sName);
+		KVOID					ActivateEffect(KSTR sName, KBOOL bFlag);
 		
  		virtual KVOID SetTranslate(KPoint3 kPos);
  		KPoint3 GetTranslate();

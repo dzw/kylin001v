@@ -21,6 +21,8 @@ namespace Kylin
 		KVOID		UnregisterLoader(DataLoader* pLoader);
 		
 		KBOOL		GetGlobalValue(KSTR sKey, KSTR& sValue);
+		
+		KBOOL		Select(KCSTR& sTable,const KUINT& kId,KCSTR& sField,KANY& aRet);
 
 	protected:
 		typedef KMAP<KSTR,DataLoader*> LoaderMap;

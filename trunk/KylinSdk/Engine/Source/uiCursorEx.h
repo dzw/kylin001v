@@ -31,6 +31,8 @@ namespace Kylin
 	class CursorEx : public GuiBase
 	{
 	public:	
+		CursorEx();
+
 		virtual KBOOL Initialize();
 		virtual KVOID Render(KFLOAT fElapsed){}
 		virtual KVOID Destroy(){}
@@ -38,5 +40,10 @@ namespace Kylin
 		virtual KVOID SetVisible(KBOOL bVisible);
 		
 		virtual KVOID SetPointer(CursorType eType);
+
+		virtual CursorType GetPointerType();
+
+	protected:
+		CursorType	m_eType;
 	};
 }

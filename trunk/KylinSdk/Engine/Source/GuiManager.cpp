@@ -38,6 +38,7 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 	m_pGUI->initialise(m_sResource);
 	
 	//////////////////////////////////////////////////////////////////////////
+	MyGUI::FactoryManager::getInstance().registerFactory<ResourceItemInfo>("Resource");
 	MyGUI::LanguageManager::getInstance().loadUserTags("core_theme_black_blue_tag.xml");
 	MyGUI::Gui::getInstance().load("core_skin.xml");
 	
@@ -51,7 +52,8 @@ KVOID Kylin::GuiManager::Destroy()
 {
 	RemoveAllGui();
 	//////////////////////////////////////////////////////////////////////////
-	
+	MyGUI::FactoryManager::getInstance().unregisterFactory<ResourceItemInfo>("Resource");
+	//---------------------------------------------------------------
 	if (m_pGUI)
 	{
 		m_pGUI->shutdown();
@@ -134,8 +136,15 @@ KVOID Kylin::GuiManager::RemoveAllGui()
 {
 	for (GuiMap::iterator it = m_kGuiMap.begin(); it != m_kGuiMap.end(); it++)
 	{
+		//-----------------------------------------------------------
+		// 加载界面不可销毁
+		if (it->first == "LoadingProgress")
+			continue;
+		//-----------------------------------------------------------
 		it->second->Destroy();
-		KDEL it->second;
+		SAFE_DEL(it->second);
+
+		it = m_kGuiMap.erase(it);
 	}
-	m_kGuiMap.clear();
+	//m_kGuiMap.clear();
 }

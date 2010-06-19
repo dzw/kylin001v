@@ -25,7 +25,7 @@ namespace Kylin
 		virtual KVOID Destroy() = 0;
 
 		// 挂载到某点
-		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO){}
+		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO, KFLOAT fScale = 1.0f){}
 	
 		// 激活特效
 		virtual KVOID Activate(KBOOL bFlag) = 0;
@@ -50,12 +50,14 @@ namespace Kylin
 		virtual ~EffectParticle();
 
 		virtual KBOOL Initialize();
+		// render
+		virtual KVOID Render(KFLOAT fElapsed){}
 
 		virtual KVOID Destroy();
 
 		virtual KVOID Activate(KBOOL bFlag);
 		
-		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO);
+		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO, KFLOAT fScale = 1.0f);
 		
 		virtual KVOID SetScale(KFLOAT fScale);
 
@@ -65,6 +67,8 @@ namespace Kylin
 		Ogre::SceneNode*			m_pRoot;
 
 		KSTR	m_sTemplate;								// 特效模板
+		KFLOAT	m_fLifeTime;								// 存在时间
+		KBOOL	m_bLoopFlag;								// 是否循环播放
 	};
 	
 	//////////////////////////////////////////////////////////////////////////
