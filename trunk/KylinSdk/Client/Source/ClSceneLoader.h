@@ -17,6 +17,9 @@ namespace Kylin
 		virtual KVOID LoadLevel();
 		
 		virtual KVOID Tick(KFLOAT fElapsed);
+		
+		// test code
+		PlayerController* GetController();
 
 	protected:
 		PlayerController*	m_pController;

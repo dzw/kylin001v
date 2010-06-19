@@ -52,22 +52,22 @@ KVOID Kylin::ClGame::Destroy()
 
 KVOID Kylin::ClGame::UiLoader()
 {
-	Kylin::ShortcutMenu* pShortcut = KNEW Kylin::ShortcutMenu();
+	ShortcutMenu* pShortcut = KNEW ShortcutMenu();
 	pShortcut->Initialize();
 
-	Kylin::CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
+	CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
 	pCharInfo->Initialize();
 
 	KitbagMenu* pKitbag = KNEW KitbagMenu();
 	pKitbag->Initialize();
 
-	Kylin::OptionMenu* pOption = KNEW Kylin::OptionMenu();
+	OptionMenu* pOption = KNEW OptionMenu();
 	pOption->Initialize();	
 
 	//////////////////////////////////////////////////////////////////////////
-	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pShortcut);
-	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
-	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
-	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pShortcut);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);
 
 }

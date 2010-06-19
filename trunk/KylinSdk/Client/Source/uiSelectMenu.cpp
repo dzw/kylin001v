@@ -18,8 +18,7 @@ Kylin::SelectMenu::SelectMenu()
 
 KBOOL Kylin::SelectMenu::Initialize()
 {
-	MyGUI::FactoryManager::getInstance().registerFactory<ResourceItemInfo>("Resource");
-
+	
 	MyGUI::Gui::getInstance().load("lobby_imageset.xml");
 	MyGUI::Gui::getInstance().load("ItemBox_skin.xml");
 	
@@ -52,7 +51,6 @@ KVOID Kylin::SelectMenu::Render( KFLOAT fElapsed )
 
 KVOID Kylin::SelectMenu::Destroy()
 {
-	MyGUI::FactoryManager::getInstance().unregisterFactory<ResourceItemInfo>("Resource");
 
 	SAFE_DEL(mItemBoxV);
 	SAFE_DEL(mToolTip);
