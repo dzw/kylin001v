@@ -80,7 +80,15 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	KSTR sEffect;
 	if (kProp.GetStrValue("$Effect",sEffect))
 	{
-		AttachEffect(sEffect);
+		EffectObject* pObj = AttachEffect(sEffect);
+		if (pObj)
+		{	// 设置特效缩放
+			KFLOAT fEfScale;
+			if (kProp.GetFloatValue("$EffectScale",fEfScale))
+			{
+				pObj->SetScale(fEfScale);
+			}
+		}
 	}
 	//////////////////////////////////////////////////////////////////////////
 	// 加载碰撞
@@ -181,17 +189,18 @@ Ogre::Entity* Kylin::Node::GetEntityPtr()
 	return m_pOgreEntity;
 }
 
-KVOID Kylin::Node::AttachEffect( KSTR sName, KUINT uType /*= EffectManager::ET_PARTICLE*/, KPoint3 kPos )
+Kylin::EffectObject* Kylin::Node::AttachEffect( KSTR sName, KUINT uType /*= EffectManager::ET_PARTICLE*/, KPoint3 kPos )
 {
 	KSTR sNewName = sName + Ogre::StringConverter::toString(GetWorldID());
 	EffectObject* pObj = EffectManager::GetSingletonPtr()->Generate(sNewName,sName,uType);
 	if (pObj)
 	{
 		pObj->Attach(m_pOgreNode,kPos);
-		pObj->SetScale(GetScale());
-
+		
 		m_kEffectList.push_back(pObj);
 	}
+
+	return pObj;
 }
 
 KVOID Kylin::Node::DetachAndDestroyEffect( KSTR sName )

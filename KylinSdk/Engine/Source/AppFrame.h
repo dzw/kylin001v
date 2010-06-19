@@ -30,7 +30,8 @@ namespace Kylin
 		virtual KVOID	OnIdle(KFLOAT fElapsed);
 		virtual KVOID	OnExit();
 		virtual KVOID	OnSize(KUINT nWidth, KUINT nHeight){}	
-		
+		virtual KVOID	OnStartTick();
+
 	private:
 		virtual KBOOL frameRenderingQueued(const Ogre::FrameEvent& evt);
 
@@ -51,5 +52,6 @@ namespace Kylin
 	
 		KBOOL m_bShutDown;
 		KBOOL m_bPaused;
+		KBOOL m_bStartTick;
 	};
 }

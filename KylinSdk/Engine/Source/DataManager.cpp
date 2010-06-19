@@ -96,3 +96,25 @@ KVOID Kylin::DataManager::Initialize()
 	InvokeLoader(KNEW DataLoader(DB_GLOBAL));
 
 }
+
+KBOOL Kylin::DataManager::Select( KCSTR& sTable,const KUINT& kId,KCSTR& sField,KANY& aRet )
+{
+	KSTR sValue;
+	if (!GetGlobalValue(sTable,sValue))
+		return false;
+
+	Kylin::DataLoader* pLoader = GetLoaderPtr(sValue);
+	// 查询对应的因子信息
+	Kylin::DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(kId,dbItem))
+		return false;
+
+	DataItem::DataField dbField;
+	if (dbItem.QueryField(sField,dbField))
+	{
+		aRet = dbField.m_aValue;
+		return true;
+	}
+
+	return false;
+}

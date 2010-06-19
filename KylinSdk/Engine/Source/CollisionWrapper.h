@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ogreopcode.h"
+//#include "ogreopcode.h"
 #include "Singleton.h"
 #include "Property.h"
 
-using namespace OgreOpcode;
+//using namespace OgreOpcode;
 
 namespace Kylin
 {
@@ -46,8 +46,8 @@ namespace Kylin
 		virtual KBOOL SetupCllsn(Ogre::Entity* pEnt,PropertySet kProp );
 		
 	protected:
-		OgreOpcode::ICollisionShape* m_pCllsnShape;
-		OgreOpcode::CollisionObject* m_pCllsnObject;
+		//OgreOpcode::ICollisionShape* m_pCllsnShape;
+		//OgreOpcode::CollisionObject* m_pCllsnObject;
 
 		KSTR	m_sName;
 	};
