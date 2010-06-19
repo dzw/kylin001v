@@ -71,7 +71,9 @@ KVOID Kylin::Scene::SpawnScene()
 {
 	Assert(KylinRoot::GetSingletonPtr()->GetGameFramePtr());
 	m_pSceneLoader = KylinRoot::GetSingletonPtr()->GetGameFramePtr()->CreateSceneLoader();
-
+	
+	//-----------------------------------------------------------------
+	// 加载场景
 	Ogre::FileInfoListPtr resPtr = Ogre::ResourceGroupManager::getSingletonPtr()->findResourceFileInfo("General", m_kSceneHag.m_sSceneFile);
 	Ogre::FileInfo fInfo = (*(resPtr->begin()));
 
@@ -83,11 +85,13 @@ KVOID Kylin::Scene::SpawnScene()
 		AssertEx(NULL,"场景加载失败！");
 		return;
 	}
+	//-----------------------------------------------------------------
 	// 加载玩家
 	m_pSceneLoader->LoadPlayer();
+	//-----------------------------------------------------------------
 	// 加载NPC等
 	m_pSceneLoader->LoadLevel();
-
+	//-----------------------------------------------------------------
 	m_pZone->Initialize(fname.data());
 }
 
@@ -108,3 +112,7 @@ KBOOL Kylin::Scene::IsValidPosition( const KPoint2& fvPos )
 	return true;
 }
 
+Kylin::SceneLoader* Kylin::Scene::GetSceneLoader()
+{
+	return m_pSceneLoader;
+}

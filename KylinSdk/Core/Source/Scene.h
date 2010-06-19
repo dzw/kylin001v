@@ -35,7 +35,9 @@ namespace Kylin
 		virtual KVOID	LeaveScene(KVOID);
 		//场景位置是否合法
 		virtual KBOOL	IsValidPosition(const KPoint2& fvPos);
-		
+		//获得场景加载接口
+		SceneLoader*	GetSceneLoader();
+
 	protected:
 		virtual KVOID	SpawnScene();
 

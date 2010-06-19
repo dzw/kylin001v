@@ -10,10 +10,11 @@ namespace Kylin
 		class MotionDummy
 		{
 		public:
-			MotionDummy(Node* pHost, KPoint3 kSpeed = KPoint3::ZERO)
+			MotionDummy(Node* pHost, KPoint3 kSpeed = KPoint3::ZERO, KFLOAT fGravity = _WGravity)
 				: m_pHost(pHost)
 				, m_kSpeed(kSpeed)
 				, m_bIsInAir(false)
+				, m_fGravity(fGravity)
 				, m_kPreSpeed(KPoint3::ZERO)
 			{
 			}
@@ -38,6 +39,8 @@ namespace Kylin
 			KPoint3 m_kSpeed;
 			// 上一帧物体速度
 			KPoint3 m_kPreSpeed;
+			// 重力
+			KFLOAT	m_fGravity;
 			//-----------------------------------------------------
 			//此物体是否在空中
 			BOOL	m_bIsInAir;
@@ -56,8 +59,8 @@ namespace Kylin
 			virtual KVOID Tick(KFLOAT fElapsed);
 			virtual KVOID Destroy();
 			//-----------------------------------------------------
-			// 提交模拟对象及参数
-			virtual KVOID Commit(Node* pNode, const KPoint3 fSpeed);
+			// 提交模拟对象及参数(水平速度，重力加速度)
+			virtual KVOID Commit(Node* pNode, const KPoint3 fSpeed, KFLOAT fGravity = _WGravity);
 			//-----------------------------------------------------
 			// 剔除模拟对象
 			virtual KVOID Reject(Node* pNode);
@@ -71,13 +74,11 @@ namespace Kylin
 			class Calculator
 			{
 			public:
-				Calculator():m_fGravity(10.0f){}	
+				Calculator(){}	
 				
 				KVOID Handle(MotionDummy* pDummy, KFLOAT fElapsed);
 
 			protected:
-				// 重力系数
-				KFLOAT		m_fGravity;
 
 				friend class MotionSimulator;
 			};

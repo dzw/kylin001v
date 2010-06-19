@@ -104,26 +104,26 @@ FLAG_F:
 }
 
 //////////////////////////////////////////////////////////////////////////
-KVOID Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RWEAPON*/ )
+Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RWEAPON*/ )
 {
 	DetachWeapon(ePart);
 
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
-		return;
+		return NULL;
 
 	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
 
 	// 查询对应的Avatar信息
 	DataItem dbItem;
 	if (!pLoader->GetDBPtr()->Query(uGID,dbItem))
-		return;
+		return NULL;
 
 	DataItem::DataField dbField;
 	dbItem.QueryField("TYPE",dbField);
 	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
 	if (sType != "weapon")
-		return;
+		return NULL;
 
 	dbItem.QueryField("MESH",dbField);
 	KSTR sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
@@ -132,7 +132,7 @@ KVOID Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RWEAPON*/
 
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sMesh))
-		return;
+		return NULL;
 
 	OgreUtils::DynamicLoadMesh(sMesh);
 
@@ -150,7 +150,7 @@ KVOID Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RWEAPON*/
 	if ( !pWeapon->Load(kProp) )
 	{
 		SAFE_DEL(pWeapon);
-		return;
+		return NULL;
 	}
 
 	if (ePart == AP_RWEAPON)
@@ -164,7 +164,7 @@ KVOID Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RWEAPON*/
 		m_pHost->AttachMesh(pWeapon->GetEntityPtr(),"tag_lefthand");
 	}
 
-	
+	return pWeapon;
 }
 
 KVOID Kylin::Avatar::DetachWeapon( AvatarPart ePart )

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Property.h"
+#include "RegisterClass.h"
 
 namespace Kylin
 {
@@ -18,12 +19,16 @@ namespace Kylin
 		virtual KBOOL	IsComplete();
 		
 		virtual Factor* SpawnFactor();
+		virtual Factor* SpawnFactor(PropertySet& kFactorProp);
 		virtual KVOID	RemoveFactor(KUINT uFactorID);
 
 		virtual KUINT	GetGID();
 		
 		virtual KSTR	GetIcon();
 		virtual KSTR	GetExplain();
+		
+	public:
+		KVOID	SetEmitterNode(Ogre::Node* pNode);
 
 	protected:
 		virtual KVOID	OnTriggered(Factor* pFactor);
@@ -37,7 +42,9 @@ namespace Kylin
 		typedef KLIST<KUINT> FactorList;
 		FactorList m_kFactorList;
 
-		ActionDispatcher* m_pDispatcher;
+		ActionDispatcher*	m_pDispatcher;
+
+		Ogre::Node*			m_pEmitterNode;
 	};
 }
 

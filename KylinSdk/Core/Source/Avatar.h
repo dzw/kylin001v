@@ -20,7 +20,7 @@ namespace Kylin
 			AP_BOOTS,
 		};
 		
-		virtual KVOID AttachWeapon(KUINT uGID, AvatarPart ePart = AP_RWEAPON);
+		virtual Node* AttachWeapon(KUINT uGID, AvatarPart ePart = AP_RWEAPON);
 		virtual KVOID DetachWeapon(AvatarPart ePart);
 
 		virtual KVOID Exchange(KUINT uGID);

@@ -101,13 +101,7 @@ KVOID Kylin::Character::PostSpawn()
 	Entity::PostSpawn();
 
 	//////////////////////////////////////////////////////////////////////////
-	KSTR sModule = "char_";
-	sModule += "1"; // add gid
-
-	KVEC<KCCHAR *> kModules;
-	kModules.push_back(sModule.data());
-
-	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_spawn",true,"i",this->GetID());
+	KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"do_spawn");
 
 }
 

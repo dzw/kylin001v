@@ -4,14 +4,14 @@
 
 #include "rPhyXSystem.h"
 #include "rMotionSimulator.h"
-
+#include "KylinRoot.h"
 #include "randomc.h"
 
 #define _MAX_STAY_T_ 5
 #define _MIN_STAY_T_ 1
 
 Kylin::BaseAI::BaseAI( Character* pHost )
-: m_pHostChar(NULL)
+: m_pHostChar(pHost)
 , m_pRandomGenerator(NULL)
 , m_eCurrState(AS_INVALID)
 , m_fDistance(.0f)
@@ -30,7 +30,8 @@ KBOOL Kylin::BaseAI::Init()
 {
 	m_pRandomGenerator = KNEW CRandomMersenne(this->m_pHostChar->GetID());
 
-	m_fStayTime = m_pRandomGenerator->IRandom(_MIN_STAY_T_,_MAX_STAY_T_);
+	m_fStayTime		= m_pRandomGenerator->IRandom(_MIN_STAY_T_,_MAX_STAY_T_);
+	m_eCurrState	= AS_IDLE;
 
 	return true;
 }
@@ -90,7 +91,7 @@ RC_RESULT Kylin::BaseAI::Enter_Idle( KVOID )
 	if ( m_eCurrState != AS_IDLE )
 	{
 		// play char idle animation
-
+		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_idle");
 	}
 
 	//---------------------------------------------------------------
@@ -100,6 +101,9 @@ RC_RESULT Kylin::BaseAI::Enter_Idle( KVOID )
 
 RC_RESULT Kylin::BaseAI::Enter_Move( FLOAT fDestX, FLOAT fDestZ )
 {
+	// ²¥·Å½ÇÉ«¶¯»­
+	KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_walk");
+	//---------------------------------------------------------------
 	m_kDestination.x = fDestX;
 	m_kDestination.z = fDestZ;
 	KPoint3 kDir = m_kDestination - m_pHostChar->GetTranslate();		// B-A = A->B (see vector questions above)
@@ -111,6 +115,7 @@ RC_RESULT Kylin::BaseAI::Enter_Move( FLOAT fDestX, FLOAT fDestZ )
 	Quaternion kQuat = kSrc.getRotationTo(kDir);
 	m_pHostChar->GetSceneNode()->rotate(kQuat);
 
+	m_fDistance = (m_kDestination - m_pHostChar->GetTranslate()).length();
 	//---------------------------------------------------------------
 	m_eCurrState = AS_MOVE;
 	return RC_OK;
@@ -154,8 +159,8 @@ KBOOL Kylin::BaseAI::Tick_Idle( KFLOAT fElapsed )
 		m_fStayTime-=fElapsed;
 		if (m_fStayTime < 0)
 		{
-			//Enter_Move();
-			//m_fStayTime = m_pRandomGenerator->Random();
+			Enter_Patrol();
+			m_fStayTime = m_pRandomGenerator->Random();
 		}
 	}
 
@@ -222,4 +227,19 @@ KVOID Kylin::BaseAI::AddPathwayPos( const KPoint3& kPos )
 	m_kPathway.push_back(kPos);
 }
 
+RC_RESULT Kylin::BaseAI::Enter_Patrol()
+{
+	RC_RESULT kRet = RC_RESULT::RC_ERROR;
+	if (m_nPathwayIndex >= 0 && m_nPathwayIndex < m_kPathway.size())
+	{
+		kRet = Enter_Move(m_kPathway[m_nPathwayIndex].x,m_kPathway[m_nPathwayIndex].z);
+		m_nPathwayIndex++;
+		if (m_nPathwayIndex == m_kPathway.size())
+		{
+			m_nPathwayIndex = 0;
+		}
+	}
+		
+	return kRet;
+}
 

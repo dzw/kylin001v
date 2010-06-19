@@ -4,6 +4,7 @@
 #include "Engine.h"
 
 #define INVALID_ID	0xffffffff
+#define _WGravity	20.0f
 
 namespace Kylin
 {

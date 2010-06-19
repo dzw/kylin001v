@@ -7,11 +7,31 @@
 #include "rOgreRoot.h"
 #include "rPhyxSystem.h"
 #include "rCollisionMonitor.h"
+#include "ScriptVM.h"
+#include "RemoteEvents.h"
 
 
 KVOID Kylin::PhyX::MotionDummy::Touchdown()
 {
 	m_bIsInAir = false;
+	if (m_pHost)
+	{
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pHost->GetWorldID());
+		if (pEnt)
+		{
+			//////////////////////////////////////////////////////////////////////////
+			EventPtr spEV(
+				new Event(
+				&ev_post_touchdown, 
+				Event::ev_immediate, 
+				0, 
+				0, 
+				NULL
+				));
+
+			KylinRoot::GetSingletonPtr()->PostMessage(pEnt->GetID(),spEV);
+		}
+	}
 }
 
 KBOOL Kylin::PhyX::MotionDummy::IsImmobile()
@@ -19,22 +39,15 @@ KBOOL Kylin::PhyX::MotionDummy::IsImmobile()
 	return m_kSpeed == KPoint3::ZERO && m_kPreSpeed == KPoint3::ZERO && !m_bIsInAir;
 }
 
-#include "ScriptVM.h"
+
 KVOID Kylin::PhyX::MotionDummy::Repose()
 {
 	//////////////////////////////////////////////////////////////////////////
 	// test code
-	KUINT uGID = -1;
-	Kylin::Entity* pEnt = static_cast<Kylin::Entity*>(m_pHost);
-	if ( pEnt->GetPropertyRef().GetUIntValue("$GID",uGID) )
+	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pHost->GetWorldID());
+	if ( pEnt )
 	{
-		KSTR sModule = "char_";
-		sModule += Ogre::StringConverter::toString(uGID);
-
-		KVEC<KCCHAR *> kModules;
-		kModules.push_back(sModule.data());
-
-		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"do_idle",true,"i",pEnt->GetID());
+		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
 	}
 }
 
@@ -69,14 +82,14 @@ KVOID Kylin::PhyX::MotionSimulator::Destroy()
 	m_kDummyMap.clear();
 }
 
-KVOID Kylin::PhyX::MotionSimulator::Commit( Node* pNode, const KPoint3 kSpeed )
+KVOID Kylin::PhyX::MotionSimulator::Commit( Node* pNode, const KPoint3 kSpeed, KFLOAT fGravity)
 {
 	assert(pNode);
 
 	DummyMap::iterator it = m_kDummyMap.find(pNode);
 	if (it == m_kDummyMap.end())
 	{
-		MotionDummy* pDummy = KNEW MotionDummy(pNode,kSpeed);
+		MotionDummy* pDummy = KNEW MotionDummy(pNode,kSpeed,fGravity);
 		m_kDummyMap.insert(std::pair<Node*,MotionDummy*>(pNode,pDummy));		
 	}
 	else
@@ -108,11 +121,6 @@ KVOID Kylin::PhyX::MotionSimulator::Reject( Node* pNode )
 	}
 }
 
-KVOID Kylin::PhyX::MotionSimulator::SetGravity( KFLOAT fG )
-{
-	m_pCalculator->m_fGravity = fG;
-}
-
 
 KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFLOAT fElapsed )
 {
@@ -125,8 +133,8 @@ KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFL
 
 	// 计算位置
  	KPoint3 kOffset = pDummy->m_kSpeed * fElapsed;
- 	kOffset -= m_fGravity * KPoint3::UNIT_Y * fElapsed;
- 	pDummy->m_kSpeed -= m_fGravity * KPoint3::UNIT_Y * fElapsed;
+ 	kOffset -= pDummy->m_fGravity * KPoint3::UNIT_Y * fElapsed;
+ 	pDummy->m_kSpeed -= pDummy->m_fGravity * KPoint3::UNIT_Y * fElapsed;
 
 	//---------------------------------------------------------------
 	// 设置位置，保存老位置

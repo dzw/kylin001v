@@ -53,6 +53,7 @@ namespace Kylin
 		RC_RESULT	Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 kPos, KFLOAT fDir );
 		RC_RESULT	Enter_Dead( KVOID );
 		RC_RESULT	Enter_Follow( KUINT uTargetObj );
+		RC_RESULT	Enter_Patrol();
 
 	protected:
 		//-------------------------------------
