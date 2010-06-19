@@ -69,6 +69,7 @@ typedef double				KDOUBLE;
 typedef unsigned long		KDWORD;
 
 typedef unsigned short int	KINT2;
+typedef std::vector<KSTR>	KStrVector;
 
 //////////////////////////////////////////////////////////////////////////
 namespace Kylin

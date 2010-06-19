@@ -133,7 +133,9 @@ public:
 
 		return path;
 	}
-
+	//------------------------------------------------------------------
+	static KVOID GetFileList(KSTR path, KStrVector &list,KBOOL bSearchSubDir = false);
+	
 	protected:
 		static KSTR m_sExePath;
 };
