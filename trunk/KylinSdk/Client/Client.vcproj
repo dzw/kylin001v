@@ -226,6 +226,10 @@
 				RelativePath=".\Source\Showgirl.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\SummonSkill.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
@@ -282,6 +286,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\Showgirl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SummonSkill.h"
 				>
 			</File>
 			<File
