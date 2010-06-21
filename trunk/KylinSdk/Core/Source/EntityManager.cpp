@@ -50,7 +50,7 @@ namespace Kylin
 		assert(pEnt);
 		if(pEnt)
 		{
-			KDEL pEnt;
+			SAFE_DEL(pEnt);
 			m_idManager.RemoveID(id);
 		}
 	}

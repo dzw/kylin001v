@@ -141,12 +141,7 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 		KFLOAT fScale = boost::any_cast<KFLOAT>(dbField.m_aValue);	
 		kFactorProp.SetValue("$Scale",fScale);
 	}
-	// 获得有效时间
-// 	if (dbItem.QueryField("TIMES",dbField))
-// 	{
-// 		KFLOAT fTime = boost::any_cast<KFLOAT>(dbField.m_aValue);	
-// 		kFactorProp.SetValue("$Times",fTime);
-// 	}
+
 	// 获得类型
 	if (dbItem.QueryField("TYPE",dbField))
 	{
@@ -156,7 +151,27 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 		kFactorProp.SetValue("$CLASS_ID",uClassid);
 	}
 	//////////////////////////////////////////////////////////////////////////
-	// 设置特效属性
+	// 设置特效属性，三种状态
+	if (dbItem.QueryField("SPAWN_EFF",dbField))
+	{
+		KINT nEffectID = boost::any_cast<KINT>(dbField.m_aValue);	
+		KANY aRet;
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TEMPLATE",aRet) )
+		{
+			KSTR sEffect = boost::any_cast<KSTR>(aRet);	
+			kFactorProp.SetValue("$SpawnEffect",sEffect);
+		}
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"SCALE",aRet) )
+		{
+			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
+			kFactorProp.SetValue("$SpawnEffectScale",fScale);
+		}
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TIMES",aRet) )
+		{
+			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
+			kFactorProp.SetValue("$SpawnEffectTime",fScale);
+		}
+	}
 	if (dbItem.QueryField("IDLE_EFF",dbField))
 	{
 		KINT nEffectID = boost::any_cast<KINT>(dbField.m_aValue);	
@@ -164,12 +179,37 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TEMPLATE",aRet) )
 		{
 			KSTR sEffect = boost::any_cast<KSTR>(aRet);	
-			kFactorProp.SetValue("$Effect",sEffect);
+			kFactorProp.SetValue("$IdleEffect",sEffect);
 		}
 		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"SCALE",aRet) )
 		{
 			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
-			kFactorProp.SetValue("$EffectScale",fScale);
+			kFactorProp.SetValue("$IdleEffectScale",fScale);
+		}
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TIMES",aRet) )
+		{
+			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
+			kFactorProp.SetValue("$IdleEffectTime",fScale);
+		}
+	}
+	if (dbItem.QueryField("DESTROY_EFF",dbField))
+	{
+		KINT nEffectID = boost::any_cast<KINT>(dbField.m_aValue);	
+		KANY aRet;
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TEMPLATE",aRet) )
+		{
+			KSTR sEffect = boost::any_cast<KSTR>(aRet);	
+			kFactorProp.SetValue("$DestroyEffect",sEffect);
+		}
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"SCALE",aRet) )
+		{
+			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
+			kFactorProp.SetValue("$DestroyEffectScale",fScale);
+		}
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TIMES",aRet) )
+		{
+			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
+			kFactorProp.SetValue("$DestroyEffectTime",fScale);
 		}
 	}
 

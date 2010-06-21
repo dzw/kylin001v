@@ -23,6 +23,7 @@ namespace Kylin
 	public:
 		// 将位置设置到地面
 		//virtual KVOID	SetTranslateToTerrain(KPoint3 vPos);
+		
 
 	protected:
 		KVOID	EV_Picked(EventPtr spEV);
