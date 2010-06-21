@@ -233,3 +233,11 @@ KVOID Kylin::InputManager::OnRButtonUp( KINT nX, KINT nY )
 	for (size_t i = 0 ; i < m_kContainer.size(); i++)
 		m_kContainer[i]->OnRButtonUp(nX, nY);
 }
+
+KVOID Kylin::InputManager::SetMousePosition(int _x, int _y)
+{
+	const OIS::MouseState &ms = m_pMouse->getMouseState();
+	
+	OIS::MouseEvent evt(NULL,ms);
+	mouseMoved(evt);
+}

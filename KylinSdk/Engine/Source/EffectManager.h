@@ -14,6 +14,7 @@ namespace Kylin
 	public:
 		EffectObject(KSTR sName)
 			: m_sName(sName)
+			, m_pClocking(NULL)
 		{}
 		virtual ~EffectObject(){}
 
@@ -25,20 +26,28 @@ namespace Kylin
 		virtual KVOID Destroy() = 0;
 
 		// 挂载到某点
-		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO, KFLOAT fScale = 1.0f){}
+		virtual KVOID Attach(Ogre::SceneNode* pNode, KFLOAT fScale = 1.0f){}
 	
 		// 激活特效
 		virtual KVOID Activate(KBOOL bFlag) = 0;
-		virtual KBOOL IsEnabled() { return false; }
 
 		// 获得特效名称
 		virtual KSTR  GetName() { return m_sName; }
 		// 
 		virtual KVOID SetScale(KFLOAT fScale){}
+		// 是否可见
+		virtual KBOOL IsVisible(){ return false; }
+		// 设置回调对象
+		virtual KVOID SetCallbackObj(ClockingCallback* pObj);
+		// 设置用户数据
+		virtual KVOID SetUserData(KANY aData) { m_kUserData = aData; } 
 
 	protected:
-		KSTR				m_sName;	// 特效名称
-		KUINT				m_uType;	// 特效类型
+		KSTR				m_sName;		// 特效名称
+		KUINT				m_uType;		// 特效类型
+
+		ClockingCallback*	m_pClocking;	// 定时回调
+		KANY				m_kUserData;
 	};
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -46,29 +55,30 @@ namespace Kylin
 	class EffectParticle : public EffectObject
 	{
 	public:
-		EffectParticle(KSTR sName, KSTR sTemplate);
+		EffectParticle(KSTR sName, KSTR sTemplate, KFLOAT fLifeTime);
 		virtual ~EffectParticle();
 
 		virtual KBOOL Initialize();
 		// render
-		virtual KVOID Render(KFLOAT fElapsed){}
+		virtual KVOID Render(KFLOAT fElapsed);
 
 		virtual KVOID Destroy();
 
 		virtual KVOID Activate(KBOOL bFlag);
 		
-		virtual KVOID Attach(Ogre::SceneNode* pNode, KPoint3 kOffset = KPoint3::ZERO, KFLOAT fScale = 1.0f);
+		virtual KVOID Attach(Ogre::SceneNode* pNode, KFLOAT fScale = 1.0f);
 		
 		virtual KVOID SetScale(KFLOAT fScale);
-
+		// 是否可见
+		virtual KBOOL IsVisible();
+		
 	protected:
 		//ParticleUniverse::ParticleSystem*	m_pParticleSystemEx;	// 扩展粒子特效句柄
 		Ogre::ParticleSystem*		m_pParticleHandle;		// 
 		Ogre::SceneNode*			m_pRoot;
 
 		KSTR	m_sTemplate;								// 特效模板
-		KFLOAT	m_fLifeTime;								// 存在时间
-		KBOOL	m_bLoopFlag;								// 是否循环播放
+		KFLOAT	m_fLifeTime;								// 存在时间， <= 0 为无限时
 	};
 	
 	//////////////////////////////////////////////////////////////////////////
@@ -122,7 +132,7 @@ namespace Kylin
 		KVOID DestroyEffect(KSTR sName);
 		// 产生特效
 		KVOID Generate(EffectObject* pEffect);
-		EffectObject* Generate(const KSTR& sName, const KSTR& sTemplate, KUINT uType = ET_PARTICLE);
+		EffectObject* Generate(const KSTR& sName, const KSTR& sTemplate, KFLOAT fLifeTime = -1.0f, KUINT uType = ET_PARTICLE);
 		// 激活特效
 		KVOID Activate(KSTR sName, KBOOL bFlag);
 

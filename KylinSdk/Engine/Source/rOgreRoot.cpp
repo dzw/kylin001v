@@ -222,7 +222,7 @@ KVOID Kylin::OgreRoot::DestroyCameraControl()
 
 //-----------------------------------------------------
 // 创建射线交集
-Ogre::RaySceneQuery* Kylin::OgreRoot::CreateSceneRay()
+Ogre::RaySceneQuery* Kylin::OgreRoot::CreateRaySceneQuery()
 {
 	if (!m_pRaySceneQuery)
 		m_pRaySceneQuery = OgreRoot::GetSingletonPtr()->GetSceneManager()->createRayQuery(Ogre::Ray());
@@ -230,7 +230,15 @@ Ogre::RaySceneQuery* Kylin::OgreRoot::CreateSceneRay()
 	return m_pRaySceneQuery;
 }
 
-KVOID Kylin::OgreRoot::DestroySceneRay()
+Ogre::SphereSceneQuery* Kylin::OgreRoot::CreateSphereSceneQuery()
+{
+	if (!m_pSphereSceneQuery)
+		m_pSphereSceneQuery = OgreRoot::GetSingletonPtr()->GetSceneManager()->createSphereQuery(Ogre::Sphere());
+
+	return m_pSphereSceneQuery;
+}
+
+KVOID Kylin::OgreRoot::DestroyQuery()
 {
 	if (m_pRaySceneQuery)
 	{
@@ -239,49 +247,7 @@ KVOID Kylin::OgreRoot::DestroySceneRay()
 	}
 }
 
-KBOOL Kylin::OgreRoot::PickOgreEntity( Ogre::Ray &rRay, Ogre::Entity **ppResult, KUINT uQueryMask )
+Kylin::InputManager* Kylin::OgreRoot::GetInputManager()
 {
-	if (!m_pRaySceneQuery) return false;
-
-	m_pRaySceneQuery->setRay(rRay);
-	if (uQueryMask != 0xffffffff)
-		m_pRaySceneQuery->setQueryMask(uQueryMask);
-	m_pRaySceneQuery->setQueryTypeMask(Ogre::SceneManager::ENTITY_TYPE_MASK);
-	m_pRaySceneQuery->setSortByDistance(true);
-
-	KUINT uVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();
-
-	RaySceneQueryResult &result = m_pRaySceneQuery->execute();
-	Ogre::RaySceneQueryResult::iterator rayIterator;
-
-	for(rayIterator = result.begin(); rayIterator != result.end(); rayIterator++ ) 
-	{
-		if (rayIterator->distance < KZERO)
-		{
-			rayIterator->movable->getParentSceneNode()->showBoundingBox(true);
-			continue;
-		}
-		
-		// get the entity to check
-		Ogre::Entity *pentity = static_cast<Ogre::Entity*>(rayIterator->movable);
-
-		if(!(pentity->getVisibilityFlags() & uVisibilityMask))
-			continue;
-
-		if(!pentity->getVisible()) 
-			continue;
-		
-		*ppResult = pentity;
-
-		m_pRaySceneQuery->clearResults();
-
-		return true;
-	}
-	
-	return false;
-}
-
-Ogre::RaySceneQuery* Kylin::OgreRoot::GetSceneRay()
-{
-	return m_pRaySceneQuery;
+	return g_theApp->m_pInputMgr;
 }

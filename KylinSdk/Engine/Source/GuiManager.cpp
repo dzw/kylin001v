@@ -38,7 +38,6 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 	m_pGUI->initialise(m_sResource);
 	
 	//////////////////////////////////////////////////////////////////////////
-	MyGUI::FactoryManager::getInstance().registerFactory<ResourceItemInfo>("Resource");
 	MyGUI::LanguageManager::getInstance().loadUserTags("core_theme_black_blue_tag.xml");
 	MyGUI::Gui::getInstance().load("core_skin.xml");
 	
@@ -52,8 +51,6 @@ KVOID Kylin::GuiManager::Destroy()
 {
 	RemoveAllGui();
 	//////////////////////////////////////////////////////////////////////////
-	MyGUI::FactoryManager::getInstance().unregisterFactory<ResourceItemInfo>("Resource");
-	//---------------------------------------------------------------
 	if (m_pGUI)
 	{
 		m_pGUI->shutdown();

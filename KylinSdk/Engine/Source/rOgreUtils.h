@@ -16,7 +16,13 @@ namespace Kylin
 		
 		// point3 to point2
 		static KPoint2	Point3To2(KPoint3 kP3, Ogre::Camera* pCam);
-
+		
+		/**
+		* Makes a sphere query with a given sphere
+		* @param sphere the sphere to check against scene
+		* @param results the list of objects returned by query
+		*/
+		static void SphereQuery(const KPoint3& pos, Ogre::Real radius, KVEC<Ogre::Entity *>& results, KUINT uQueryType = 0);
 		/**
 		* Attempts to pick an entity within scene using ray cast from the mouse
 		* @see Ogre::RaySceneQuery
@@ -30,6 +36,7 @@ namespace Kylin
 		*/
 		static KBOOL PickEntity(Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, KUINT uQueryType = 0, KFLOAT max_distance = -1.0f);
 		static KBOOL PickEntities(Ogre::Ray &ray, KVEC<Ogre::Entity *>& result, KUINT uQueryType = 0, KFLOAT max_distance = -1.0f);
+		static KBOOL PickEntityBoundBox(Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, KUINT uQueryType = 0, KFLOAT max_distance = -1.0f);
 		/**
 		* Fetches information about OGRE-based mesh
 		* @param mesh mesh to retrieve information about

@@ -23,11 +23,11 @@ Kylin::AnimationProxy::~AnimationProxy()
 
 }
 
-KVOID Kylin::AnimationProxy::Play( KSTR sAnim, KBOOL bL /*= false*/, BlendingTransition eTransition /*= BlendSwitch*/, KFLOAT fDuration /*= 1.0*/ )
+KVOID Kylin::AnimationProxy::Play( KCSTR& sAnim, KBOOL bL /*= false*/, BlendingTransition eTransition /*= BlendSwitch*/, KFLOAT fDuration /*= 1.0*/ )
 {
-	if (!m_pEntity->getAnimationState( sAnim ))
+	if (!HasAnimation( sAnim ))
 	{
-		AssertEx(NULL,KSTR("不存在此动画： " + sAnim).data());
+		//AssertEx(NULL,KSTR("不存在此动画： " + sAnim).data());
 		return;
 	}
 
@@ -175,11 +175,24 @@ KVOID Kylin::AnimationProxy::SetTarget( Ogre::Entity * pEnt )
 	Reset();
 }
 
-KFLOAT Kylin::AnimationProxy::GetLength( KSTR sAnim )
+KFLOAT Kylin::AnimationProxy::GetLength( KCSTR& sAnim )
 {
 	Ogre::AnimationState *pSource = m_pEntity->getAnimationState( sAnim );
 	if (pSource)
 		return pSource->getLength();
 
 	return .0f;
+}
+
+KBOOL Kylin::AnimationProxy::HasAnimation( KCSTR& sAnim )
+{
+	for (KUINT i = 0 ; i < m_kAnimNameList.size(); i++)
+	{
+		if (sAnim == m_kAnimNameList[i])
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
