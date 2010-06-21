@@ -4,6 +4,7 @@
 #include "ParticleUniverseSystemManager.h"
 #include "EffectMotionBlur.h"
 #include "EffectFade.h"
+#include "ClockingCallback.h"
 
 
 KBOOL Kylin::EffectManager::Initialize()
@@ -20,14 +21,14 @@ KBOOL Kylin::EffectManager::Initialize()
 	//KNEW ParticleUniverse::ParticleSystemManager();
 	Ogre::ParticleSystem::setDefaultNonVisibleUpdateTimeout(5);
 
-	Generate("Bloom","",ET_COMPOSITOR);
+	Generate("Bloom","",-1.0f,ET_COMPOSITOR);
 	Generate(KNEW EffectFade());
 	Generate(KNEW EffectMotionBlur());
 
 	return true;
 }
 
-Kylin::EffectObject* Kylin::EffectManager::Generate( const KSTR& sName,const KSTR& sTemplate, KUINT uType)
+Kylin::EffectObject* Kylin::EffectManager::Generate( const KSTR& sName,const KSTR& sTemplate, KFLOAT fLifeTime, KUINT uType)
 {
 	EffectMap::iterator it = m_kEffectMap.find(sName);
 	if (it != m_kEffectMap.end())
@@ -36,7 +37,7 @@ Kylin::EffectObject* Kylin::EffectManager::Generate( const KSTR& sName,const KST
 	EffectObject* pEffect = NULL;
 	if (uType == ET_PARTICLE)
 	{
-		pEffect = KNEW EffectParticle(sName,sTemplate);		
+		pEffect = KNEW EffectParticle(sName,sTemplate,fLifeTime);		
 		pEffect->Initialize();
 	}
 	else if (uType == ET_COMPOSITOR)
@@ -75,6 +76,7 @@ KVOID Kylin::EffectManager::Destroy()
 	EffectMap::iterator end = m_kEffectMap.end();
 	for (EffectMap::iterator it = beg; it != end; it++)
 	{
+		SAFE_CALL(it->second,Destroy());
 		SAFE_DEL(it->second);
 	}
 
@@ -88,6 +90,7 @@ KVOID Kylin::EffectManager::DestroyEffect( KSTR sName )
 	EffectMap::iterator it = m_kEffectMap.find(sName);
 	if (it != m_kEffectMap.end())
 	{
+		SAFE_CALL(it->second,Destroy());
 		SAFE_DEL(it->second);
 		m_kEffectMap.erase(it);
 	}
@@ -99,16 +102,23 @@ KVOID Kylin::EffectManager::Render( KFLOAT fElapsed )
 	EffectMap::iterator end = m_kEffectMap.end();
 	for (EffectMap::iterator it = beg; it != end; it++)
 	{
-		if (it->second->IsEnabled())
+		if (it->second->IsVisible())
 			it->second->Render(fElapsed);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////
-Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate)
+KVOID Kylin::EffectObject::SetCallbackObj( ClockingCallback* pObj )
+{
+	m_pClocking = pObj;
+}
+
+//////////////////////////////////////////////////////////////////////////
+Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate, KFLOAT fLifeTime)
 : EffectObject(sName)
 , m_pRoot(NULL)
 , m_sTemplate(sTemplate)
+, m_fLifeTime(fLifeTime)
 , m_pParticleHandle(NULL)
 //, m_pParticleSystemEx(NULL)
 {
@@ -117,7 +127,7 @@ Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate)
 
 Kylin::EffectParticle::~EffectParticle()
 {
-	Destroy();
+	//Destroy();
 }
 
 KBOOL Kylin::EffectParticle::Initialize()
@@ -136,6 +146,7 @@ KBOOL Kylin::EffectParticle::Initialize()
 	m_pRoot = pSceneMngr->getRootSceneNode()->createChildSceneNode();
 	m_pRoot->attachObject(m_pParticleHandle);
 
+	Activate(false);
 // 	ParticleUniverse::ParticleSystemManager* pPSManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
 // 	
 // 	m_pParticleSystemEx = pPSManager->getParticleSystem(m_sName);
@@ -185,7 +196,7 @@ KVOID Kylin::EffectParticle::Activate( KBOOL bFlag )
 
 }
 
-KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset , KFLOAT fScale)
+KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KFLOAT fScale)
 {
 	Assert(pNode);
 // 	if (m_pParticleSystemEx->getParentSceneNode())
@@ -196,7 +207,6 @@ KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KPoint3 kOffset , K
 		m_pRoot->getParentSceneNode()->removeChild(m_pRoot);
 
 	pNode->addChild(m_pRoot);
-	m_pRoot->setPosition(kOffset);
 	m_pRoot->setScale(KPoint3(fScale,fScale,fScale));
 }
 
@@ -204,6 +214,23 @@ KVOID Kylin::EffectParticle::SetScale( KFLOAT fScale )
 {
 	//SAFE_CALL(m_pParticleSystemEx,setScale(KPoint3(fScale,fScale,fScale)));
 	SAFE_CALL(m_pRoot,setScale(KPoint3(fScale,fScale,fScale)));
+}
+
+KVOID Kylin::EffectParticle::Render( KFLOAT fElapsed )
+{
+	if (m_fLifeTime > .0f)
+	{
+		m_fLifeTime -= fElapsed;
+		if (m_fLifeTime <= .0f)
+		{
+			SAFE_CALL(m_pClocking,EndTime(CLASS_TO(EffectParticle),m_sTemplate,m_kUserData));
+		}
+	}
+}
+
+KBOOL Kylin::EffectParticle::IsVisible()
+{
+	return m_pParticleHandle->getVisible();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -216,7 +243,7 @@ Kylin::EffectCompositor::EffectCompositor( KSTR sName )
 
 Kylin::EffectCompositor::~EffectCompositor()
 {
-	Destroy();
+	//Destroy();
 }
 
 
@@ -247,64 +274,3 @@ KBOOL Kylin::EffectCompositor::IsEnabled()
 	return m_pCompositor->getEnabled();
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-
-
-//////////////////////////////////////////////////////////////////////////
-//KBOOL Kylin::EffectBloom::Initialize()
-//{
-	/// Bloom effect
-//	Ogre::CompositorPtr spCompositor = Ogre::CompositorManager::getSingleton().create(
-//		m_sName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
-//		);
-
-// 	CompositionTechnique *t;
-// 	CompositionTechnique::TextureDefinition *td;
-// 	CompositionTargetPass *tp;
-// 	CompositionPass *pass;
-// 
-// 	t = spCompositor->createTechnique();
-// 	td = t->createTextureDefinition("scene");
-// 	td->width = 1;
-// 	td->height = 1;
-// 	td->formatList.push_back(PF_X8R8G8B8);
-// 	td = t->createTextureDefinition("blur0");
-// 	td->width = 0.25;
-// 	td->height = 0.25;
-// 	td->formatList.push_back(PF_X8R8G8B8);
-// 	td = t->createTextureDefinition("blur1");
-// 	td->width = 0.25;
-// 	td->height = 0.25;
-// 	td->formatList.push_back(PF_X8R8G8B8);
-// 
-// 	tp = t->createTargetPass();
-// 	tp->setInputMode(CompositionTargetPass::IM_PREVIOUS);
-// 	tp->setOutputName("scene");
-// 
-// 	tp = t->createTargetPass();
-// 	tp->setInputMode(CompositionTargetPass::IM_NONE);
-// 	tp->setOutputName("blur0");
-// 	pass = tp->createPass();
-// 	pass->setType(CompositionPass::PT_RENDERQUAD);
-// 	pass->setMaterialName("PostFilters/Bloom/Blur");
-// 	pass->setInput(0, "scene");
-// 
-// 	tp = t->createTargetPass();
-// 	tp->setInputMode(CompositionTargetPass::IM_NONE);
-// 	tp->setOutputName("blur1");
-// 	pass = tp->createPass();
-// 	pass->setType(CompositionPass::PT_RENDERQUAD);
-// 	pass->setMaterialName("PostFilters/Bloom/Blur");
-// 	pass->setInput(0, "blur0");
-// 
-// 	tp = t->getOutputTargetPass();
-// 	tp->setInputMode(CompositionTargetPass::IM_NONE);
-// 	pass = tp->createPass();
-// 	pass->setType(CompositionPass::PT_RENDERQUAD);
-// 	pass->setMaterialName("PostFilters/Bloom/Final");
-// 	pass->setInput(0, "scene");
-// 	pass->setInput(1, "blur1");
-// 
-// 	return EffectCompositor::Initialize();
-//}

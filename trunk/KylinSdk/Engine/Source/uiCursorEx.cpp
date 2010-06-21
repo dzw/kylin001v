@@ -2,6 +2,8 @@
 #include "uiCursorEx.h"
 
 #include <MyGUI.h>
+#include "rogreRoot.h"
+#include "InputManager.h"
 
 
 Kylin::CursorEx::CursorEx()
@@ -14,11 +16,13 @@ Kylin::CursorEx::CursorEx()
 
 KBOOL Kylin::CursorEx::Initialize()
 {
-	//MyGUI::getGUI()->load("Pointers_W32.xml");
-	
-	MyGUI::Gui::getInstance().load("Pointers.xml");
+
+	//MyGUI::PointerManager::getInstance().load("Pointers.xml");
 	
 	SetPointer(CT_NORMAL);
+
+	MyGUI::IntSize size = MyGUI::Gui::getInstance().getViewSize();
+	Kylin::OgreRoot::GetSingletonPtr()->GetInputManager()->SetMousePosition(size.width / 2, size.height / 2);
 
 	return true;
 }
@@ -63,11 +67,12 @@ KVOID Kylin::CursorEx::SetPointer( CursorType eType )
 
 		break;
 	}
-
+	
+	MyGUI::PointerManager::getInstance().setVisible(true);
 	m_eType = eType;
 }
 
-Kylin::CursorType Kylin::CursorEx::GetPointerType()
+Kylin::CursorEx::CursorType Kylin::CursorEx::GetPointerType()
 {
 	return m_eType;
 }

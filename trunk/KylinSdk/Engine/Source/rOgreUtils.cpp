@@ -45,7 +45,7 @@ KVOID Kylin::OgreUtils::DynamicLoadMesh( KSTR sMesh )
 //-----------------------------------------------------------------------------------------
 KBOOL Kylin::OgreUtils::PickEntity( Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, KUINT uQueryType /* = 0*/ , KFLOAT max_distance /*= -1.0f*/ )
 {
-	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetSceneRay();
+	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetRayQuery();
 	mRaySceneQuery->setRay(ray);
 	mRaySceneQuery->setQueryMask(uQueryType);
 	mRaySceneQuery->setQueryTypeMask(Ogre::SceneManager::ENTITY_TYPE_MASK);
@@ -449,7 +449,7 @@ KINT Kylin::OgreUtils::PickSubMesh(Ogre::Ray& ray, Ogre::Entity* pEntity)
 
 KBOOL Kylin::OgreUtils::PickEntities( Ogre::Ray &ray, KVEC<Ogre::Entity *>& result, KUINT uQueryType, KFLOAT max_distance)
 {
-	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetSceneRay();
+	Ogre::RaySceneQuery *mRaySceneQuery = OgreRoot::GetSingletonPtr()->GetRayQuery();
 	mRaySceneQuery->setRay(ray);
 	mRaySceneQuery->setQueryMask(uQueryType);
 	mRaySceneQuery->setSortByDistance(true);
@@ -570,4 +570,99 @@ KPoint2 Kylin::OgreUtils::Point3To2( KPoint3 kP3, Ogre::Camera* pCam )
 	}
 
 	return ret;
+}
+
+void Kylin::OgreUtils::SphereQuery( const KPoint3& pos, Ogre::Real radius, KVEC<Ogre::Entity *>& results, KUINT uQueryType)
+{
+	results.clear();
+
+	Ogre::SphereSceneQuery *mSphereQuery = OgreRoot::GetSingletonPtr()->GetSphereQuery();
+	Ogre::Sphere sphere(pos, radius);
+	mSphereQuery->setSphere(sphere);
+	mSphereQuery->setQueryMask(uQueryType);
+
+	KUINT mVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();
+
+	Ogre::SceneQueryResult& qryResult = mSphereQuery->execute();
+	Ogre::SceneQueryResultMovableList::iterator it;
+	Ogre::SceneQueryResultMovableList::iterator it_end = qryResult.movables.end();
+
+	for(it = qryResult.movables.begin();it != it_end;it++)
+	{
+		Ogre::MovableObject *entity = (*it);
+
+		if (entity->getMovableType().compare("Entity") == 0)
+		{
+			// get the entity to check
+			Ogre::Entity *pentity = static_cast<Ogre::Entity*>(entity);
+
+			if(!pentity->getVisible() || !(pentity->getVisibilityFlags() & mVisibilityMask))
+				continue;
+
+			results.push_back(pentity);
+		}
+	}
+}
+
+KBOOL Kylin::OgreUtils::PickEntityBoundBox( Ogre::Ray &ray, Ogre::Entity **result, KPoint3 &hitpoint, KUINT uQueryType /*= 0*/, KFLOAT max_distance /*= -1.0f*/ )
+{
+	Ogre::RaySceneQuery *mRaySceneQuery = Kylin::OgreRoot::GetSingletonPtr()->GetRayQuery();
+	mRaySceneQuery->setRay(ray);
+	mRaySceneQuery->setQueryMask(uQueryType);
+//	mRaySceneQuery->setQueryTypeMask(Ogre::SceneManager::ENTITY_TYPE_MASK);
+	mRaySceneQuery->setSortByDistance(true);
+
+	KUINT mVisibilityMask = OgreRoot::GetSingletonPtr()->GetSceneManager()->getVisibilityMask();
+
+	if (mRaySceneQuery->execute().size() <= 0) return (false);
+
+	// at this point we have raycast to a series of different objects bounding boxes.
+	// we need to test these different objects to see which is the first polygon hit.
+	// there are some minor optimizations (distance based) that mean we wont have to
+	// check all of the objects most of the time, but the worst case scenario is that
+	// we need to test every triangle of every object.
+	KFLOAT closest_distance = max_distance;
+	KPoint3 closest_result;
+	Ogre::RaySceneQueryResult &query_result = mRaySceneQuery->getLastResults();
+
+	for (size_t qr_idx = 0; qr_idx < query_result.size(); qr_idx++)
+	{
+		if (query_result[qr_idx].distance == 0) continue;
+		// stop checking if we have found a raycast hit that is closer
+		// than all remaining entities
+		if ((closest_distance >= 0.0f) && (closest_distance < query_result[qr_idx].distance))
+		{
+			break;
+		}
+
+		// only check this result if its a hit against an entity
+		if ((query_result[qr_idx].movable != NULL) && (query_result[qr_idx].movable->getMovableType().compare("Entity") == 0))
+		{
+			// get the entity to check
+			Ogre::Entity *pentity = static_cast<Ogre::Entity*>(query_result[qr_idx].movable);
+
+			if(!(pentity->getVisibilityFlags() & mVisibilityMask))
+				continue;
+
+			if(!pentity->getVisible()) 
+				continue;
+	
+			closest_distance = query_result[qr_idx].distance;
+			// if we found a new closest raycast for this object, update the
+			// closest_result before moving on to the next object.
+			closest_result = ray.getPoint(closest_distance);
+			(*result) = pentity;
+		}
+	}
+
+	// return the result
+	if (closest_distance != max_distance)
+	{
+		hitpoint = closest_result;
+		return true;
+	}
+	else // raycast failed
+	{
+		return false;
+	}
 }

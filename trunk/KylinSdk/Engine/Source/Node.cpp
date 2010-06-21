@@ -18,7 +18,7 @@ Kylin::Node::Node()
 
 Kylin::Node::~Node()
 {
-	Destroy();
+	//Destroy();
 }
 
 KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
@@ -35,10 +35,9 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	{
 		//kProp.GetStrValue("$Materials",sMaterials);
 		// 加载模型资源
+		m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
 		if (uID != -1)
-			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(Ogre::StringConverter::toString(uID),sMesh,"General");
-		else
-			m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
+			m_pOgreEntity->setUserAny(Ogre::Any(uID));
 
 		// 设置模型贴图
 		OgreUtils::SetDefaultMaterial(m_pOgreEntity);
@@ -56,11 +55,11 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		else
 			m_pOgreEntity->setCastShadows(false);
 		
-		//--------------------------------------------------------
+		//-----------------------------------------------------------
 		// 透明度
 		if (!m_pTransparency)
 			m_pTransparency = KNEW EntityMaterialInstance (m_pOgreEntity);
-		//--------------------------------------------------------
+		//-----------------------------------------------------------
 
 		// 设置渲染距离
 		KFLOAT fRenderDisance = -1.0f;
@@ -75,21 +74,8 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	KFLOAT fScale;
 	if (kProp.GetFloatValue("$Scale",fScale))
 		m_pOgreNode->setScale(KPoint3(fScale,fScale,fScale));
-	//////////////////////////////////////////////////////////////////////////
-	// 加载特效
-	KSTR sEffect;
-	if (kProp.GetStrValue("$Effect",sEffect))
-	{
-		EffectObject* pObj = AttachEffect(sEffect);
-		if (pObj)
-		{	// 设置特效缩放
-			KFLOAT fEfScale;
-			if (kProp.GetFloatValue("$EffectScale",fEfScale))
-			{
-				pObj->SetScale(fEfScale);
-			}
-		}
-	}
+	//---------------------------------------------------------------
+	BindEffect(kProp);
 	//////////////////////////////////////////////////////////////////////////
 	// 加载碰撞
 	KBOOL bCollide = false;
@@ -189,13 +175,13 @@ Ogre::Entity* Kylin::Node::GetEntityPtr()
 	return m_pOgreEntity;
 }
 
-Kylin::EffectObject* Kylin::Node::AttachEffect( KSTR sName, KUINT uType /*= EffectManager::ET_PARTICLE*/, KPoint3 kPos )
+Kylin::EffectObject* Kylin::Node::AttachEffect( KSTR sName, KFLOAT fTime, KUINT uType /*= EffectManager::ET_PARTICLE*/)
 {
 	KSTR sNewName = sName + Ogre::StringConverter::toString(GetWorldID());
-	EffectObject* pObj = EffectManager::GetSingletonPtr()->Generate(sNewName,sName,uType);
+	EffectObject* pObj = EffectManager::GetSingletonPtr()->Generate(sNewName,sName,fTime,uType);
 	if (pObj)
 	{
-		pObj->Attach(m_pOgreNode,kPos);
+		pObj->Attach(m_pOgreNode);
 		
 		m_kEffectList.push_back(pObj);
 	}
@@ -205,7 +191,7 @@ Kylin::EffectObject* Kylin::Node::AttachEffect( KSTR sName, KUINT uType /*= Effe
 
 KVOID Kylin::Node::DetachAndDestroyEffect( KSTR sName )
 {
-	KSTR sNewName = sName + GetEntityName();
+	KSTR sNewName = sName + Ogre::StringConverter::toString(GetWorldID());
 	for (KUINT i = 0; i < m_kEffectList.size(); i++)
 	{	
 		if (m_kEffectList[i]->GetName() == sNewName)

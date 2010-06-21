@@ -16,10 +16,11 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 
 		KVOID SetWindowExtents(KINT nWidth, KINT nHeight);
+		KVOID SetMousePosition(int _x, int _y);
 		KBOOL IsKeyDown(KUINT uKey);
 
 		OIS::Mouse* GetMouse();
-
+		
 	protected:
 		virtual KVOID OnKeyDown(KUINT uKey);
 		virtual KVOID OnKeyUp(KUINT uKey);

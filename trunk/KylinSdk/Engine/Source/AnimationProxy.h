@@ -18,14 +18,16 @@ namespace Kylin
 		};
 		
 		// 播放动画
-		KVOID Play(KSTR sAnim, KBOOL bL = false, BlendingTransition eTransition = BlendSwitch, KFLOAT fDuration = 1.0);
+		KVOID Play(KCSTR& sAnim, KBOOL bL = false, BlendingTransition eTransition = BlendSwitch, KFLOAT fDuration = 1.0);
 		KVOID Play(KINT nIndex, KBOOL bL = false, BlendingTransition eTransition = BlendSwitch, KFLOAT fDuration = 1.0);
 		KVOID Update(KFLOAT fElapsed);
 		KVOID Reset();
 
 		KVOID SetTarget(Ogre::Entity *);
 		// 获得动画长度
-		KFLOAT GetLength(KSTR sAnim);
+		KFLOAT GetLength(KCSTR& sAnim);
+		
+		KBOOL HasAnimation(KCSTR& sAnim);
 
 	protected:
 		Ogre::Entity *			m_pEntity;
