@@ -7,6 +7,7 @@
 #include "uiSelectMenu.h"
 
 #include "LobbyScene.h"
+#include "rPhyXSystem.h"
 
 
 Kylin::ClLobby::ClLobby()
@@ -18,6 +19,9 @@ Kylin::ClLobby::ClLobby()
 
 KBOOL Kylin::ClLobby::Initialize()
 {
+	if (PhyX::PhysicalSystem::Initialized())
+		PhyX::PhysicalSystem::GetSingletonPtr()->SetEnable(true);
+
 	//////////////////////////////////////////////////////////////////////////
 	m_pLobbyScene = KNEW Kylin::LobbyScene();
 	if (!m_pLobbyScene->Initialize())
