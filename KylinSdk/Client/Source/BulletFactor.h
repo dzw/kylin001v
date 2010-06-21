@@ -1,10 +1,13 @@
 #pragma once
 
 #include "factor.h"
+#include "ClockingCallback.h"
+
 
 namespace Kylin
 {
-	class BulletFactor : public Factor
+	class BulletFactor : public Factor 
+					   , public ClockingCallback
 	{
 	public:
 		BtDeclareRTTI
@@ -15,7 +18,8 @@ namespace Kylin
 
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
-		
+		virtual KVOID BindEffect(PropertySet kProp);
+
 		virtual KVOID Moving(KFLOAT fElapsed);
 	
 	protected:
@@ -24,7 +28,8 @@ namespace Kylin
 	protected:
 		virtual KVOID PostSpawn();
 		virtual KVOID PostDestroy();
-	
+		virtual KVOID EndTime(KCSTR& sClass,KCSTR& sName, KANY aUserData);
+
 	protected:
 		KFLOAT m_fVelocity;		// ËÙ¶È
 		
