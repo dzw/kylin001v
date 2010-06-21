@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm156"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../Engine/Source;../../Dependencies/boost_1_42;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;./Source"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../Engine/Source;../../Dependencies/boost_1_42;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
