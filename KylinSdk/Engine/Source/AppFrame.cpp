@@ -182,7 +182,8 @@ namespace Kylin
 
 	KVOID AppFrame::OnExit()
 	{
-		Destroy();
+		//Destroy();
+		m_bShutDown = true;
 	}
 	
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
