@@ -1,0 +1,8 @@
+ID,TYPE,NAME,MESH,MATERIAL,LUA,SCALE,HIGH,LEVEL,EXP,HP,STR,EXPLAIN
+INT,INT,STRING,STRING,STRING,STRING,FLOAT,FLOAT,INT,FLOAT,INT,INT,STRING
+0,1,食人魔,Media\models\bosses\Troll_King\Troll_King.MESH,Troll_King,char_%d.lua,1,5,1,1,65,40,古代传说的恶魔
+1,1,人类,Media\models\player\warrior\player.MESH,Nude/base,char_%d.lua,1,1,1,1,,1,1
+2,1,巨魔,Media\models\bosses\troll\Troll.MESH,trollsketch,char_%d.lua,1,5,1,1,70,34,古代传说的恶魔
+3,1,巨魔,Media\models\bosses\Ordraake\Ordraake.MESH,BP_Ordraake,char_%d.lua,1,5,1,1,63,38,古代传说的恶魔
+4,1,巨魔,Media\models\bosses\Corrupted_Merc\Corrupted_Merc.MESH,Corrupted_Merc,char_%d.lua,1,5,1,1,70,28,古代传说的恶魔
+5,1,巨魔,Media\models\bosses\Ember_Colossus\Ember_Colossus.MESH,Standard_24,char_%d.lua,1,5,1,1,67,36,古代传说的恶魔

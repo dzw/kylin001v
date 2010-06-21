@@ -1,0 +1,8 @@
+ID,KEY,VALUE
+INT,STRING,STRING
+0,CHAR_DB,Data\db\char.csv
+1,ACTION_DB,Data\db\action.csv
+2,EFFECT_DB,Data\db\effect.csv
+3,FACTOR_DB,Data\db\factor.csv
+4,CONSOLE_DB,Data\db\console.csv
+5,AVATAR_DB,Data\db\avatar.csv

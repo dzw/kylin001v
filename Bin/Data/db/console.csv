@@ -1,0 +1,4 @@
+ID,COMMAND,ARG_COUNT,EXPLAIN
+INT,STRING,INT,STRING
+0,exit,0,exit the application
+1,show_frame,1,show frame status... (true/false)
