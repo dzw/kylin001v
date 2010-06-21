@@ -9,6 +9,7 @@ Kylin::PhyX::PhysicalSystem::PhysicalSystem()
 : m_pCoverMonitor(NULL)
 , m_pMotionSimulator(NULL)
 , m_pCollisionMonitor(NULL)
+, m_bEnable(false)
 {
 
 }
@@ -52,6 +53,9 @@ KVOID Kylin::PhyX::PhysicalSystem::CreateCoverMonitor( CoverMonitor* pCm /*= NUL
 
 KVOID Kylin::PhyX::PhysicalSystem::Tick( KFLOAT fElapsed )
 {
+	if (!m_bEnable) 
+		return;
+
 	SAFE_CALL(m_pMotionSimulator,Tick(fElapsed));
 	SAFE_CALL(m_pCollisionMonitor,Tick(fElapsed));
 	SAFE_CALL(m_pCoverMonitor,Tick(fElapsed));

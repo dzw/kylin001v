@@ -27,9 +27,8 @@ KVOID Kylin::GameFrame::Run()
 
 KVOID Kylin::GameFrame::Destroy()
 {
-	if (m_pActiveStatus)
-		m_pActiveStatus->Destroy();
-	KDEL m_pActiveStatus;
+	SAFE_CALL(m_pActiveStatus,Destroy());
+	SAFE_DEL(m_pActiveStatus);
 
 	if (KylinRoot::Initialized())
 		KDEL KylinRoot::GetSingletonPtr();
@@ -85,7 +84,7 @@ KVOID Kylin::GameFrame::SwitchStatus( GameStatus* pStatus )
 		m_pActiveStatus->Deserialize(kSwitchInfo);
 		m_pActiveStatus->Destroy();
 
-		KDEL m_pActiveStatus;
+		SAFE_DEL(m_pActiveStatus);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////
