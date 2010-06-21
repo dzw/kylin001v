@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<World>
+	<SoundVolume>1.0</SoundVolume>
+	<Entry>10000000</Entry>
+	<!-- type=1 城镇 =0 战场 -->
+	<Scene id="10000000" type="0" name="场景1">
+		<File>level_em.xml</File>
+		<Explain>1233 4231</Explain>
+		<Level>1</Level>
+		<BackgroundSound></BackgroundSound>
+		<BackgroundUI></BackgroundUI>
+	</Scene>
+	<Scene id="10000001" type="0" name="场景2">
+		<File>level_em_1.xml</File>
+		<Explain>1233 4231</Explain>
+		<Level>3</Level>
+		<BackgroundSound></BackgroundSound>
+		<BackgroundUI></BackgroundUI>
+	</Scene>
+	
+</World>
