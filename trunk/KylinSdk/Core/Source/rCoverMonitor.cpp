@@ -45,6 +45,9 @@ KVOID Kylin::PhyX::CoverMonitor::Destroy()
 
 KVOID Kylin::PhyX::CoverMonitor::Testing( KFLOAT fElapsed )
 {
+	if (!KylinRoot::GetSingletonPtr()->GetActiveCamera())
+		return;
+
 	Ogre::Ray kRay		= KylinRoot::GetSingletonPtr()->GetActiveCamera()->GetCameraToTargetRay();
 	KFLOAT fDistance	= KylinRoot::GetSingletonPtr()->GetActiveCamera()->GetCameraDistance();
 	KVEC<Ogre::Entity *> kEntities;

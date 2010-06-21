@@ -24,11 +24,16 @@ namespace Kylin
 			MotionSimulator*	GetMotionSimulator();
 			CollisionMonitor*	GetCollisionMonitor();
 			CoverMonitor*		GetCoverMonitor();
+		
+			KVOID				SetEnable(KBOOL bFlag) { m_bEnable = bFlag; }
+			KBOOL				IsEnable() { return m_bEnable; }
 
 		protected:
 			CoverMonitor*		m_pCoverMonitor;
 			MotionSimulator*	m_pMotionSimulator;
 			CollisionMonitor*	m_pCollisionMonitor;
+
+			KBOOL				m_bEnable;
 		};
 	}
 }
