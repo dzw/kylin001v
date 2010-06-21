@@ -258,6 +258,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ClockingCallback.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\CollisionWrapper.h"
 				>
 			</File>
