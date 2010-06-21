@@ -9,6 +9,7 @@
 #include "Character.h"
 #include "Avatar.h"
 #include "NpcObject.h"
+#include "rOgreUtils.h"
 
 
 namespace Script
@@ -52,57 +53,6 @@ namespace Script
 		}
 	}
 
-	//-----------------------------------------------------
-	extern void set_fog_color( float r, float g, float b )
-	{
-		
-	}
-
-	extern void set_fog_distance( float d )
-	{
-
-	}
-
-	extern void set_fog_intensity( float i )
-	{
-
-	}
-
-	extern void set_fog_near( float n )
-	{
-
-	}
-
-	extern void set_fog_far( float f )
-	{
-
-	}
-
-	extern void set_fog_enable( bool b )
-	{
-		
-	}
-
-	extern void set_camera_near( float n )
-	{
-
-	}
-
-	extern void set_camera_far( float f )
-	{
-
-	}
-
-	extern void set_visible_distance( float d )
-	{
-
-	}
-
-	extern void set_viewport_back( float r, float g, float b )
-	{
-
-	}
-
 	extern void add_pathway_pos( unsigned int uEntID, float x, float z )
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
@@ -111,6 +61,25 @@ namespace Script
 		{
 			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
 			SAFE_CALL(pNpc->GetAIHandler(),AddPathwayPos(KPoint3(x,0,z)));	
+		}
+	}
+
+	extern void query_near_foeman( unsigned int uEntID, float r )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::NpcObject,pEnt))
+		{
+			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
+			
+			KVEC<Ogre::Entity*> kEntities;
+			Kylin::OgreUtils::SphereQuery(pNpc->GetTranslate(),r,kEntities,Kylin::KylinRoot::KR_NPC_MASK);
+
+			float fDistance = 99999999.0f;
+			for (KUINT i = 0; i < kEntities.size(); i++)
+			{
+				
+			}
 		}
 	}
 }

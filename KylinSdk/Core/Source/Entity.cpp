@@ -70,6 +70,8 @@ KVOID Kylin::Entity::EV_PostDestroy( EventPtr spEV )
 
 KVOID Kylin::Entity::PostDestroy()
 {
+	Node::Destroy();
+
 	KylinRoot::GetSingletonPtr()->DestroyEntity(this->GetID());
 }
 
