@@ -43,10 +43,10 @@ namespace Kylin
 		virtual KVOID	OnKeyUp(KUINT uKey);
 
 		virtual KVOID	OnLButtonDown(KINT nX, KINT nY);
-		virtual KVOID	OnLButtonUp(KINT nX, KINT nY);
 		virtual KVOID	OnRButtonDown(KINT nX, KINT nY);
 		virtual KVOID	OnMouseMove(KFLOAT fX, KFLOAT fY, KFLOAT fZ);
-		
+		virtual KVOID	OnMouseMove(KINT nX, KINT nY);
+
 	protected:
 		
 		Character*		m_pHost;
@@ -57,14 +57,16 @@ namespace Kylin
 		
 		KFLOAT			m_fDistance;
 		KBOOL			m_bMoveForward;
-		KBOOL			m_bCanRot;
-		
+		KBOOL			m_bPrepareFire;
+
 		// 贴花特效
 		EffectDecal*	m_pGuideEffect;
 		// 选中对象特效
 		EffectDecal*	m_pFocusEffect;
 		// 被选中的entity
 		Ogre::Entity*	m_pFocusEntity;
+		// 操作对象
+		KUINT			m_uTargetID;
 
 		// 摄像机
 		GameCamera*		m_pCamera;

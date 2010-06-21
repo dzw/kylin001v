@@ -13,19 +13,20 @@
 #include "rMotionSimulator.h"
 #include "ScriptVM.h"
 #include "EffectDecal.h"
+#include "uiCursorEx.h"
 
 
 
 Kylin::PlayerController::PlayerController()
 : InputListener()
 , m_pHost(NULL)
-, m_bCanRot(false)
 , m_bMoveForward(true)
 , m_kKeyDirection(KPoint3::ZERO)
 , m_kMousePickPos(KPoint3::ZERO)
 , m_pGuideEffect(NULL)
 , m_pFocusEffect(NULL)
 , m_pFocusEntity(NULL)
+, m_uTargetID(INVALID_ID)
 {
 	//-----------------------------------------------------
 	m_pCamera = KNEW GameCamera( OgreRoot::GetSingletonPtr()->GetCamera("$MainCamera"),
@@ -40,7 +41,7 @@ Kylin::PlayerController::PlayerController()
 		"Game/UnitSelect",1 );
 	//-----------------------------------------------------
 	// 创建射线交集
-	OgreRoot::GetSingletonPtr()->CreateSceneRay();
+	OgreRoot::GetSingletonPtr()->CreateRaySceneQuery();
 }
 
 
@@ -48,7 +49,7 @@ Kylin::PlayerController::~PlayerController()
 {
 	//-----------------------------------------------------
 	// 销毁射线交集
-	OgreRoot::GetSingletonPtr()->DestroySceneRay();
+	OgreRoot::GetSingletonPtr()->DestroyQuery();
 	//-----------------------------------------------------
 	SAFE_DEL(m_pFocusEffect);
 	SAFE_DEL(m_pGuideEffect);
@@ -133,6 +134,31 @@ KVOID Kylin::PlayerController::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
 	}
 	else
 		m_pCamera->UpdateCameraGoal(0, 0, -0.0005f * fZ);
+
+}
+//---------------------------------------------------------------
+KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
+{
+	Ogre::Ray kRay;
+	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
+	{
+		Ogre::Entity* pEnt = NULL;
+		KPoint3 kHit;
+		if ( OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+		{
+			if (pEnt)
+			{
+				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+				if (m_pHost->GetID() != uID)
+				{
+					// 非友军改变鼠标指针
+					KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_ATTACK);
+				}
+			}
+		}
+		else
+			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_NORMAL);
+	}
 }
 
 KVOID Kylin::PlayerController::OnKeyUp( KUINT uKey )
@@ -192,44 +218,55 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
 	{
-		KPoint3 vPos;
-		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
+		//m_pTarget
+		Ogre::Entity* pEnt = NULL;
+		KPoint3 kHitPos; 
+		if ( OgreUtils::PickEntity(kRay,&pEnt,kHitPos,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
 		{
-			m_fDistance = (vPos - m_pHost->GetTranslate()).length();
-			// 超过可视距离不可移动
-			if ( m_fDistance > VISIBLE_DISTANCE )
+			if (pEnt)
 			{
-				// 提示声音
-				return;
+				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+				Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
+				if (pTarget)
+				{
+					m_uTargetID = uID;
+				}
 			}
-			else
+		}
+		else
+		{
+			if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
 			{
-				m_kMousePickPos = vPos;
+				m_fDistance = (kHitPos - m_pHost->GetTranslate()).length();
+				// 超过可视距离不可移动
+				if ( m_fDistance > VISIBLE_DISTANCE )
+				{
+					// 提示声音
+					return;
+				}
+				else
+				{
+					m_kMousePickPos = kHitPos;
 
-				// 在选中位置播放动画
-				m_pGuideEffect->MoveTo(vPos);
-				m_pGuideEffect->SetVisible(true);
-				
-				// 播放角色动画
-				KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
-			}
+					// 在选中位置播放动画
+					m_pGuideEffect->MoveTo(kHitPos);
+					m_pGuideEffect->SetVisible(true);
 
-			//////////////////////////////////////////////////////////////////////////
-			// 旋转到拾取的方向
-			KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
-			KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
-			kSrc.y = 0;														// Ignore pitch difference angle
-			kDir.y = 0;
-			kSrc.normalise(); 
+					// 播放角色动画
+					KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
+				}
 
-// 			if ((1.0f + kSrc.dotProduct(kDir)) < KZERO)						// Work around 180 degree quaternion rotation quirk                         
-// 			{                                                                           
-// 				m_pHost->GetSceneNode()->yaw(Ogre::Degree(180));                                                
-// 			}                                                                           
-// 			else                                                                        
-			{                                                                           
-				Quaternion kQuat = kSrc.getRotationTo(kDir);                        
-				m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+				//////////////////////////////////////////////////////////////////////////
+				// 旋转到拾取的方向
+				KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
+				KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
+				kSrc.y = 0;														// Ignore pitch difference angle
+				kDir.y = 0;
+				kSrc.normalise();                                                           
+				{                                                                           
+					Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+					m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+				}
 			}
 		}
 	}
@@ -251,19 +288,24 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 	}
 }
 
-KVOID Kylin::PlayerController::OnLButtonUp( KINT nX, KINT nY )
-{
-	if (m_bCanRot)
-	{
-		m_bCanRot = false;
-		// 改变鼠标
-
-	}
-}
-
 KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 {
-	//KPoint3 vPos = m_pHost->GetTranslate();
-	//vPos.y += 3;
+	Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetID);
+	if (pTarget)
+	{
+		KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
+		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;				// Orientation from initial direction
+		kSrc.y = 0;																// Ignore pitch difference angle
+		kDir.y = 0;
+		kSrc.normalise();                                                           
+		{                                                                           
+			Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+		}
+	}
+	
 	SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+
+	//------------------------------------------------------------------
+	// m_bPrepareFire 当目标距离大于攻击距离时，向目标移动。
 }
