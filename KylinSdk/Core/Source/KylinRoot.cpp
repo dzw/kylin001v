@@ -16,7 +16,8 @@
 #include "FileUtils.h"
 #include "rOgreUtils.h"
 #include "GameCamera.h"
-
+#include "GuiManager.h"
+#include "uiCursorEx.h"
 
 extern Kylin::AppFrame* g_theApp;
 
@@ -253,3 +254,9 @@ Kylin::Scene* Kylin::KylinRoot::GetCurrentScene()
 	}
 	return NULL;
 }
+
+KVOID Kylin::KylinRoot::SetMousePointer( KUINT uType )
+{
+	CursorEx* pCursor = GET_UI_PTR(CursorEx);
+	SAFE_CALL(pCursor,SetPointer(CursorEx::CursorType(uType)));
+}	
