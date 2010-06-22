@@ -62,6 +62,9 @@ namespace Kylin
 		
 		// 通知脚步中的entity 函数
 		KVOID		NotifyScriptEntity(Kylin::Entity* pEnt, KCSTR& sFunc);
+		
+		// 设置鼠标指针类型
+		KVOID		SetMousePointer(KUINT uType);
 
 	protected:
 		GameCamera* m_pCamera;
