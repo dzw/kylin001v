@@ -107,7 +107,7 @@ KVOID Kylin::AnimationProxy::Play( KINT nIndex, KBOOL bL /*= false*/, BlendingTr
 
 KVOID Kylin::AnimationProxy::Update( KFLOAT fElapsed )
 {
-	if( m_pSource != 0 )
+	if( m_pSource )
 	{
 		if( m_fTimeleft > 0 ) //两个动画仍在混合过程中
 		{
@@ -134,7 +134,8 @@ KVOID Kylin::AnimationProxy::Update( KFLOAT fElapsed )
 		}
 		if (m_pSource->getTimePosition() >= m_pSource->getLength())
 		{
-			// 动画结束			
+			// 动画结束
+			PlayNext();
 		}
 
 		m_pSource->addTime(fElapsed);
@@ -195,4 +196,35 @@ KBOOL Kylin::AnimationProxy::HasAnimation( KCSTR& sAnim )
 	}
 
 	return false;
+}
+
+KVOID Kylin::AnimationProxy::AddQueue( KCSTR& sAnim )
+{
+	if (HasAnimation(sAnim))
+	{
+		if (m_pSource && m_pSource->getTimePosition() < m_pSource->getLength())
+		{
+			m_kWaitingQueue.push_back(sAnim);
+		}
+		
+	}
+}
+
+KBOOL Kylin::AnimationProxy::IsEmptyQueue()
+{
+	return !m_kWaitingQueue.size();
+}
+
+KVOID Kylin::AnimationProxy::PlayNext()
+{
+	if (!IsEmptyQueue())
+	{
+		Play(m_kWaitingQueue[0]);
+		m_kWaitingQueue.erase(m_kWaitingQueue.begin());
+	}
+}
+
+KVOID Kylin::AnimationProxy::ClearQueue()
+{
+	m_kWaitingQueue.clear();
 }

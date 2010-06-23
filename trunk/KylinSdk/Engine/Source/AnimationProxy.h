@@ -28,6 +28,15 @@ namespace Kylin
 		KFLOAT GetLength(KCSTR& sAnim);
 		
 		KBOOL HasAnimation(KCSTR& sAnim);
+		
+		// 将动画加入等待队列，上一个动画播放完后再播放此动画
+		KVOID AddQueue(KCSTR& sAnim);
+		// 判断队列是否为空
+		KBOOL IsEmptyQueue();
+		// 播放队列中的下一个动画
+		KVOID PlayNext();
+		// 清空队列
+		KVOID ClearQueue();
 
 	protected:
 		Ogre::Entity *			m_pEntity;
@@ -41,5 +50,7 @@ namespace Kylin
 		KFLOAT					m_fDuration;	// 持续时间
 
 		KVEC<KSTR>				m_kAnimNameList;// 动画名称列表
+
+		KVEC<KSTR>				m_kWaitingQueue;// 动画等待队列
 	};
 }
