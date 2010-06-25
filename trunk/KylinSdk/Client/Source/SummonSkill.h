@@ -2,12 +2,15 @@
 
 #include "ActSkill.h"
 
+//
+// ÕÙ»½ÐÍ¼¼ÄÜ
+//
 namespace Kylin
 {
-	class BeckonSkill : public ActSkill
+	class SummonSkill : public ActSkill
 	{
 	public:
-		BeckonSkill(ActionDispatcher* pDispatcher);
+		SummonSkill(ActionDispatcher* pDispatcher);
 
 		virtual KBOOL Init(const PropertySet& kProp);
 
