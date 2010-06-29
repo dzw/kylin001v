@@ -33,8 +33,7 @@ KVOID Kylin::GameFrame::Destroy()
 	if (KylinRoot::Initialized())
 		KDEL KylinRoot::GetSingletonPtr();
 
-	if (PhyX::PhysicalSystem::Initialized())
-		KDEL PhyX::PhysicalSystem::GetSingletonPtr();
+
 
 	AppFrame::Destroy();
 }
@@ -44,8 +43,6 @@ KVOID Kylin::GameFrame::OnIdle( KFLOAT fElapsed )
 	if (fElapsed > 0.1f) fElapsed = 0.003f;
 
 	AppFrame::OnIdle(fElapsed);
-	
-	SAFE_CALL(PhyX::PhysicalSystem::GetSingletonPtr(),Tick(fElapsed));
 	
 	SAFE_CALL(m_pActiveStatus,Tick(fElapsed));
 }
