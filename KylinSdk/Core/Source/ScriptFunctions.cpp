@@ -10,6 +10,7 @@
 #include "Avatar.h"
 #include "NpcObject.h"
 #include "rOgreUtils.h"
+#include "ObjectSpawner.h"
 
 
 namespace Script
@@ -32,12 +33,12 @@ namespace Script
 		}
 	}
 
-	extern void set_effect( unsigned int uEntID, unsigned int uEffectID)
+	extern void add_effect( unsigned int uEntID, unsigned int uEffectID)
 	{
 		int i = 0;
 	}
 
-	extern void set_global_effect( unsigned int uEffectID )
+	extern void add_global_effect( unsigned int uEffectID )
 	{
 		int i = 0;
 	}
@@ -80,6 +81,18 @@ namespace Script
 			{
 				
 			}
+		}
+	}
+
+	extern void set_spawner( unsigned int uEntID, float fInterval, float fDelay, int nMaxCount, unsigned int uSpawnID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::ObjectSpawner,pEnt))
+		{
+			Kylin::ObjectSpawner* pObj = BtStaticCast(Kylin::ObjectSpawner,pEnt);
+
+			pObj->Accept(fInterval,fDelay,nMaxCount,uSpawnID);
 		}
 	}
 }

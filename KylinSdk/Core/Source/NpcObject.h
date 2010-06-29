@@ -24,9 +24,13 @@ namespace Kylin
 	public:
 		BaseAI* GetAIHandler();
 		KVOID	SetAIHandler(BaseAI* pAI);
+		
+		KUINT	GetMasterWorldID();
+		KVOID	SetMaster(const Character* pChar);
 
 	protected:
 		BaseAI*		m_pAIHandler;
+		KUINT		m_uMasterID;
 	};
 }
 

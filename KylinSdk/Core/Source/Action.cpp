@@ -15,6 +15,7 @@
 
 Kylin::Action::Action( ActionDispatcher* pDispatcher )
 : m_pDispatcher(pDispatcher)
+, m_eType(AT_NONE)
 , m_pEmitterNode(NULL)
 {
 	
@@ -255,5 +256,15 @@ KSTR Kylin::Action::GetExplain()
 KVOID Kylin::Action::SetEmitterNode( Ogre::Node* pNode )
 {
 	m_pEmitterNode = pNode;
+}
+
+KUINT Kylin::Action::GetHostWorldID()
+{
+	return m_pDispatcher->GetHostWorldID();
+}
+
+ActionType Kylin::Action::TransformType( KCSTR& sType )
+{
+	return (ActionType)(KUINT)OgreRoot::GetSingletonPtr()->GetScriptVM()->GetGlobalNumber(sType.data());
 }
 //-------------------------------------------------------------------

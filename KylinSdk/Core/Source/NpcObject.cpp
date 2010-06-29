@@ -67,4 +67,14 @@ namespace Kylin
 	{
 		return m_pAIHandler;
 	}
+
+	KVOID NpcObject::SetMaster( const Character* pChar )
+	{
+		m_uMasterID = pChar->GetID();
+	}
+
+	KUINT NpcObject::GetMasterWorldID()
+	{
+		return m_uMasterID;
+	}
 }

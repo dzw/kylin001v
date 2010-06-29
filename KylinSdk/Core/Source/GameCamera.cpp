@@ -87,7 +87,7 @@ KVOID Kylin::GameCamera::UpdateCameraGoal( KFLOAT fDeltaYaw, KFLOAT fDeltaPitch,
 	if (!(m_fPivotPitch + fDeltaPitch > 25 && fDeltaPitch > 0) &&
 		!(m_fPivotPitch + fDeltaPitch < -60 && fDeltaPitch < 0))
 	{
-		Ogre::Radian temp = Ogre::Degree(fDeltaPitch);
+		//Ogre::Radian temp = Ogre::Degree(fDeltaPitch);
 		m_pCameraPivot->pitch(Ogre::Degree(fDeltaPitch), Ogre::Node::TS_LOCAL);
 		m_fPivotPitch += fDeltaPitch;
 	}

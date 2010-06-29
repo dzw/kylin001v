@@ -7,7 +7,10 @@ namespace Kylin
 	public:
 		ActionDispatcher(KUINT uHostID);
 		
-		virtual Action* Fire(KUINT uGID/*,const KPoint3& kPos*/);
+		virtual Factor* Fire(KUINT uGID/*,const KPoint3& kPos*/);
+		virtual Factor* Fire(KUINT uGID,const KPoint3& kPos);
+		virtual Factor* Fire(KUINT uGID,KUINT uTarget);
+
 		virtual KVOID	SetFactory(ActionFactory* pFactory);
 		virtual Action* SpawnAction(KUINT uGID);
 
@@ -18,7 +21,7 @@ namespace Kylin
 
 	public:
 		KVOID SetHost(Entity* pEnt);
-		KUINT GetHostID() { return m_uHostID; }
+		KUINT GetHostWorldID() { return m_uHostID; }
 
 	protected:
 		Action* GetActionPtr(KUINT uGID);

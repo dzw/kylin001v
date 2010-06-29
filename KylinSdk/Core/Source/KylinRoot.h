@@ -52,6 +52,8 @@ namespace Kylin
 		KVOID		DebugHideEntities(KBOOL bFlag);
 		// debug
 		KVOID		DebugHideTerrain(KBOOL bFlag);
+		// debug	
+		KVOID		DebugShowBoundingBox(KBOOL bFlag);
 		// 获得当前状态
 		GameStatus*	GetCurrentGameStatus();
 		// 获得当前场景

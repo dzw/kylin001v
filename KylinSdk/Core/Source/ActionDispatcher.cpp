@@ -98,12 +98,13 @@ KVOID Kylin::ActionDispatcher::SetFactory( ActionFactory* pFactory )
 	m_pActionFactory = pFactory;
 }
 
-Kylin::Action* Kylin::ActionDispatcher::Fire( KUINT uGID/*,const KPoint3& kPos*/ )
+Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID/*,const KPoint3& kPos*/ )
 {
-	Action* pAct = GetActionPtr(uGID);
+	Factor* pFactor = NULL;
+	Action* pAct	= GetActionPtr(uGID);
 	if (pAct)
 	{
-		Factor* pFactor = pAct->SpawnFactor();
+		pFactor = pAct->SpawnFactor();
 		//SAFE_CALL(pFactor,SetTranslate(kPos));
 		
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uHostID);
@@ -115,5 +116,21 @@ Kylin::Action* Kylin::ActionDispatcher::Fire( KUINT uGID/*,const KPoint3& kPos*/
 
 	}
 
-	return pAct;
+	return pFactor;
+}
+
+Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID,const KPoint3& kPos )
+{
+	Factor* pFactor = Fire(uGID);
+	SAFE_CALL(pFactor,SetTranslate(kPos));
+
+	return pFactor;
+}
+
+Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID,KUINT uTarget )
+{
+	Factor* pFactor = Fire(uGID);
+	SAFE_CALL(pFactor,SetTarget(uTarget));
+
+	return pFactor;
 }

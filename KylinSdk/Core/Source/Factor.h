@@ -16,6 +16,7 @@ namespace Kylin
 
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
+		virtual KVOID SetTarget(KUINT uTarget){}
 
 	protected:
 		virtual KVOID PostSpawn();

@@ -6,7 +6,6 @@
 #include "KylinRoot.h"
 #include "ScriptVM.h"
 
-#include "CollisionWrapper.h"
 #include "ActionDispatcher.h"
 #include "rOgreUtils.h"
 #include "Avatar.h"
