@@ -95,4 +95,11 @@ namespace Script
 			pObj->Accept(fInterval,fDelay,nMaxCount,uSpawnID);
 		}
 	}
+
+	extern void set_translate( unsigned int uEntID, float x, float z )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		SAFE_CALL(pEnt,SetTranslate(KPoint3(x,0,z)));
+	}
 }
