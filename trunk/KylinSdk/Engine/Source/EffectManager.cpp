@@ -52,13 +52,15 @@ Kylin::EffectObject* Kylin::EffectManager::Generate( const KSTR& sName,const KST
 	return pEffect;
 }
 
-KVOID Kylin::EffectManager::Generate( EffectObject* pEffect )
+Kylin::EffectObject* Kylin::EffectManager::Generate( EffectObject* pEffect )
 {
 	if (pEffect)
 	{
 		pEffect->Initialize();
 		m_kEffectMap.insert(std::pair<KSTR,EffectObject*>(pEffect->GetName(),pEffect));
 	}
+
+	return pEffect;
 }
 
 KVOID Kylin::EffectManager::Activate( KSTR sName, KBOOL bFlag)
@@ -122,7 +124,7 @@ Kylin::EffectParticle::EffectParticle( KSTR sName, KSTR sTemplate, KFLOAT fLifeT
 , m_pParticleHandle(NULL)
 //, m_pParticleSystemEx(NULL)
 {
-	m_uType = EffectManager::ET_PARTICLE;
+	m_uType = ET_PARTICLE;
 }
 
 Kylin::EffectParticle::~EffectParticle()
@@ -238,7 +240,7 @@ KBOOL Kylin::EffectParticle::IsVisible()
 Kylin::EffectCompositor::EffectCompositor( KSTR sName )
 : EffectObject(sName)
 {
-	m_uType = EffectManager::ET_COMPOSITOR;
+	m_uType = ET_COMPOSITOR;
 }
 
 Kylin::EffectCompositor::~EffectCompositor()

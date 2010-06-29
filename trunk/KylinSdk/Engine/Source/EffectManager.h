@@ -7,6 +7,15 @@
 
 namespace Kylin
 {
+	// 特效类型
+	enum EffectType
+	{
+		ET_NONE,
+		ET_PARTICLE,
+		ET_COMPOSITOR,
+		ET_CUSTROM,
+	};
+
 	//////////////////////////////////////////////////////////////////////////
 	// 特效接口
 	class EffectObject
@@ -15,6 +24,7 @@ namespace Kylin
 		EffectObject(KSTR sName)
 			: m_sName(sName)
 			, m_pClocking(NULL)
+			, m_uType(ET_NONE)
 		{}
 		virtual ~EffectObject(){}
 
@@ -115,13 +125,7 @@ namespace Kylin
 	class EffectManager : public Singleton<EffectManager>
 	{
 	public:
-		// 特效类型
-		enum EffectType
-		{
-			ET_NONE,
-			ET_PARTICLE,
-			ET_COMPOSITOR,
-		};
+
 		// 初始化
 		KBOOL Initialize();
 		// render
@@ -131,7 +135,7 @@ namespace Kylin
 		// 销毁某个特效
 		KVOID DestroyEffect(KSTR sName);
 		// 产生特效
-		KVOID Generate(EffectObject* pEffect);
+		EffectObject* Generate(EffectObject* pEffect);
 		EffectObject* Generate(const KSTR& sName, const KSTR& sTemplate, KFLOAT fLifeTime = -1.0f, KUINT uType = ET_PARTICLE);
 		// 激活特效
 		KVOID Activate(KSTR sName, KBOOL bFlag);
