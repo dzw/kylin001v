@@ -23,3 +23,6 @@ EventTemplate ev_post_destroy			("ev_post_destroy");
 EventTemplate ev_sync_translate			("ev_sync_translate");
 EventTemplate ev_sync_gametime			("ev_sync_gametime");
 
+
+//////////////////////////////////////////////////////////////////////////
+EventTemplate ev_do_spawn				("ev_do_spawn");

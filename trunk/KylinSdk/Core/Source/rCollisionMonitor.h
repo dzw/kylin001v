@@ -23,27 +23,25 @@ namespace Kylin
 				CollisionPair()
 					: m_pObj1(NULL)
 					, m_pObj2(NULL)
-					, m_kNormal(KPoint3::ZERO)
 				{
 				}
 
 				Node* m_pObj1;
 				Node* m_pObj2;
-
-				KPoint3 m_kNormal;
 			};
 
 			//////////////////////////////////////////////////////////////////////////
-			typedef KVOID(*Func)(const CollisionPair kPair);
+			typedef KVOID(*Func)(const CollisionPair& kPair);
 
 			class CollisionData
 			{
 			public:
-				CollisionData()
-					: m_pHost(NULL)
+				CollisionData(Node* pHost,KBOOL bCollider = false)
+					: m_pHost(pHost)
 					, m_bEnable(false)
-					, m_bCollider(false)
+					, m_bCollider(bCollider)
 					, m_pCallback(NULL)
+					, m_eMode(CLLSN_BREAK)
 				{
 				}
 				
@@ -61,9 +59,6 @@ namespace Kylin
 				Func		m_pCallback;
 				Node*		m_pHost;
 				
-				KFLOAT		m_fRadius;
-				KFLOAT		m_fHeight;
-
 				friend class CollisionMonitor;
 			};
 
@@ -88,7 +83,7 @@ namespace Kylin
 			//-----------------------------------------------------------------
 			virtual KVOID Destroy();
 			//-----------------------------------------------------------------
-			virtual KVOID Commit(CollisionData* pData);
+			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider);
 			//-----------------------------------------------------------------
 			// 查询场景碰撞， 
 			// pos 要查询的位置，dir 朝向， 查询半径

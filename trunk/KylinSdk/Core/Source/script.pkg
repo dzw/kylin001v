@@ -7,6 +7,6 @@ $#pragma warning(disable : 4800) //forcing value to bool warning
 $cfile "core.h"
 $cfile "RegisterClass.h"
 $cfile "ScriptFunctions.h"
-
+$cfile "Action.h"
 
 $using namespace Script;

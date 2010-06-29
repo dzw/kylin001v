@@ -5,6 +5,7 @@
 #include "Character.h"
 #include "Factor.h"
 #include "NpcObject.h"
+#include "ObjectSpawner.h"
 
 
 using namespace Kylin;
@@ -16,6 +17,7 @@ KVOID RegisterClasses()
 	RegEntity(Character);
 	RegEntity(Factor);
 	RegEntity(NpcObject);
+	RegEntity(ObjectSpawner);
 
 //	RegEntity(EntitySpawner);
 // 	RegMessage(M_SpawnEntity);

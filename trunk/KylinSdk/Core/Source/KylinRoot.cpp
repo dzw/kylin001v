@@ -185,7 +185,7 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 	KSTR sScript = "./Data/script/charactor/char_";
 	sScript += Ogre::StringConverter::toString(uGid);
 	sScript += ".lua";
-	if (FileUtils::IsFileExist(sModel))
+	if (FileUtils::IsFileExist(sScript))
 	{
 		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile(sScript.data());
 	}
@@ -200,7 +200,7 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 	kProp.SetValue("$Shadows",true);
 	//kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
 	//kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
-	//kProp.SetValue("$COLLISION",false);
+	kProp.SetValue("$Collision",true);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 	//////////////////////////////////////////////////////////////////////////
@@ -260,3 +260,17 @@ KVOID Kylin::KylinRoot::SetMousePointer( KUINT uType )
 	CursorEx* pCursor = GET_UI_PTR(CursorEx);
 	SAFE_CALL(pCursor,SetPointer(CursorEx::CursorType(uType)));
 }	
+
+KVOID Kylin::KylinRoot::DebugShowBoundingBox( KBOOL bFlag )
+{
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		EntityManager::EntityPool kEntPool;
+		pStatus->m_pWorldManager->m_pActiveScene->m_pEntityManager->FillEntityPool(kEntPool);
+		for (KUINT i = 0; i < kEntPool.size(); i++)
+		{
+			kEntPool[i]->ShowBoundingBox(bFlag);
+		}
+	}
+}

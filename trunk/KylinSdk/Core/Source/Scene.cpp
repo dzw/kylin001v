@@ -11,7 +11,7 @@
 #include "CameraControl.h"
 #include "Entity.h"
 #include "Zone.h"
-#include "CollisionWrapper.h"
+#include "rPhyXSystem.h"
 
 
 Kylin::SceneHag::SceneHag()
@@ -48,9 +48,8 @@ Kylin::Scene::~Scene()
 KVOID Kylin::Scene::EnterScene( KVOID )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if (!CollisionWrapper::Initialized())
-		KNEW CollisionWrapper();
-	CollisionWrapper::GetSingletonPtr()->Initialize(OgreRoot::GetSingletonPtr()->GetSceneManager());
+	if (!PhyX::PhysicalSystem::Initialized())
+		KNEW PhyX::PhysicalSystem();
 
 	// 读取配置文件
 	// 加载场景
@@ -63,8 +62,8 @@ KVOID Kylin::Scene::LeaveScene( KVOID )
 	SAFE_CALL(m_pSceneLoader,Unload(&m_kSceneHag));
 	SAFE_DEL(m_pSceneLoader);
 
-	if (CollisionWrapper::Initialized())
-		KDEL CollisionWrapper::GetSingletonPtr();
+	if (PhyX::PhysicalSystem::Initialized())
+		KDEL PhyX::PhysicalSystem::GetSingletonPtr();
 }
 
 KVOID Kylin::Scene::SpawnScene()
@@ -100,8 +99,8 @@ KVOID Kylin::Scene::Tick( KFLOAT fElapsed )
 	SAFE_CALL(m_pEventManager,HandleEvents(fElapsed));
 	SAFE_CALL(m_pEntityManager,Tick(fElapsed));	
 	
-	if (CollisionWrapper::Initialized())
-		CollisionWrapper::GetSingletonPtr()->Update(fElapsed);
+	if (PhyX::PhysicalSystem::Initialized())
+		PhyX::PhysicalSystem::GetSingletonPtr()->Tick(fElapsed);
 
 	SAFE_CALL(m_pSceneLoader,Tick(fElapsed));
 }

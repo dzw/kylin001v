@@ -3,8 +3,9 @@
 #include "Standard.h"
 #include "Engine.h"
 
-#define INVALID_ID	0xffffffff
-#define _WGravity	20.0f
+#define INVALID_ID			0xffffffff
+#define _WGravity			20.0f
+#define VISIBLE_DISTANCE	50.0f
 
 namespace Kylin
 {
@@ -13,7 +14,8 @@ namespace Kylin
 	class Level;
 
 	class Character;
-	
+	class NpcObject;
+
 	class EventManager;
 	class EntityManager;
 	class WorldManager;
@@ -36,6 +38,13 @@ namespace Kylin
 
 	class Avatar;
 	class BaseAI;
+
+	namespace PhyX
+	{
+		class CollisionMonitor;
+		class MotionSimulator;
+		class CoverMonitor;
+	}
 }
 
 class EventTemplate;

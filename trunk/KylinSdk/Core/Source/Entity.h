@@ -3,6 +3,7 @@
 #include "rtti.h"
 #include "event.h"
 #include "node.h"
+#include "rCollisionMonitor.h"
 
 
 #define Declare_Entity_Creator(classname) static Kylin::Entity * CreateInstance() {return KNEW classname;}
@@ -23,6 +24,10 @@ namespace Kylin
 	public:
 		virtual KBOOL	Init(const PropertySet& kProp);
 		virtual KVOID	Tick(KFLOAT fElapsed);
+		virtual KVOID	SetupCllsn(PropertySet kProp);
+
+		static KVOID	OnEntityCllsn(const PhyX::CollisionMonitor::CollisionPair& kPair);
+
 
 		KVOID	SetID(KUINT uID) { m_uID = uID; }
 		KUINT	GetID() const { return m_uID; }

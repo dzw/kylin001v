@@ -19,6 +19,9 @@ extern EventTemplate ev_post_picked;
 extern EventTemplate ev_post_pick_terrain;
 extern EventTemplate ev_post_touchdown;			// 触地消息
 
+// 执行
+extern EventTemplate ev_do_spawn;				
+
 // 用于同步的消息(位置，旋转，缩放，时间) 前缀 ev_sync_
 extern EventTemplate ev_sync_translate;
 extern EventTemplate ev_sync_gametime;

@@ -8,6 +8,7 @@ enum ClassID
 	id_entity,
 	id_level,
 	id_character,
+	id_spawner,
 	id_npc,
 
 	id_factor,

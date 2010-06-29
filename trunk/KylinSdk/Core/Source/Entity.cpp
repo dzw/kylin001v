@@ -3,6 +3,7 @@
 #include "RegisterClass.h"
 #include "RemoteEvents.h"
 #include "KylinRoot.h"
+#include "rPhyXSystem.h"
 
 
 namespace Kylin
@@ -78,4 +79,18 @@ KVOID Kylin::Entity::PostDestroy()
 KVOID Kylin::Entity::EV_PostSpawn( EventPtr spEV )
 {
 	PostSpawn();
+}
+
+
+KVOID Kylin::Entity::SetupCllsn( PropertySet kProp )
+{
+
+	PhyX::CollisionMonitor::CollisionData* pData = PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->Commit(this,true);
+	pData->SetCallbackFunc(&Kylin::Entity::OnEntityCllsn);
+	pData->SetEnable(true);
+}
+
+KVOID Kylin::Entity::OnEntityCllsn( const PhyX::CollisionMonitor::CollisionPair& kPair )
+{
+	int i = 0;
 }

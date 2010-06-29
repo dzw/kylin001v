@@ -2,6 +2,7 @@
 #include "rCollisionMonitor.h"
 #include "Node.h"
 #include "KylinRoot.h"
+#include "rOgreUtils.h"
 
 
 Kylin::PhyX::CollisionMonitor::CollisionMonitor()
@@ -26,17 +27,23 @@ KVOID Kylin::PhyX::CollisionMonitor::Destroy()
 	m_kObjsMap.clear();
 }
 
-KVOID Kylin::PhyX::CollisionMonitor::Commit( CollisionData* pData )
+Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Commit( Node* pHost,KBOOL bCollider )
 {
-	CllsnObjMap::iterator it = m_kObjsMap.find(pData->m_pHost);
+	CollisionData* pData = NULL;
+	CllsnObjMap::iterator it = m_kObjsMap.find(pHost);
 	if (it != m_kObjsMap.end())
 	{
-		it->second = pData;
+		pData = it->second;
+		pData->m_bCollider = bCollider;
 	}
 	else
 	{
+		pData = KNEW CollisionData(pHost,bCollider);
+
 		m_kObjsMap.insert(std::pair<Node*, CollisionData*>(pData->m_pHost,pData));
 	}
+
+	return pData;
 }
 
 KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFLOAT fRadius )
@@ -88,8 +95,11 @@ KVOID Kylin::PhyX::CollisionMonitor::TestEntities( )
 	{
 		if (it->second->m_bEnable)
 		{
-			if (it->second)
+			if (it->second->m_bCollider)
+			{
 				kGroup.AddCollider(it->second);
+				kGroup.AddCollidee(it->second);
+			}
 			else
 				kGroup.AddCollidee(it->second);
 		}
@@ -116,18 +126,26 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 	{
 		for (KUINT j = 0; j < m_kCollidee.size(); j++)
 		{
+			if (m_kCollider[i]->m_pHost == m_kCollidee[j]->m_pHost)
+				continue;
+
 			kPos1 = m_kCollider[i]->m_pHost->GetTranslate();
 			kPos2 = m_kCollidee[j]->m_pHost->GetTranslate();
-			if (kPos1.squaredDistance(kPos2) <= pow((m_kCollider[i]->m_fRadius + m_kCollidee[j]->m_fRadius),2))
+			if (kPos1.squaredDistance(kPos2) <= pow(VISIBLE_DISTANCE,2))
 			{
-				CollisionPair kPair;
-				kPair.m_pObj1 = m_kCollider[i]->m_pHost;
-				kPair.m_pObj2 = m_kCollidee[j]->m_pHost;
-				
-				m_kCollider[i]->m_pCallback(kPair);
+				Ogre::AxisAlignedBox& box = m_kCollider[i]->m_pHost->GetWorldBoundingBox();
+			
+				if (OgreUtils::IntersectsAABB(box,m_kCollidee[j]->m_pHost->GetWorldBoundingBox()) != OgreUtils::OUTSIDE)
+				{
+					CollisionPair kPair;
+					kPair.m_pObj1 = m_kCollider[i]->m_pHost;
+					kPair.m_pObj2 = m_kCollidee[j]->m_pHost;
 
-				if (m_kCollidee[j]->m_eMode == CLLSN_BREAK)
-					break;
+					m_kCollider[i]->m_pCallback(kPair);
+
+					if (m_kCollidee[j]->m_eMode == CLLSN_BREAK)
+						break;
+				}
 			}
 		}
 	}
