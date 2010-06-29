@@ -81,9 +81,9 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	KBOOL bCollide = false;
 	if (kProp.GetBoolValue("$Collision",bCollide))
 	{
-		if (!bCollide || !SetupCllsn(m_pOgreEntity,kProp))
+		if (bCollide)
 		{
-			return false;
+			SetupCllsn(kProp);	
 		}
 	}
 
@@ -247,4 +247,25 @@ KVOID Kylin::Node::SetTransparency( KFLOAT fAlph )
 KFLOAT Kylin::Node::GetTransparency()
 {
 	return m_pTransparency->getTransparency();
+}
+
+Ogre::AxisAlignedBox Kylin::Node::GetWorldBoundingBox()
+{
+	return m_pOgreEntity->getWorldBoundingBox();
+}
+
+KVOID Kylin::Node::ShowBoundingBox( KBOOL bFlag )
+{
+	m_pOgreEntity->getParentSceneNode()->showBoundingBox(true);		
+}
+
+KVOID Kylin::Node::SetBoundingBox( const KPoint3& kSize )
+{
+	AxisAlignedBox box = m_pOgreEntity->getBoundingBox();
+	
+	box.getMaximum() = kSize * 0.5f;
+	box.getMinimum() = -kSize * 0.5f;
+
+	m_pOgreEntity->getMesh()->_setBounds(box,false);
+	m_pOgreEntity->getParentSceneNode()->_updateBounds();
 }

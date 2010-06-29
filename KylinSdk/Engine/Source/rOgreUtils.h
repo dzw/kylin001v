@@ -95,6 +95,35 @@ namespace Kylin
 			mIndexBufferSize = 0;
 		}
 
+		enum IntersectType
+		{
+			OUTSIDE = 0,
+			INTERSECTS,
+			INSIDE,
+		};
+
+		/**
+		* AABB and AABB intersect
+		*/
+		static IntersectType IntersectsAABB( const Ogre::AxisAlignedBox& box1, const Ogre::AxisAlignedBox& box2 )
+		{
+			if( box1.getMinimum().x >= box2.getMinimum().x && box1.getMaximum().x <= box2.getMaximum().x &&
+				box1.getMinimum().y >= box2.getMinimum().y && box1.getMaximum().y <= box2.getMaximum().y &&
+				box1.getMinimum().z >= box2.getMinimum().z && box1.getMaximum().z <= box2.getMaximum().z )
+			{
+				return INSIDE;
+			}
+
+			if( box2.getMaximum().x < box1.getMinimum().x || box2.getMinimum().x > box1.getMaximum().x )
+				return OUTSIDE;
+			if( box2.getMaximum().y < box1.getMinimum().y || box2.getMinimum().y > box1.getMaximum().y )
+				return OUTSIDE;
+			if( box2.getMaximum().z < box1.getMinimum().z || box2.getMinimum().z > box1.getMaximum().z )
+				return OUTSIDE;
+
+			return INTERSECTS;
+		}
+
 	protected:
 		static KUINT   mVertexBufferSize;
 		static KUINT   mIndexBufferSize;

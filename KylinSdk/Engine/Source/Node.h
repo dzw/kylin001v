@@ -2,11 +2,10 @@
 
 #include "property.h"
 
-#include "CollisionWrapper.h"
 
 namespace Kylin
 {
-	class Node : public CollisioListener
+	class Node
 	{
 	public:
 		Node();
@@ -16,6 +15,7 @@ namespace Kylin
 		virtual KVOID			Unload();
 		virtual KVOID			Destroy();
 		virtual KVOID			BindEffect(PropertySet kProp){}
+		virtual KVOID			SetupCllsn(PropertySet kProp){}
 
 		virtual KVOID			Tick(KFLOAT fElapsed);
 		
@@ -53,7 +53,18 @@ namespace Kylin
 		KUINT					GetWorldID() { return m_uWID; }
 
 		AnimationProxy*			GetAnimationProxy();
+		
+		//-----------------------------------------------------------------
+		// 获得包围盒
+		Ogre::AxisAlignedBox	GetWorldBoundingBox();
+		
+		// 设置包围盒大小
+		KVOID					SetBoundingBox(const KPoint3& kSize);
 
+		// 显示包围盒
+		KVOID					ShowBoundingBox(KBOOL bFlag);
+		//-----------------------------------------------------------------
+		
 	protected:
 		KUINT				m_uWID;
 		Ogre::SceneNode*	m_pOgreNode;
