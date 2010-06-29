@@ -5,6 +5,7 @@
 #include "DataLoader.h"
 #include "property.h"
 #include "ActSkill.h"
+#include "SummonSkill.h"
 #include "DataItem.h"
 
 
@@ -44,7 +45,11 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 	{
 		pAct = KNEW ActSkill(m_pDispatcher);
 	}
-	
+	else if (sClass == "SummonSkill")
+	{
+		pAct = KNEW SummonSkill(m_pDispatcher);
+	}
+
 	pAct->Init(kProp);
 
 	return pAct;

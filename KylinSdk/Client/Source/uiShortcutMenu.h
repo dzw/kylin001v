@@ -24,7 +24,7 @@ namespace Kylin
 		KVOID SetSkillIcon(KSTR sIcon,KCHAR cP);
 
 	public:
-		KVOID NotifyClick_Skill_L(MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id);
+		KVOID NotifyClick_Skill(MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id);
 
 	protected:
 		ATTRIBUTE_FIELD_WIDGET_NAME(ShortcutMenu, m_pImageBack, "_Main");

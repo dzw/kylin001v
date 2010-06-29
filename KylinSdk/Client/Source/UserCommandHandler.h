@@ -35,6 +35,15 @@ namespace Kylin
 					if (uSceneID > 0)
 						KylinRoot::GetSingletonPtr()->SwitchScene(uSceneID);
 				}
+				else if (kCmd[0] == "show_box")
+				{
+					if (kCmd.size() < 2) return;
+					
+					if (kCmd[1] == "true")
+						KylinRoot::GetSingletonPtr()->DebugShowBoundingBox(true);
+					else
+						KylinRoot::GetSingletonPtr()->DebugShowBoundingBox(false);
+				}
 			}
 		}
 	};

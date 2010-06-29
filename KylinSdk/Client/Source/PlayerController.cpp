@@ -14,7 +14,8 @@
 #include "ScriptVM.h"
 #include "EffectDecal.h"
 #include "uiCursorEx.h"
-
+#include "DataManager.h"
+#include "Action.h"
 
 
 Kylin::PlayerController::PlayerController()
@@ -284,6 +285,8 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 			m_pFocusEffect->MoveTo(pEnt->getParentSceneNode()->getPosition());
 			m_pFocusEffect->SetVisible(true);
 			m_pFocusEntity = pEnt;
+
+			m_uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
 		}
 	}
 }
@@ -304,7 +307,29 @@ KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 		}
 	}
 	
-	SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+	KANY aValue;
+	if ( DataManager::GetSingletonPtr()->Select("ACTION_DB",uActID,"TYPE",aValue) )
+	{
+		KSTR sValue = boost::any_cast<KSTR>(aValue);	
+		
+		ActionType type = Action::TransformType(sValue);
+		
+		if (type == AT_NONE)
+		{
+			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+		}
+		else if (type == AT_TARGET)
+		{
+			if (!pTarget) return;
+
+			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID,m_uTargetID));
+		}
+		else if (type == AT_POINT)
+		{
+			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+		}
+	}
+	
 
 	//------------------------------------------------------------------
 	// m_bPrepareFire 当目标距离大于攻击距离时，向目标移动。

@@ -150,7 +150,9 @@ namespace Kylin
 				if (BtIsKindOf(Character,pEnt))
 				{
 					Character* pChar = BtStaticCast(Character,pEnt);
-					pNpcObj->SetAIHandler(KNEW PetAI(pChar));
+					pNpcObj->SetTranslate(this->GetTranslate());
+					pNpcObj->SetMaster(pChar);
+					pNpcObj->SetAIHandler(KNEW PetAI(pNpcObj));
 				}
 
 				

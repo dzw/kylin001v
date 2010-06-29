@@ -44,7 +44,9 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 	SetWidgetWidthPct("image_experience",0.6f);
 	
 	//-----------------------------------------------------
-	m_pImageSkill_L->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill_L);
+	m_pImageSkill_L->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill);
+	m_pImageSkill_1->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill);
+	m_pImageSkill_2->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill);
 
 	return true;
 }
@@ -115,13 +117,18 @@ KVOID Kylin::ShortcutMenu::SetSkillIcon( KSTR sIcon,KCHAR cP )
 
 }
 
-KVOID Kylin::ShortcutMenu::NotifyClick_Skill_L( MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id )
+KVOID Kylin::ShortcutMenu::NotifyClick_Skill( MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id )
 {
 	// test code skill
 	ClSceneLoader* pLoader = (ClSceneLoader*)KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
 	if (pLoader)
 	{
-		pLoader->GetController()->UseSkill(4);
+		if ( _sender == m_pImageSkill_L )
+			pLoader->GetController()->UseSkill(4);
+		else if ( _sender == m_pImageSkill_1)
+			pLoader->GetController()->UseSkill(5);
+		else if ( _sender == m_pImageSkill_2)
+			pLoader->GetController()->UseSkill(6);
 	}
 }
 //-----------------------------------------------------------------------------
