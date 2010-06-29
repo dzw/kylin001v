@@ -27,7 +27,7 @@ KVOID Kylin::PhyX::CollisionMonitor::Destroy()
 	m_kObjsMap.clear();
 }
 
-Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Commit( Node* pHost,KBOOL bCollider )
+Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Commit( Node* pHost,KBOOL bCollider,KUINT uSelf,KUINT uMate )
 {
 	CollisionData* pData = NULL;
 	CllsnObjMap::iterator it = m_kObjsMap.find(pHost);
@@ -35,10 +35,14 @@ Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Com
 	{
 		pData = it->second;
 		pData->m_bCollider = bCollider;
+		pData->m_uSelf = uSelf;
+		pData->m_uMate = uMate;
 	}
 	else
 	{
 		pData = KNEW CollisionData(pHost,bCollider);
+		pData->m_uSelf = uSelf;
+		pData->m_uMate = uMate;
 
 		m_kObjsMap.insert(std::pair<Node*, CollisionData*>(pData->m_pHost,pData));
 	}
@@ -79,11 +83,11 @@ KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFL
 	return true;
 }
 
-Kylin::Node* Kylin::PhyX::CollisionMonitor::Query( const Ogre::Ray& kRay )
-{
-	
-	return NULL;
-}
+// Kylin::Node* Kylin::PhyX::CollisionMonitor::Query( const Ogre::Ray& kRay )
+// {
+// 	
+// 	return NULL;
+// }
 
 KVOID Kylin::PhyX::CollisionMonitor::TestEntities( )
 {
@@ -121,6 +125,8 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::AddCollidee( CollisionData*
 
 KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 {
+	m_kCllsnBag.clear();
+
 	KPoint3 kPos1,kPos2;
 	for (KUINT i = 0; i < m_kCollider.size(); i++)
 	{
@@ -128,6 +134,17 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 		{
 			if (m_kCollider[i]->m_pHost == m_kCollidee[j]->m_pHost)
 				continue;
+			
+			if (!(m_kCollider[i]->m_uSelf & m_kCollidee[j]->m_uMate))
+				continue;
+
+			//----------------------------------------------------------------
+			// 过滤掉已经处理过的碰撞对
+			if(IsMarked(m_kCollider[i], m_kCollidee[j]))
+				continue;
+			//mark as collided
+			AddPair(m_kCollider[i], m_kCollidee[j]);
+			//----------------------------------------------------------------
 
 			kPos1 = m_kCollider[i]->m_pHost->GetTranslate();
 			kPos2 = m_kCollidee[j]->m_pHost->GetTranslate();
@@ -149,6 +166,46 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 			}
 		}
 	}
+}
+
+void Kylin::PhyX::CollisionMonitor::CollisionGroup::AddPair( const CollisionData& kCllsn, const CollisionData& kCllsn_1 )
+{
+	//add the first of the pair
+	ColliderBag::iterator bagIt = m_kCllsnBag.find(&kCllsn);
+	if(bagIt != m_kCllsnBag.end())
+	{
+		bagIt->second.insert(&kCllsn_1);
+	}
+	else
+	{
+		ResponserSet cllsnSet;
+		cllsnSet.insert(&kCllsn_1);
+		m_kCllsnBag.insert(ColliderBag::value_type(&kCllsn, cllsnSet));
+	}
+
+	//add the second of the pair
+	bagIt = m_kCllsnBag.find(&kCllsn_1);
+	if(bagIt != m_kCllsnBag.end())
+	{
+		bagIt->second.insert(&kCllsn);
+	}
+	else
+	{
+		ResponserSet cllsnSet;
+		cllsnSet.insert(&kCllsn);
+		m_kCllsnBag.insert(ColliderBag::value_type(&kCllsn_1, cllsnSet));
+	}	
+}
+
+bool Kylin::PhyX::CollisionMonitor::CollisionGroup::IsMarked( const CollisionData& kCllsn, const CollisionData& kCllsn_1 ) const
+{
+	ColliderBag::const_iterator bagIt = m_kCllsnBag.find(&kCllsn);
+	if(bagIt != m_kCllsnBag.end())
+	{
+		return bagIt->second.find(&kCllsn_1) != bagIt->second.end();
+	}
+	else
+		return false;
 }
 //////////////////////////////////////////////////////////////////////////
 

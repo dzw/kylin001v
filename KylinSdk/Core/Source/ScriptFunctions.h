@@ -29,6 +29,8 @@ namespace Script
 	// 设置spawner参数
 	extern void set_spawner(unsigned int uEntID, float fInterval, float fDelay, int nMaxCount, unsigned int uSpawnID);
 
+	// 设置位置
+	extern void set_translate(unsigned int uEntID, float x, float z);
 
 //tolua_end
 };
