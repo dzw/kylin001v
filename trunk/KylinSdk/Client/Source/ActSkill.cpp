@@ -44,7 +44,7 @@ Kylin::Factor* Kylin::ActSkill::SpawnFactor()
 	KSTR sAnim;
 	if (m_kProperty.GetStrValue("$Animation",sAnim))
 	{
-		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostID());
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
 		if (pEnt)
 		{
 			pEnt->GetAnimationProxy()->Play(sAnim);

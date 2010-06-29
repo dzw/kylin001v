@@ -7,8 +7,10 @@
 enum ClClassID
 {
 	id_cl_entity = id_last + 1,
-	id_bullet_factor,
 
+	id_bullet_factor,
+	id_summon_factor,
+	id_chain_factor,
 };
 //tolua_end
 

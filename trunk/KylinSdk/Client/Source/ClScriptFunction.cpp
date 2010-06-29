@@ -30,7 +30,7 @@ namespace Script
 		}
 	}
 
-	extern void to_learn_skill( unsigned int uEntID ,unsigned int uActID)
+	extern void to_learn_skill( unsigned int uEntID ,unsigned int uActID,char* chPos)
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 
@@ -42,7 +42,7 @@ namespace Script
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));
 
 			Kylin::ShortcutMenu* pMenu = (Kylin::ShortcutMenu*)(Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("ShortcutMenu"));
-			pMenu->SetSkillIcon(pAct->GetIcon(),'l');
+			pMenu->SetSkillIcon(pAct->GetIcon(),chPos[0]);
 		}
 	}
 

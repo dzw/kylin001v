@@ -72,6 +72,12 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	{
 		pNpc->SetTranslate(KPoint3(pMyself->GetTranslate().x -1 , 0 , pMyself->GetTranslate().z -1));
 	}
+	//-------------------------------------------------
+	Kylin::Entity * pSpawner = KylinRoot::GetSingletonPtr()->SpawnCharactor(6,id_spawner);
+	if (pSpawner)
+	{
+		pSpawner->SetTranslate(KPoint3(1 , 0 , 1));
+	}
 
 	return true;
 }

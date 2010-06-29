@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 06/17/10 13:11:14.
+** Generated automatically by tolua++-1.0.92 on 06/25/10 16:33:05.
 */
 
 #ifndef __cplusplus
@@ -62,7 +62,8 @@ static int tolua_clscript_to_learn_skill00(lua_State* tolua_S)
  if (
      !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
      !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,3,&tolua_err)
+     !tolua_isstring(tolua_S,3,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,4,&tolua_err)
  )
   goto tolua_lerror;
  else
@@ -70,8 +71,9 @@ static int tolua_clscript_to_learn_skill00(lua_State* tolua_S)
  {
   unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
   unsigned int uActID = ((unsigned int)  tolua_tonumber(tolua_S,2,0));
+  char* chPos = ((char*)  tolua_tostring(tolua_S,3,0));
   {
-   to_learn_skill(uEntID,uActID);
+   to_learn_skill(uEntID,uActID,chPos);
   }
  }
  return 0;
@@ -127,6 +129,8 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
   tolua_function(tolua_S,"to_bind_weapon",tolua_clscript_to_bind_weapon00);
   tolua_constant(tolua_S,"id_cl_entity",id_cl_entity);
   tolua_constant(tolua_S,"id_bullet_factor",id_bullet_factor);
+  tolua_constant(tolua_S,"id_summon_factor",id_summon_factor);
+  tolua_constant(tolua_S,"id_chain_factor",id_chain_factor);
  tolua_endmodule(tolua_S);
  return 1;
 }
