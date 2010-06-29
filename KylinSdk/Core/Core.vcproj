@@ -108,7 +108,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm150"
-				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../Engine/Source;../../Dependencies/boost_1_42;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;./Source;../../Dependencies/ogreopcode/include"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../Engine/Source;../../Dependencies/boost_1_42;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -244,6 +244,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ObjectSpawner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PetAI.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\rCollisionMonitor.cpp"
 				>
 			</File>
@@ -371,6 +379,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\NpcObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ObjectSpawner.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PetAI.h"
 				>
 			</File>
 			<File
