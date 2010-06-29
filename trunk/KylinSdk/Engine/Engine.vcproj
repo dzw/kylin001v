@@ -108,7 +108,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm150"
-				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../../Dependencies/ParticleUniverse/include;&quot;../../Dependencies/SkyX-v0.1/SkyX&quot;"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../../Dependencies/ParticleUniverse/include;&quot;../../Dependencies/SkyX-v0.1/SkyX&quot;;../../Dependencies\Extras\DirectShow\Include;&quot;D:\Program Files\Microsoft DirectX SDK (August 2009)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -429,6 +429,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\EffectFade.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EffectLightning.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EffectLightning.h"
 				>
 			</File>
 			<File
