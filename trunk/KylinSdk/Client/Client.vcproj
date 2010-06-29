@@ -155,18 +155,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Source\ActSkill.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\BulletFactor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ClActionFactory.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\ClGame.cpp"
 				>
 			</File>
@@ -226,28 +214,12 @@
 				RelativePath=".\Source\Showgirl.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\Source\SummonSkill.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Í·ÎÄ¼þ"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\Source\ActSkill.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\BulletFactor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ClActionFactory.h"
-				>
-			</File>
 			<File
 				RelativePath=".\Source\ClGame.h"
 				>
@@ -286,10 +258,6 @@
 			</File>
 			<File
 				RelativePath=".\Source\Showgirl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\SummonSkill.h"
 				>
 			</File>
 			<File
@@ -398,6 +366,62 @@
 				RelativePath=".\Source\uiTipMenu.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Skill"
+			>
+			<File
+				RelativePath=".\Source\ActSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ActSkill.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BulletFactor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\BulletFactor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ChainFactor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ChainFactor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClActionFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClActionFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SummonFactor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SummonFactor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SummonSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\SummonSkill.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DataPool"
+			>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
