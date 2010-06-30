@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 06/30/10 10:02:16.
+** Generated automatically by tolua++-1.0.92 on 06/30/10 10:10:10.
 */
 
 #ifndef __cplusplus
@@ -132,9 +132,6 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
   tolua_constant(tolua_S,"id_bullet_factor",id_bullet_factor);
   tolua_constant(tolua_S,"id_summon_factor",id_summon_factor);
   tolua_constant(tolua_S,"id_chain_factor",id_chain_factor);
-  tolua_constant(tolua_S,"IMM",IMM);
-  tolua_constant(tolua_S,"POS",POS);
-  tolua_constant(tolua_S,"TAR",TAR);
  tolua_endmodule(tolua_S);
  return 1;
 }

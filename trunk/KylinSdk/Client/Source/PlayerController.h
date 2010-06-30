@@ -13,6 +13,24 @@
 
 namespace Kylin
 {
+
+	struct UsedAction
+	{
+		UsedAction()
+		{
+			Reset();
+		}
+		
+		KVOID Reset()
+		{
+			uActionGID = INVALID_ID;
+			uActionType= INVALID_ID;
+		}
+
+		KUINT uActionGID;
+		KUINT uActionType;
+	};
+
 	class GameCamera;
 	class Character;
 	class PlayerController : public InputListener
@@ -67,6 +85,8 @@ namespace Kylin
 		Ogre::Entity*	m_pFocusEntity;
 		// 操作对象
 		KUINT			m_uTargetID;
+		// 当前所选择的技能
+		UsedAction		m_kSelectAction;
 
 		// 摄像机
 		GameCamera*		m_pCamera;
