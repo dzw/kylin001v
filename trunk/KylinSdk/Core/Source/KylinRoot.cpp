@@ -257,7 +257,7 @@ Kylin::Scene* Kylin::KylinRoot::GetCurrentScene()
 
 KVOID Kylin::KylinRoot::SetMousePointer( KUINT uType )
 {
-	CursorEx* pCursor = GET_UI_PTR(CursorEx);
+	CursorEx* pCursor = GET_GUI_PTR(CursorEx);
 	SAFE_CALL(pCursor,SetPointer(CursorEx::CursorType(uType)));
 }	
 
