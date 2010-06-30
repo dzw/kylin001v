@@ -49,7 +49,7 @@ namespace Kylin
 					, m_bCollider(bCollider)
 					, m_pCallback(NULL)
 					, m_eMode(CLLSN_BREAK)
-					, m_eSelf(COT_NONE)
+					, m_uSelf(COT_NONE)
 					, m_uMate(COT_NONE)
 				{
 				}
@@ -91,9 +91,9 @@ namespace Kylin
 			protected:
 				void AddPair(const CollisionData& kCllsn, const CollisionData& kCllsn_1);	//order insensitive
 				bool IsMarked(const CollisionData& kCllsn, const CollisionData& kCllsn_1)const;	//order insensitive
-
-				typedef std::set<CollisionData*> ResponserSet;
-				typedef KMAP<CollisionData*, ResponserSet> ColliderBag;
+				
+				typedef std::set<const CollisionData*> ResponserSet;
+				typedef KMAP<const CollisionData*, ResponserSet> ColliderBag;
 
 				ColliderBag m_kCllsnBag;
 			};
@@ -104,7 +104,7 @@ namespace Kylin
 			//-----------------------------------------------------------------
 			virtual KVOID Destroy();
 			//-----------------------------------------------------------------
-			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider,KUINT uSelf,KUINT uMate);
+			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider,KUINT uSelf = COT_DYNAMIC,KUINT uMate = COT_STATIC | COT_DYNAMIC);
 			//-----------------------------------------------------------------
 			// 查询场景碰撞， 
 			// pos 要查询的位置，dir 朝向， 查询半径

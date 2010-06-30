@@ -6,6 +6,7 @@
 #include "rMotionSimulator.h"
 #include "KylinRoot.h"
 #include "randomc.h"
+#include "rOgreUtils.h"
 
 #define _MAX_STAY_T_ 5
 #define _MIN_STAY_T_ 1
@@ -17,6 +18,8 @@ Kylin::BaseAI::BaseAI( Character* pHost )
 , m_fDistance(.0f)
 , m_kDestination(KPoint3::ZERO)
 , m_nPathwayIndex(0)
+, m_fScanTime(.0f)
+, m_bToBlock(false)
 {
 
 }
@@ -47,8 +50,10 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 		break;
 
 	case AS_MOVE:
-
-		bRet = Tick_Move(fElapsed);
+		
+		bRet = false;//Tick_Radar(fElapsed);
+		if (!bRet)
+			bRet = Tick_Move(fElapsed);
 		break;
 
 	case AS_USE_SKILL:
@@ -168,11 +173,9 @@ KBOOL Kylin::BaseAI::Tick_Idle( KFLOAT fElapsed )
 }
 
 // test code
-const int g_speed = 9;
+const int g_speed = 5;
 KBOOL Kylin::BaseAI::Tick_Move( KFLOAT fElapsed )
 {
-	KPoint3 kDir = m_kDestination - m_pHostChar->GetTranslate();
-	kDir.normalise();
 	KFLOAT fOffset = fElapsed * g_speed;
 	m_fDistance -= fOffset;
 	if (m_fDistance < KZERO)
@@ -243,3 +246,40 @@ RC_RESULT Kylin::BaseAI::Enter_Patrol()
 	return kRet;
 }
 
+// test code
+const int	g_radar_time	= 0.3f;
+const float g_adjust_angle	= 10.0f;
+KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
+{
+	m_fScanTime += fElapsed;
+	if (m_fScanTime > g_radar_time)
+	{
+		//--------------------
+		// radar
+		KPoint3	kPos = m_pHostChar->GetTranslate();
+		kPos.y += m_pHostChar->GetEntityPtr()->getBoundingRadius();
+		KPoint3	kDes = m_kDestination;
+		kDes.y = kPos.y;
+
+		Ogre::Ray kRay(kPos,kDes);
+		Ogre::Entity* pEnt = NULL;
+		
+		m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_SCENE_OBJ | KylinRoot::KR_NPC_MASK,g_adjust_angle);
+
+		if (m_bToBlock)
+		{
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(g_speed, 0, 0));
+			// random move dir ( left or right )
+			// radar
+		}
+			
+		m_fScanTime = .0f;
+	}
+
+	if (m_bToBlock)
+	{
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(g_speed, 0, 0));
+	}
+		
+	return m_bToBlock;
+}

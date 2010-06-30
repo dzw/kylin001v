@@ -56,7 +56,7 @@ KVOID Kylin::GameCamera::Update( KFLOAT fElapsed )
 		// move the camera smoothly to the goal
 		KPoint3 goalOffset = m_pCameraGoal->_getDerivedPosition() - m_pCameraNode->getPosition();
 
-		KPoint3 DistPos = Capos + goalOffset* fElapsed * 9.0f;
+		KPoint3 DistPos = Capos + goalOffset; //* fElapsed * 9.0f;
 		if(DistPos.y < GetCameraPosY())
 			DistPos.y = GetCameraPosY();
 		m_pCameraNode->setPosition(DistPos);
