@@ -33,7 +33,7 @@ namespace Kylin
 	public:
 		virtual KVOID  PrintHelpInfo()
 		{
-			DebugConsole* pConsole = (DebugConsole*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("DebugConsole"));
+			DebugConsole* pConsole = GET_GUI_PTR(DebugConsole);
 			if (pConsole)
 			{
 				pConsole->PrintLine("================================================================");

@@ -92,5 +92,5 @@ namespace Kylin
 	};
 }
 
-#define GET_UI_PTR(class_name) \
-	static_cast<class_name*>(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase(#class_name))
+#define GET_GUI_PTR(class_name) \
+	static_cast<class_name*>(Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase(#class_name))
