@@ -9,6 +9,7 @@
 
 #define GUI_RESOURCE "core.xml"
 
+
 //////////////////////////////////////////////////////////////////////////
 Kylin::GuiManager::GuiManager()
 : m_pGUI(NULL)
@@ -121,6 +122,12 @@ KVOID Kylin::GuiManager::Update( KFLOAT fElapsed )
 
 Kylin::GuiBase* Kylin::GuiManager::GetGuiBase( KSTR sName )
 {
+	// 由于使用宏操作，#classname 可能包含名字空间
+	// 此处过滤掉名字空间
+	KUINT n = sName.find("Kylin::");
+	if (n == 0)
+		sName = sName.substr(7,sName.length()-1);
+
 	GuiMap::iterator it = m_kGuiMap.find(sName);
 	if (it != m_kGuiMap.end())
 	{

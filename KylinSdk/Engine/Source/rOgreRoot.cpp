@@ -182,7 +182,7 @@ Kylin::GuiManager* Kylin::OgreRoot::GetGuiManager()
 
 KBOOL Kylin::OgreRoot::IsOpenConsole()
 {
-	DebugConsole* pConsole = (DebugConsole*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("DebugConsole"));
+	DebugConsole* pConsole = GET_GUI_PTR(DebugConsole);
 	if (pConsole)
 		return pConsole->IsVisible();
 
