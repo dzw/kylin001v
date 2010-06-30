@@ -627,6 +627,7 @@ KBOOL Kylin::OgreUtils::PickEntityBoundBox( Ogre::Ray &ray, Ogre::Entity **resul
 
 	for (size_t qr_idx = 0; qr_idx < query_result.size(); qr_idx++)
 	{
+		// test code , skymesh entity boundingbox is large
 		if (query_result[qr_idx].distance == 0) continue;
 		// stop checking if we have found a raycast hit that is closer
 		// than all remaining entities
