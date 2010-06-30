@@ -1,5 +1,14 @@
 #pragma once
 
+//tolua_begin
+// 技能使用方式
+enum USE_SKILL_TYPE
+{
+	IMM,			// 及时型
+	POS,			// 位置型
+	TAR,			// 目标型
+};
+//tolua_end
 
 // 关系
 enum ENUM_RELATION
