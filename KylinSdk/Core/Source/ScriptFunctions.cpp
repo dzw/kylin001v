@@ -99,7 +99,9 @@ namespace Script
 	extern void set_translate( unsigned int uEntID, float x, float z )
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
-
-		SAFE_CALL(pEnt,SetTranslate(KPoint3(x,0,z)));
+		
+		KPoint3 kPos;
+		if ( Kylin::KylinRoot::GetSingletonPtr()->HitTest(KPoint3(x,0,z),KPoint3::NEGATIVE_UNIT_Y,kPos) )
+			SAFE_CALL(pEnt,SetTranslate(kPos));
 	}
 }
