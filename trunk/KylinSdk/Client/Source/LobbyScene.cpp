@@ -3,8 +3,8 @@
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "XmlStream.h"
+#include "uiLobbyMenu.h"
 
-#include "GuiManager.h"
 #include "SceneLoader.h"
 #include "GameFrame.h"
 
@@ -153,7 +153,8 @@ KVOID Kylin::LobbyScene::SpawnActor(KUINT uIndex)
 	m_pShowgirl->SetTranslate(m_kPosition);
 	//-----------------------------------------------------
 	// 设置进入游戏按钮为可用状态
-	OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("LobbyMenu")->SetWidgetEnable("_Main",true);
+	LobbyMenu* pMenu = GET_GUI_PTR(LobbyMenu);
+	SAFE_CALL(pMenu,SetWidgetEnable("_Main",true));
 	//-----------------------------------------------------
 }
 

@@ -5,7 +5,7 @@
 
 namespace Kylin
 {
-	ATTRIBUTE_CLASS_LAYOUT(ShortcutMenu, "monster.layout");
+	ATTRIBUTE_CLASS_LAYOUT(MonsterInfoMenu, "monster.layout");
 	class MonsterInfoMenu : public GuiBase
 						  , public wraps::BaseLayout
 	{
@@ -17,12 +17,21 @@ namespace Kylin
 		virtual KVOID Destroy();
 
 		virtual KVOID SetVisible(KBOOL bVisible);
+		
 
+		KVOID SetTitle(KCSTR sTitle);
 		KVOID SetWidgetWidthPct(KSTR sName, KFLOAT fW);
-
+		
 	protected:
-		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageBack, "_Main");
-		MyGUI::StaticImage* m_pImageBack;
-
+		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageHeadBack, "_Main");
+		MyGUI::StaticImage* m_pImageHeadBack;
+		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageHeadFront, "image_head");
+		MyGUI::StaticImage* m_pImageHeadFront;
+		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageAnimaBack, "image_anima_back");
+		MyGUI::StaticImage* m_pImageAnimaBack;
+		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageAnimaFront, "image_anima_front");
+		MyGUI::StaticImage* m_pImageAnimaFront;
+		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pTextName, "txt_title");
+		MyGUI::StaticText* m_pTextName;
 	};
 }

@@ -7,6 +7,7 @@
 #include "uiCharInfoMenu.h"
 #include "uiKitbagMenu.h"
 #include "uiConsole.h"
+#include "uiMonsterInfoMenu.h"
 #include "CameraControl.h"
 #include "UserCommandHandler.h"
 
@@ -31,7 +32,7 @@ KBOOL Kylin::ClGame::Initialize()
 	Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->InitShell(this);
 
 	// 设置控制台命令接口
-	DebugConsole* pConsole = (DebugConsole*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("DebugConsole"));
+	DebugConsole* pConsole = GET_GUI_PTR(DebugConsole);
 	pConsole->SetHandler(KNEW UserCommandHandler());
 	//-----------------------------------------------------
 	if (!GSGame::Initialize())
@@ -55,6 +56,9 @@ KVOID Kylin::ClGame::UiLoader()
 	ShortcutMenu* pShortcut = KNEW ShortcutMenu();
 	pShortcut->Initialize();
 
+	MonsterInfoMenu* pMonsterInfo = KNEW MonsterInfoMenu();
+	pMonsterInfo->Initialize();
+
 	CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
 	pCharInfo->Initialize();
 
@@ -66,6 +70,9 @@ KVOID Kylin::ClGame::UiLoader()
 
 	//////////////////////////////////////////////////////////////////////////
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pShortcut);
+	
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pMonsterInfo);
+
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);

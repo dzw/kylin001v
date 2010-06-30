@@ -11,7 +11,7 @@ namespace Kylin
 		{
 			CommandHandler::PrintHelpInfo();
 
-			DebugConsole* pConsole = (DebugConsole*)(OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("DebugConsole"));
+			DebugConsole* pConsole = GET_GUI_PTR(DebugConsole);
 			if (pConsole)
 			{
 				pConsole->PrintLine(">change_scene - switch scene (scene id)");
