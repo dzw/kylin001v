@@ -331,6 +331,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\uiMonsterInfoMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiMonsterInfoMenu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\uiOptionMenu.cpp"
 				>
 			</File>
