@@ -125,7 +125,7 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::AddCollidee( CollisionData*
 
 KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 {
-	m_kCllsnBag.clear();
+	//m_kCllsnBag.clear();
 
 	KPoint3 kPos1,kPos2;
 	for (KUINT i = 0; i < m_kCollider.size(); i++)
@@ -140,10 +140,10 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 
 			//----------------------------------------------------------------
 			// 过滤掉已经处理过的碰撞对
-			if(IsMarked(m_kCollider[i], m_kCollidee[j]))
+			if(IsMarked(*m_kCollider[i], *m_kCollidee[j]))
 				continue;
 			//mark as collided
-			AddPair(m_kCollider[i], m_kCollidee[j]);
+			AddPair(*m_kCollider[i], *m_kCollidee[j]);
 			//----------------------------------------------------------------
 
 			kPos1 = m_kCollider[i]->m_pHost->GetTranslate();

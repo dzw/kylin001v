@@ -15,7 +15,7 @@
 
 Kylin::Action::Action( ActionDispatcher* pDispatcher )
 : m_pDispatcher(pDispatcher)
-, m_eType(AT_NONE)
+, m_eType(AT_IMM)
 , m_pEmitterNode(NULL)
 {
 	

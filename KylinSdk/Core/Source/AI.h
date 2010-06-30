@@ -64,6 +64,7 @@ namespace Kylin
 		virtual KBOOL		Tick_UseSkill( KFLOAT fElapsed );
 		virtual KBOOL		Tick_Dead( KFLOAT fElapsed );
 		virtual KBOOL		Tick_Follow( KFLOAT fElapsed );
+		virtual KBOOL		Tick_Radar( KFLOAT fElapsed );
 
 	protected:
 		Character*	m_pHostChar;
@@ -76,6 +77,8 @@ namespace Kylin
 		KINT		m_nPathwayIndex;			// 当前路径点索引
 		
 		KFLOAT		m_fStayTime;				// 停留时间
+		KFLOAT		m_fScanTime;				// 上一次的扫描时间
+		KBOOL		m_bToBlock;					// 前面存在障碍
 
 		CRandomMersenne* m_pRandomGenerator;	// 随机数发生器
 	};

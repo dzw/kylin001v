@@ -4,11 +4,12 @@
 #include "RegisterClass.h"
 
 //tolua_begin
+// 技能使用方式
 enum ActionType
 {
-	AT_NONE,
-	AT_POINT,
-	AT_TARGET,
+	AT_IMM,			// 及时型
+	AT_POS,			// 位置型
+	AT_TAR,			// 目标型
 };
 //tolua_end
 

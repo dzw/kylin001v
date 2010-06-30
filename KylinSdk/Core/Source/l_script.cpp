@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 06/29/10 15:50:05.
+** Generated automatically by tolua++-1.0.92 on 06/30/10 10:14:17.
 */
 
 #ifndef __cplusplus
@@ -328,9 +328,9 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_function(tolua_S,"query_near_foeman",tolua_script_query_near_foeman00);
   tolua_function(tolua_S,"set_spawner",tolua_script_set_spawner00);
   tolua_function(tolua_S,"set_translate",tolua_script_set_translate00);
-  tolua_constant(tolua_S,"AT_NONE",AT_NONE);
-  tolua_constant(tolua_S,"AT_POINT",AT_POINT);
-  tolua_constant(tolua_S,"AT_TARGET",AT_TARGET);
+  tolua_constant(tolua_S,"AT_IMM",AT_IMM);
+  tolua_constant(tolua_S,"AT_POS",AT_POS);
+  tolua_constant(tolua_S,"AT_TAR",AT_TAR);
  tolua_endmodule(tolua_S);
  return 1;
 }
