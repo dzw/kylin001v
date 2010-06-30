@@ -48,13 +48,20 @@ namespace Kylin
 		// test
 		KVOID			UseSkill(KUINT uActID);
 
+		// 设置焦点
+		KVOID			FocusTarget(KUINT uTargetID);
+
 	public:
 		virtual KVOID	Tick(KFLOAT fElapsed);
 
 	protected:
-		KVOID			SetupAnimations();
-
 		KVOID			UpdateBody(KFLOAT fElapsed);
+
+		// 更新焦点特效
+		KVOID			UpdateEffect(KFLOAT fElapsed);
+		
+		KBOOL			SelectedEntity(Ogre::Ray kRay);
+		KVOID			SelectedTerrain(Ogre::Ray kRay);
 
 	protected:
 		virtual KVOID	OnKeyDown(KUINT uKey);
@@ -81,8 +88,6 @@ namespace Kylin
 		EffectDecal*	m_pGuideEffect;
 		// 选中对象特效
 		EffectDecal*	m_pFocusEffect;
-		// 被选中的entity
-		Ogre::Entity*	m_pFocusEntity;
 		// 操作对象
 		KUINT			m_uTargetID;
 		// 当前所选择的技能

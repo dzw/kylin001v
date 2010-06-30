@@ -25,7 +25,7 @@ namespace Script
 		{
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 
-			Kylin::CharInfoMenu* pMenu = (Kylin::CharInfoMenu*)(Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("CharInfoMenu"));
+			Kylin::CharInfoMenu* pMenu = GET_GUI_PTR(Kylin::CharInfoMenu);
 			pMenu->SetRenderMyself(pChar->GetEntityPtr());
 		}
 	}
@@ -41,7 +41,7 @@ namespace Script
 			
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));
 
-			Kylin::ShortcutMenu* pMenu = (Kylin::ShortcutMenu*)(Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("ShortcutMenu"));
+			Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
 			pMenu->SetSkillIcon(pAct->GetIcon(),chPos[0]);
 		}
 	}
@@ -66,7 +66,7 @@ namespace Script
 				else
 				{	SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode())); }
 				//---------------------------------------------------------------
-				Kylin::ShortcutMenu* pMenu = (Kylin::ShortcutMenu*)(Kylin::OgreRoot::GetSingletonPtr()->GetGuiManager()->GetGuiBase("ShortcutMenu"));
+				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
 				pMenu->SetSkillIcon(pAct->GetIcon(),'l');
 			}
 		}

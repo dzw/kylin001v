@@ -43,6 +43,6 @@ namespace Kylin
 		MyGUI::StaticImage* m_pImageSkill_2;
 
 	protected:
-
+		KPoint4		m_kImageHealthCoord;
 	};
 }

@@ -22,24 +22,31 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 
 	MyGUI::ResourceImageSetPtr resource_exp = nullptr;
 	resource_exp = MyGUI::ResourceManager::getInstance().getByName("pic_exp")->castType<MyGUI::ResourceImageSet>();
-	
+
 	//-----------------------------------------------------
 	m_pImageBack->setItemResourcePtr(resource_back);
 	m_pImageBack->setItemGroup("States");
 
 	m_pImageHealth->setItemResourcePtr(resource_health);
 	m_pImageHealth->setItemGroup("States");
+
+	MyGUI::ImageIndexInfo info = resource_health->getIndexInfo("States","Normal");
 	
+	m_kImageHealthCoord.x = info.frames[0].left;
+	m_kImageHealthCoord.y = info.frames[0].top;
+	m_kImageHealthCoord.z = info.size.width;
+	m_kImageHealthCoord.w = info.size.height;
+
 	m_pImageExprience->setItemResourcePtr(resource_exp);
 	m_pImageExprience->setItemGroup("States");
 	
 	//-----------------------------------------------------
 
-	m_pImageHealth->setColour(MyGUI::Colour(0.75,0,0,0.85));
+	m_pImageHealth->setColour(MyGUI::Colour(0.85,0,0,0.1));
 	
 	//-----------------------------------------------------
 	// test code
-	SetWidgetHeightPct("image_health",0.6f);
+	SetWidgetHeightPct("image_health",0.8f);
 	
 	SetWidgetWidthPct("image_experience",0.6f);
 	
@@ -58,16 +65,23 @@ KVOID Kylin::ShortcutMenu::Destroy()
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetVisible( KBOOL bVisible )
 {
-
+	
 }
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetWidgetHeightPct( KSTR sName, KFLOAT fH )
 {	
 	if (sName == "image_health")
 	{
-		int nw = m_pImageHealth->getWidth();
-		int nh = m_pImageHealth->getHeight();
+		KINT h = m_kImageHealthCoord.w * fH;
+		KINT t = m_kImageHealthCoord.y + (1-fH) * m_kImageHealthCoord.w;
+		m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.x,t,m_kImageHealthCoord.z,h));
 
+		MyGUI::IntCoord crd = m_pImageHealth->getCoord();
+		
+		crd.top += (1-fH) * m_kImageHealthCoord.w + 0.5f;
+		crd.height = h;
+
+		m_pImageHealth->setCoord(crd);
 	}
 }
 //-----------------------------------------------------------------------------

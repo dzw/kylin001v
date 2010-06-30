@@ -14,8 +14,10 @@
 #include "ScriptVM.h"
 #include "EffectDecal.h"
 #include "uiCursorEx.h"
+#include "uiMonsterInfoMenu.h"
 #include "DataManager.h"
 #include "Action.h"
+#include "NpcObject.h"
 
 
 Kylin::PlayerController::PlayerController()
@@ -26,7 +28,6 @@ Kylin::PlayerController::PlayerController()
 , m_kMousePickPos(KPoint3::ZERO)
 , m_pGuideEffect(NULL)
 , m_pFocusEffect(NULL)
-, m_pFocusEntity(NULL)
 , m_uTargetID(INVALID_ID)
 {
 	//-----------------------------------------------------
@@ -74,8 +75,7 @@ KVOID Kylin::PlayerController::Tick( KFLOAT fElapsed )
 
 	m_pCamera->Update(fElapsed);
 
-	if (m_pFocusEntity && m_pFocusEffect->IsVisible())
-		m_pFocusEffect->MoveTo(m_pFocusEntity->getParentSceneNode()->getPosition());
+	UpdateEffect(fElapsed);
 }
 
 KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
@@ -147,7 +147,7 @@ KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 		KPoint3 kHit;
 		if ( OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
 		{
-			if (pEnt)
+			if (pEnt && !pEnt->getUserAny().isEmpty())
 			{
 				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
 				if (m_pHost->GetID() != uID)
@@ -217,82 +217,10 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 {
 	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
-	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
+	OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay);
 	{
-		//m_pTarget
-		Ogre::Entity* pEnt = NULL;
-		KPoint3 kHitPos; 
-		if ( OgreUtils::PickEntity(kRay,&pEnt,kHitPos,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
-		{
-			if (pEnt)
-			{
-				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
-				Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
-				if (pTarget)
-				{
-					if (m_kSelectAction.uActionType == AT_TAR)
-					{
-						SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
-						m_kSelectAction.Reset();
-					}
-
-					m_uTargetID = uID;
-				}
-			}
-		}
-		else
-		{
-			if (m_kSelectAction.uActionType == AT_TAR)
-			{
-				return;
-			}
-
-			//-------------------------------------------------------
-			if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
-			{
-				KFLOAT fDistance = (kHitPos - m_pHost->GetTranslate()).length();
-				// 超过可视距离不可移动
-				if ( fDistance > VISIBLE_DISTANCE )
-				{
-					// 提示声音
-					return;
-				}
-				else
-				{
-					//-------------------------------------------------------
-					// 使用技能
-					if (m_kSelectAction.uActionType == AT_POS)
-					{
-						SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,kHitPos));
-						m_kSelectAction.Reset();
-						return;
-					}
-					//-------------------------------------------------------
-					
-					m_fDistance		= fDistance;
-					m_kMousePickPos = kHitPos;
-
-					// 在选中位置播放动画
-					m_pGuideEffect->MoveTo(kHitPos);
-					m_pGuideEffect->SetVisible(true);
-
-					// 播放角色动画
-					KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
-				}
-
-				//////////////////////////////////////////////////////////////////////////
-				// 旋转到拾取的方向
-				KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
-				KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
-				kSrc.y = 0;														// Ignore pitch difference angle
-				kDir.y = 0;
-				kSrc.normalise();                                                           
-				{                                                                           
-					Quaternion kQuat = kSrc.getRotationTo(kDir);                        
-					m_pHost->GetSceneNode()->rotate(kQuat);                                                    
-				}
-			}
-		}
+		if (!SelectedEntity(kRay))
+			SelectedTerrain(kRay);
 	}
 }
 
@@ -305,31 +233,17 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 		Ogre::Entity* pEnt = NULL;
 		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
 		{
-			m_pFocusEffect->MoveTo(pEnt->getParentSceneNode()->getPosition());
-			m_pFocusEffect->SetVisible(true);
-			m_pFocusEntity = pEnt;
-
-			m_uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+			FocusTarget(uTargetID);
 		}
 	}
 }
 
 KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 {
-	Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetID);
-	if (pTarget)
-	{
-		KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
-		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;				// Orientation from initial direction
-		kSrc.y = 0;																// Ignore pitch difference angle
-		kDir.y = 0;
-		kSrc.normalise();                                                           
-		{                                                                           
-			Quaternion kQuat = kSrc.getRotationTo(kDir);                        
-			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
-		}
-	}
-	
+	if (m_kSelectAction.uActionGID != INVALID_ID)
+		return;
+
 	KANY aValue;
 	if ( DataManager::GetSingletonPtr()->Select("ACTION_DB",uActID,"TYPE",aValue) )
 	{
@@ -356,4 +270,137 @@ KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 
 	//------------------------------------------------------------------
 	// m_bPrepareFire 当目标距离大于攻击距离时，向目标移动。
+}
+
+KVOID Kylin::PlayerController::FocusTarget( KUINT uTargetID )
+{
+	Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uTargetID);
+	if (pTarget && pTarget != m_pHost)
+	{
+		// 使角色面向焦点对象
+		KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
+		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;				// Orientation from initial direction
+		kSrc.y = 0;																// Ignore pitch difference angle
+		kDir.y = 0;
+		kSrc.normalise();                                                           
+		{                                                                           
+			Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+		}
+		
+		// 在UI中显示焦点对象信息
+		if (BtIsKindOf(NpcObject,pTarget))
+		{
+			MonsterInfoMenu* pMenu = GET_GUI_PTR(MonsterInfoMenu);
+			pMenu->SetVisible(true);
+			// set anima ... 
+		}
+
+		// 移动焦点特效到该目标位置
+		m_pFocusEffect->MoveTo(pTarget->GetTranslate());
+		m_pFocusEffect->SetVisible(true);
+
+		m_uTargetID = uTargetID;
+	}
+}
+
+KVOID Kylin::PlayerController::UpdateEffect( KFLOAT fElapsed )
+{
+	if (m_uTargetID != INVALID_ID && m_pFocusEffect->IsVisible())
+	{
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetID);
+		if (pEnt)
+		{
+			KFLOAT fDistance = pEnt->GetTranslate().squaredDistance(m_pHost->GetTranslate());
+			if (fDistance < VISIBLE_DISTANCE * VISIBLE_DISTANCE)
+			{
+				m_pFocusEffect->MoveTo(pEnt->GetTranslate());
+				return;
+			}
+		}
+		
+		//-----------------------------------------------------------------
+		m_pFocusEffect->SetVisible(false);
+		// set ui
+		MonsterInfoMenu* pMenu = GET_GUI_PTR(MonsterInfoMenu);
+		pMenu->SetVisible(false);
+		m_uTargetID = INVALID_ID;
+	}
+}
+
+KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
+{
+	Ogre::Entity* pEnt = NULL;
+	KPoint3 kHitPos; 
+	if ( OgreUtils::PickEntity(kRay,&pEnt,kHitPos,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+	{
+		if (pEnt)
+		{
+			KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+			Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
+			if (pTarget)
+			{
+				if (m_kSelectAction.uActionType == AT_TAR)
+				{
+					SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
+					m_kSelectAction.Reset();
+				}
+
+				//
+				FocusTarget(uID);
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
+{
+	if (m_kSelectAction.uActionType == AT_TAR)
+		return ;
+	
+	KPoint3 kHitPos; 
+	//-------------------------------------------------------
+	if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
+	{
+		KFLOAT fDistance = (kHitPos - m_pHost->GetTranslate()).length();
+		// 超过可视距离不可移动
+		if ( fDistance < VISIBLE_DISTANCE )
+		{
+			//-------------------------------------------------------
+			// 使用技能
+			if (m_kSelectAction.uActionType == AT_POS)
+			{
+				SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,kHitPos));
+				m_kSelectAction.Reset();
+				return ;
+			}
+			//-------------------------------------------------------
+
+			m_fDistance		= fDistance;
+			m_kMousePickPos = kHitPos;
+
+			// 在选中位置播放动画
+			m_pGuideEffect->MoveTo(kHitPos);
+			m_pGuideEffect->SetVisible(true);
+
+			// 播放角色动画
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+		// 旋转到拾取的方向
+		KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
+		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
+		kSrc.y = 0;														// Ignore pitch difference angle
+		kDir.y = 0;
+		kSrc.normalise();                                                           
+		{                                                                           
+			Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+		}
+	}
 }
