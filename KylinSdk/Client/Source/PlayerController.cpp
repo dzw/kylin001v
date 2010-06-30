@@ -230,23 +230,46 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 				Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
 				if (pTarget)
 				{
+					if (m_kSelectAction.uActionType == AT_TAR)
+					{
+						SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
+						m_kSelectAction.Reset();
+					}
+
 					m_uTargetID = uID;
 				}
 			}
 		}
 		else
 		{
+			if (m_kSelectAction.uActionType == AT_TAR)
+			{
+				return;
+			}
+
+			//-------------------------------------------------------
 			if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
 			{
-				m_fDistance = (kHitPos - m_pHost->GetTranslate()).length();
+				KFLOAT fDistance = (kHitPos - m_pHost->GetTranslate()).length();
 				// 超过可视距离不可移动
-				if ( m_fDistance > VISIBLE_DISTANCE )
+				if ( fDistance > VISIBLE_DISTANCE )
 				{
 					// 提示声音
 					return;
 				}
 				else
 				{
+					//-------------------------------------------------------
+					// 使用技能
+					if (m_kSelectAction.uActionType == AT_POS)
+					{
+						SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,kHitPos));
+						m_kSelectAction.Reset();
+						return;
+					}
+					//-------------------------------------------------------
+					
+					m_fDistance		= fDistance;
 					m_kMousePickPos = kHitPos;
 
 					// 在选中位置播放动画
@@ -313,20 +336,20 @@ KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 		KSTR sValue = boost::any_cast<KSTR>(aValue);	
 		
 		ActionType type = Action::TransformType(sValue);
-		
-		if (type == AT_NONE)
-		{
-			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
-		}
-		else if (type == AT_TARGET)
-		{
-			if (!pTarget) return;
 
-			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID,m_uTargetID));
-		}
-		else if (type == AT_POINT)
+		if (type != AT_IMM)
 		{
-			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+			m_kSelectAction.uActionGID = uActID;
+			m_kSelectAction.uActionType= type;
+		}
+
+		if (type == AT_TAR)
+		{
+			// update cursor
+		}
+		else if (type == AT_POS)
+		{
+			// update cursor
 		}
 	}
 	
