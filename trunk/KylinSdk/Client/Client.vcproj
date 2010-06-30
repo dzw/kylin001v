@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\GameDefine.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\LobbyScene.h"
 				>
 			</File>
