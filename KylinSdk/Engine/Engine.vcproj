@@ -168,10 +168,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\CollisionWrapper.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\Debug.cpp"
 				>
 			</File>
@@ -259,10 +255,6 @@
 			</File>
 			<File
 				RelativePath=".\Source\ClockingCallback.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\CollisionWrapper.h"
 				>
 			</File>
 			<File
@@ -459,6 +451,14 @@
 		<Filter
 			Name="util"
 			>
+			<File
+				RelativePath=".\Source\rOrientedBox.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rOrientedBox.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Source\UtilsOgreDshow.cpp"
 				>
