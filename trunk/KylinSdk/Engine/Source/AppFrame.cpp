@@ -148,7 +148,7 @@ namespace Kylin
 		Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
 		if (pCam)
 		{
-			pCam->setNearClipDistance(1.0f);
+			pCam->setNearClipDistance(0.1f);
 			
 			OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
 		}
@@ -188,9 +188,6 @@ namespace Kylin
 	
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
 	{
-		if (m_bStartTick)
-			OnStartTick();
-
 		if(m_pWindow->isClosed())
 			return false;
 		
@@ -221,6 +218,9 @@ namespace Kylin
 
 	KVOID AppFrame::OnIdle( KFLOAT fElapsed )
 	{
+		if (m_bStartTick)
+			OnStartTick();
+
 		SAFE_CALL(EffectManager::GetSingletonPtr(),Render(fElapsed));
 		
 		//SAFE_CALL(m_pCameraCtrl,Update(fElapsed));

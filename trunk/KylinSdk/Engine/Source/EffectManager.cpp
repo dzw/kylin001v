@@ -141,6 +141,7 @@ KBOOL Kylin::EffectParticle::Initialize()
 	else
 		m_pParticleHandle = pSceneMngr->createParticleSystem(m_sName, m_sTemplate);
 	
+	m_pParticleHandle->setRenderingDistance(VISIBLE_DISTANCE);
 	m_pParticleHandle->setCastShadows(false);
 	// 若要使粒子特效缩放有效请打开此项
 	m_pParticleHandle->setKeepParticlesInLocalSpace(true);

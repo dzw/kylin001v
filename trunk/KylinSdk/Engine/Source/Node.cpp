@@ -41,8 +41,6 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 
 		// 设置模型贴图
 		OgreUtils::SetDefaultMaterial(m_pOgreEntity);
-		//if (!sMaterials.empty())
-		//	m_pOgreEntity->setMaterialName(sMaterials);
 		
 		if (!m_pOgreNode || !m_pOgreEntity) return false;
 		// 挂接对象
@@ -55,6 +53,8 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		else
 			m_pOgreEntity->setCastShadows(false);
 		
+		// 设置渲染距离
+		m_pOgreEntity->setRenderingDistance(VISIBLE_DISTANCE);
 		//-----------------------------------------------------------
 		// 透明度
 		if (!m_pTransparency)
