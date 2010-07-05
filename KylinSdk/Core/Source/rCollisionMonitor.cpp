@@ -25,6 +25,7 @@ KVOID Kylin::PhyX::CollisionMonitor::Destroy()
 	}
 
 	m_kObjsMap.clear();
+	m_kSceneVec.clear();
 }
 
 Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Commit( Node* pHost,KBOOL bCollider,KUINT uSelf,KUINT uMate )
@@ -52,6 +53,9 @@ Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Com
 
 KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFLOAT fRadius )
 {
+	if (QuerySceneCllsnBox(kPos))
+		return false;
+
 	KPoint3 kSrc(kPos.x,kPos.y + fRadius,kPos.z);	
 	Ogre::Ray kRay(kSrc,kDir);
 	
@@ -83,11 +87,6 @@ KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFL
 	return true;
 }
 
-// Kylin::Node* Kylin::PhyX::CollisionMonitor::Query( const Ogre::Ray& kRay )
-// {
-// 	
-// 	return NULL;
-// }
 
 KVOID Kylin::PhyX::CollisionMonitor::TestEntities( )
 {
@@ -112,6 +111,29 @@ KVOID Kylin::PhyX::CollisionMonitor::TestEntities( )
 	kGroup.Update();
 }
 
+KBOOL Kylin::PhyX::CollisionMonitor::QuerySceneCllsnBox( KPoint3 kPos )
+{
+ 	for (KUINT i = 0; i < m_kSceneVec.size(); i++)
+	{
+		if ( m_kSceneVec[i].mOBB.getCenter().squaredDistance(kPos) <= 
+			 m_kSceneVec[i].mOBB.getSquaredRadius() )
+		{
+			if ( m_kSceneVec[i].mOBB.contains(kPos) )
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+KVOID Kylin::PhyX::CollisionMonitor::AddSceneCllsnBox( const OrientedBox& kBox )
+{
+	CollisionBox box;
+	box.mOBB = kBox;
+	m_kSceneVec.push_back(box);
+}
 //////////////////////////////////////////////////////////////////////////
 KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::AddCollider( CollisionData* pData )
 {

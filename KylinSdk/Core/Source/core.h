@@ -3,9 +3,8 @@
 #include "Standard.h"
 #include "Engine.h"
 
-#define INVALID_ID			0xffffffff
 #define _WGravity			20.0f
-#define VISIBLE_DISTANCE	50.0f
+
 
 namespace Kylin
 {
