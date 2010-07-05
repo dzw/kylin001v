@@ -56,7 +56,7 @@ namespace Kylin
 		
 		KVOID RegisterGui(GuiBase* pGui);
 		KVOID UnregisterGui(GuiBase* pGui);
-		KVOID RemoveAllGui();
+		KVOID RemoveAllGui(KBOOL bFlag=false);
 		GuiBase* GetGuiBase(KSTR sName);
 
 	public:

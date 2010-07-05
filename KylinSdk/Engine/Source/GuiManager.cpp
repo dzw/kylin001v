@@ -50,7 +50,7 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 
 KVOID Kylin::GuiManager::Destroy()
 {
-	RemoveAllGui();
+	RemoveAllGui(true);
 	//////////////////////////////////////////////////////////////////////////
 	if (m_pGUI)
 	{
@@ -136,13 +136,13 @@ Kylin::GuiBase* Kylin::GuiManager::GetGuiBase( KSTR sName )
 	return NULL;
 }
 
-KVOID Kylin::GuiManager::RemoveAllGui()
+KVOID Kylin::GuiManager::RemoveAllGui(KBOOL bFlag)
 {
 	for (GuiMap::iterator it = m_kGuiMap.begin(); it != m_kGuiMap.end(); it++)
 	{
 		//-----------------------------------------------------------
 		// 加载界面不可销毁
-		if (it->first == "LoadingProgress")
+		if (!bFlag && it->first == "LoadingProgress")
 			continue;
 		//-----------------------------------------------------------
 		it->second->Destroy();
