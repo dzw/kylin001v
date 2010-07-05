@@ -1,5 +1,6 @@
 #pragma once
 
+#include "rOrientedBox.h"
 
 namespace Kylin
 {
@@ -98,26 +99,46 @@ namespace Kylin
 				ColliderBag m_kCllsnBag;
 			};
 			
+			class CollisionBox
+			{
+			public:
+				CollisionBox()
+					: mWireBoundingBox(NULL)
+				{
+				}
+
+				OrientedBox				mOBB;
+				/// Pointer to a Wire Bounding Box for this Node
+				Ogre::WireBoundingBox*	mWireBoundingBox;
+			};
 			//////////////////////////////////////////////////////////////////////////
 
 			virtual KVOID Tick(KFLOAT fElapsed);
 			//-----------------------------------------------------------------
 			virtual KVOID Destroy();
 			//-----------------------------------------------------------------
-			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider,KUINT uSelf = COT_DYNAMIC,KUINT uMate = COT_STATIC | COT_DYNAMIC);
+			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider = true,KUINT uSelf = COT_DYNAMIC,KUINT uMate = COT_STATIC | COT_DYNAMIC);
 			//-----------------------------------------------------------------
 			// 查询场景碰撞， 
 			// pos 要查询的位置，dir 朝向， 查询半径
 			virtual KBOOL QueryScene(KPoint3 kPos, KPoint3 kDir, KFLOAT fRadius);
-			//-----------------------------------------------------------------
 
+			// 判断该位置是否在场景碰撞内
+			virtual KBOOL QuerySceneCllsnBox(KPoint3 kPos);
+			
+			// 添加场景碰撞盒
+			virtual KVOID AddSceneCllsnBox(const OrientedBox& kBox);
+			//-----------------------------------------------------------------
+			
 		protected:
 			virtual KVOID TestEntities();
 
 		protected:
 			typedef KMAP<Node*, CollisionData*> CllsnObjMap;
+			typedef KVEC<CollisionBox>			CllsnSceneVec;
 
-			CllsnObjMap m_kObjsMap;
+			CllsnObjMap		m_kObjsMap;
+			CllsnSceneVec	m_kSceneVec;
 		};
 	}
 }
