@@ -1,5 +1,7 @@
 #pragma once
 
+#define CLICK_DISTANCE	50			// 鼠标可点击的距离
+
 
 // 关系
 enum ENUM_RELATION
@@ -42,3 +44,4 @@ enum ENUM_NPC_AI_ATTR
 	NPC_AI_TYPE_IS_8			= 8,	//不主动攻击，会随机移动，可以攻击，不会还击
 	NPC_AI_TYPE_IS_9			= 9,	//主动攻击，不会随机移动，可以攻击，会还击（副本专用，小扫敌半径）
 };
+

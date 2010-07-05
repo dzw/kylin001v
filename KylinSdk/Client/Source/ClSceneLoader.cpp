@@ -30,8 +30,9 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 #ifdef _DEBUG
 		uGid = 1;
 #else
-		assert(!"无法获得角色ID"); // log to file
-		return false;
+		Ogre::LogManager::getSingleton().logMessage("[ClSceneLoader] 无法获得角色ID!");
+		uGid = 1;
+		//return false;
 #endif
 	}
 	

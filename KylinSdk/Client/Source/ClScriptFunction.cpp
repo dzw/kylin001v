@@ -26,7 +26,8 @@ namespace Script
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 
 			Kylin::CharInfoMenu* pMenu = GET_GUI_PTR(Kylin::CharInfoMenu);
-			pMenu->SetRenderMyself(pChar->GetEntityPtr());
+
+			SAFE_CALL(pMenu,SetRenderMyself(pChar->GetEntityPtr()));
 		}
 	}
 
