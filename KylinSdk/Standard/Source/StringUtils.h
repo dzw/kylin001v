@@ -1,5 +1,7 @@
 #pragma once
 
+#include   <cstdarg> 
+
 class StringUtils
 {
 public:
@@ -49,4 +51,16 @@ public:
 		return result;
 	}
 
+	static KSTR format(const KSTR& fmt, ...)
+	{ 
+		va_list argptr; 
+		va_start(argptr, fmt); 
+		KINT bufsize = _vsnprintf(NULL, 0, fmt.c_str(), argptr) + 2;
+		KCHAR* buf   = KNEW KCHAR[bufsize];
+		_vsnprintf(buf, bufsize, fmt.c_str(), argptr); 
+		KSTR   s(buf);
+		KDEL[]   buf;
+		va_end(argptr);
+		return s;
+	}
 };
