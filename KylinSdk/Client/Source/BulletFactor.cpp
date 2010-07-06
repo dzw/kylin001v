@@ -174,5 +174,12 @@ namespace Kylin
 			}
 		}
 	}
+
+	KVOID BulletFactor::SetupCllsn( PropertySet kProp )
+	{
+		PhyX::CollisionMonitor::CollisionData* pData = PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->Commit(this,true);
+		pData->SetCallbackFunc(&Kylin::Entity::OnEntityCllsn);
+		pData->SetEnable(true);
+	}
 }
 

@@ -47,6 +47,7 @@ namespace Kylin
 		
 		// test
 		KVOID			UseSkill(KUINT uActID);
+		KVOID			SelectDefaultAction();
 
 		// 设置焦点
 		KVOID			FocusTarget(KUINT uTargetID);
@@ -92,6 +93,8 @@ namespace Kylin
 		KUINT			m_uTargetID;
 		// 当前所选择的技能
 		UsedAction		m_kSelectAction;
+		// 左键默认技能ID
+		KUINT			m_uDefaultActionID;
 
 		// 摄像机
 		GameCamera*		m_pCamera;

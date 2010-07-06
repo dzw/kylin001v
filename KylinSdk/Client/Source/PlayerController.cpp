@@ -18,6 +18,7 @@
 #include "DataManager.h"
 #include "Action.h"
 #include "NpcObject.h"
+#include "gamedefine.h"
 
 
 Kylin::PlayerController::PlayerController()
@@ -29,6 +30,7 @@ Kylin::PlayerController::PlayerController()
 , m_pGuideEffect(NULL)
 , m_pFocusEffect(NULL)
 , m_uTargetID(INVALID_ID)
+, m_uDefaultActionID(INVALID_ID)
 {
 	//-----------------------------------------------------
 	m_pCamera = KNEW GameCamera( OgreRoot::GetSingletonPtr()->GetCamera("$MainCamera"),
@@ -115,6 +117,11 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		if (m_fDistance < KZERO)
 		{				
 			m_kMousePickPos = KPoint3::ZERO;
+			if (m_kSelectAction.uActionGID != INVALID_ID)
+			{
+				SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,m_uTargetID));
+				m_kSelectAction.Reset();
+			}
 		}
 		else 
 		{
@@ -140,12 +147,15 @@ KVOID Kylin::PlayerController::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
 //---------------------------------------------------------------
 KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 {
+	if (m_pCamera->GetMode() == GameCamera::CM_FREE)
+		return;
+
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
 	{
 		Ogre::Entity* pEnt = NULL;
 		KPoint3 kHit;
-		if ( OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+		if ( OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
 		{
 			if (pEnt && !pEnt->getUserAny().isEmpty())
 			{
@@ -174,23 +184,35 @@ KVOID Kylin::PlayerController::OnKeyUp( KUINT uKey )
 
 KVOID Kylin::PlayerController::OnKeyDown( KUINT uKey )
 {
-	// keep track of the player's intended direction
-	if (uKey == OIS::KC_W) m_kKeyDirection.z = -1;
-	else if (uKey == OIS::KC_A) m_kKeyDirection.x = -1;
-	else if (uKey == OIS::KC_S) m_kKeyDirection.z = 1;
-	else if (uKey == OIS::KC_D) m_kKeyDirection.x = 1;
-	else if (uKey == OIS::KC_SPACE)
+	if (m_pCamera->GetMode() != GameCamera::CM_FREE)
 	{
-		// jump if on ground
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, JUMP_ACCEL, 0));
-	}
+		// keep track of the player's intended direction
+		if (uKey == OIS::KC_W) m_kKeyDirection.z = -1;
+		else if (uKey == OIS::KC_A) m_kKeyDirection.x = -1;
+		else if (uKey == OIS::KC_S) m_kKeyDirection.z = 1;
+		else if (uKey == OIS::KC_D) m_kKeyDirection.x = 1;
+		else if (uKey == OIS::KC_SPACE)
+		{
+			// jump if on ground
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, JUMP_ACCEL, 0));
+		}
 
-	if (m_kKeyDirection.z != 0 || m_kKeyDirection.x != 0)
+		if (m_kKeyDirection.z != 0 || m_kKeyDirection.x != 0)
+		{
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
+			//-----------------------------------------------------------
+			m_kMousePickPos = KPoint3::ZERO;
+			m_pGuideEffect->SetVisible(false);
+		}
+	}
+	else 
 	{
-		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
-		//-----------------------------------------------------------
-		m_kMousePickPos = KPoint3::ZERO;
-		m_pGuideEffect->SetVisible(false);
+		if (uKey == OIS::KC_W) m_kKeyDirection.z = -1;
+		else if (uKey == OIS::KC_A) m_kKeyDirection.x = -1;
+		else if (uKey == OIS::KC_S) m_kKeyDirection.z = 1;
+		else if (uKey == OIS::KC_D) m_kKeyDirection.x = 1;
+		else if (uKey == OIS::KC_E) m_kKeyDirection.y = 1;
+		else if (uKey == OIS::KC_Q) m_kKeyDirection.y = -1;
 	}
 }
 
@@ -215,6 +237,9 @@ KBOOL Kylin::PlayerController::IsMove()
 
 KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 {
+	if (m_pCamera->GetMode() == GameCamera::CM_FREE)
+		return;
+
 	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
 	OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay);
@@ -226,12 +251,16 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 
 KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 {
+	if (m_pCamera->GetMode() == GameCamera::CM_FREE)
+		return;
+	
+	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
 	{
 		KPoint3 kHit;
 		Ogre::Entity* pEnt = NULL;
-		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
 		{
 			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
 			FocusTarget(uTargetID);
@@ -312,7 +341,7 @@ KVOID Kylin::PlayerController::UpdateEffect( KFLOAT fElapsed )
 		if (pEnt)
 		{
 			KFLOAT fDistance = pEnt->GetTranslate().squaredDistance(m_pHost->GetTranslate());
-			if (fDistance < VISIBLE_DISTANCE * VISIBLE_DISTANCE)
+			if (fDistance < CLICK_DISTANCE * CLICK_DISTANCE)
 			{
 				m_pFocusEffect->MoveTo(pEnt->GetTranslate());
 				return;
@@ -332,7 +361,7 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 {
 	Ogre::Entity* pEnt = NULL;
 	KPoint3 kHitPos; 
-	if ( OgreUtils::PickEntity(kRay,&pEnt,kHitPos,KylinRoot::KR_NPC_MASK,VISIBLE_DISTANCE) )
+	if ( OgreUtils::PickEntity(kRay,&pEnt,kHitPos,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
 	{
 		if (pEnt)
 		{
@@ -340,10 +369,28 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 			Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
 			if (pTarget)
 			{
+				if (m_kSelectAction.uActionGID == INVALID_ID)
+				{
+					SelectDefaultAction();
+				}
+
 				if (m_kSelectAction.uActionType == AT_TAR)
 				{
-					SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
-					m_kSelectAction.Reset();
+					KFLOAT fDistance = pTarget->GetTranslate().distance(m_pHost->GetTranslate());
+					KFLOAT fValidDis = pTarget->GetBoundingRadius() + m_pHost->GetBoundingRadius();	// test code
+					if (fDistance > fValidDis)			
+					{
+						KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();
+						kDir.normalise();
+						
+						m_kMousePickPos = pTarget->GetTranslate() - kDir * fValidDis;
+						m_fDistance		= fDistance - fValidDis;
+					}
+					else
+					{
+						SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
+						m_kSelectAction.Reset();
+					}
 				}
 
 				//
@@ -367,8 +414,8 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 	if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
 	{
 		KFLOAT fDistance = (kHitPos - m_pHost->GetTranslate()).length();
-		// 超过可视距离不可移动
-		if ( fDistance < VISIBLE_DISTANCE )
+		// 超过可点击距离
+		if ( fDistance < CLICK_DISTANCE )
 		{
 			//-------------------------------------------------------
 			// 使用技能
@@ -404,3 +451,20 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 		}
 	}
 }
+
+KVOID Kylin::PlayerController::SelectDefaultAction()
+{
+	if (m_kSelectAction.uActionGID == INVALID_ID)
+	{
+		KANY aValue;
+		if ( DataManager::GetSingletonPtr()->Select("ACTION_DB",m_uDefaultActionID,"TYPE",aValue) )
+		{
+			KSTR sValue = boost::any_cast<KSTR>(aValue);	
+
+			ActionType type = Action::TransformType(sValue);
+			
+			m_kSelectAction.uActionGID  = m_uDefaultActionID;
+			m_kSelectAction.uActionType = type;
+		}
+	}
+}	

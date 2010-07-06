@@ -19,6 +19,7 @@ namespace Kylin
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID BindEffect(PropertySet kProp);
+		virtual KVOID SetupCllsn(PropertySet kProp);
 
 		virtual KVOID Moving(KFLOAT fElapsed);
 	
