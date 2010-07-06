@@ -2,6 +2,9 @@
 #include "NpcObject.h"
 #include "RegisterClass.h"
 #include "AI.h"
+#include "RemoteEvents.h"
+#include "KylinRoot.h"
+#include "DamageSystem.h"
 
 
 namespace Kylin
@@ -10,6 +13,8 @@ namespace Kylin
 
 	Implement_Event_Handler(NpcObject, Character)
 	{
+		{&ev_post_damage,			&EV_Damage},
+		{&ev_post_killed,			&EV_Killed},
 		{NULL, NULL}
 	};
 
@@ -76,5 +81,23 @@ namespace Kylin
 	KUINT NpcObject::GetMasterWorldID()
 	{
 		return m_uMasterID;
+	}
+
+	KVOID NpcObject::EV_Damage( EventPtr spEV )
+	{
+		DamageUnit kUnit(1,1,1,1);
+		
+		if ( DamageSystem::Calculate(kUnit,this->GetID()) > 0 )
+		{
+			// 执行对应的脚步函数
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_damage");
+		}
+	}
+
+	KVOID NpcObject::EV_Killed( EventPtr spEV )
+	{
+
+		// 执行对应的脚步函数
+		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_killed");
 	}
 }

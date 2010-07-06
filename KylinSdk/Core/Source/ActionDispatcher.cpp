@@ -129,8 +129,14 @@ Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID,const KPoint3& kPos )
 
 Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID,KUINT uTarget )
 {
-	Factor* pFactor = Fire(uGID);
-	SAFE_CALL(pFactor,SetTarget(uTarget));
+	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(uTarget);
+	if (pEnt)
+	{
+		Factor* pFactor = Fire(uGID);
+		SAFE_CALL(pFactor,SetTarget(uTarget));
 
-	return pFactor;
+		return pFactor;
+	}
+	
+	return NULL;
 }
