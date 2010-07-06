@@ -117,7 +117,7 @@ namespace Kylin
 			//-----------------------------------------------------------------
 			virtual KVOID Destroy();
 			//-----------------------------------------------------------------
-			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider = true,KUINT uSelf = COT_DYNAMIC,KUINT uMate = COT_STATIC | COT_DYNAMIC);
+			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider = false,KUINT uSelf = COT_DYNAMIC,KUINT uMate = COT_STATIC | COT_DYNAMIC);
 			//-----------------------------------------------------------------
 			// 查询场景碰撞， 
 			// pos 要查询的位置，dir 朝向， 查询半径

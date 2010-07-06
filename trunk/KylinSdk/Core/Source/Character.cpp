@@ -18,8 +18,6 @@ namespace Kylin
 
 	Implement_Event_Handler(Character, Entity)
 	{
-		//{&ev_post_picked,			&EV_Picked},
-		//{&ev_post_pick_terrain,		&EV_PickTerrain},
 		{NULL, NULL}
 	};
 }
@@ -30,33 +28,6 @@ Kylin::Character::Character()
 {
 
 }
-
-// KVOID Kylin::Character::EV_Picked( EventPtr spEV )
-// {
-// 	
-// }
-// 
-// KVOID Kylin::Character::EV_PickTerrain( EventPtr spEV )
-// {
-// 	KINT nX = boost::get<KINT>(spEV->args[0]);
-// 	KINT nY = boost::get<KINT>(spEV->args[1]);
-// 	
-// 	Ogre::Ray kRay;
-// 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
-// 	{
-// 		KPoint3 vPos;
-// 		if (KylinRoot::GetSingletonPtr()->HitTest(kRay,vPos))
-// 		{
-// 			//this->SetTranslate(vPos);
-// 			m_kDestination = vPos;
-// 
-// 			m_fDistance = (m_kDestination - GetTranslate()).length();
-// 		}
-// 	}
-// 
-// 	CollisionWrapper::GetSingletonPtr()->Query(kRay,1000);
-// 	
-// }
 
 KVOID Kylin::Character::OnEntityCllsn( Node* pCollidee,const KPoint3& rNormal )
 {
@@ -130,16 +101,3 @@ Kylin::Avatar* Kylin::Character::GetAvatar()
 {
 	return m_pAvatar;
 }
-
-// KVOID Kylin::Character::SetTranslateToTerrain( KPoint3 vPos )
-// {
-// 	vPos.y = 50000.0f;
-// 	if (KylinRoot::GetSingletonPtr()->HitTest(vPos,Ogre::Vector3(Ogre::Vector3::NEGATIVE_UNIT_Y),vPos))
-// 	{
-// 		Ogre::Real r = OgreUtils::GetEntitySize(this->GetEntityPtr(),this->GetScale()).y * KHALF;
-// 		vPos.y += r - KHALF;
-// 
-// 		this->SetTranslate(vPos);
-// 	}
-// }
-

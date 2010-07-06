@@ -26,9 +26,7 @@ namespace Kylin
 		
 
 	protected:
-		KVOID	EV_Picked(EventPtr spEV);
-		KVOID	EV_PickTerrain(EventPtr spEV);
-
+		
 		virtual KVOID OnEntityCllsn(Node* pCollidee,const KPoint3& rNormal);
 		virtual KBOOL OnShouldCllsn(Node* pCollidee);
 		

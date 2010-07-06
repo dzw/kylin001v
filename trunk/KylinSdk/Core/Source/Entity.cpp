@@ -84,8 +84,7 @@ KVOID Kylin::Entity::EV_PostSpawn( EventPtr spEV )
 
 KVOID Kylin::Entity::SetupCllsn( PropertySet kProp )
 {
-
-	PhyX::CollisionMonitor::CollisionData* pData = PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->Commit(this,true);
+	PhyX::CollisionMonitor::CollisionData* pData = PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->Commit(this);
 	pData->SetCallbackFunc(&Kylin::Entity::OnEntityCllsn);
 	pData->SetEnable(true);
 }
