@@ -4,6 +4,7 @@
 #include "uiFrameStats.h"
 #include "uiConsole.h"
 #include "CommandHandler.h"
+#include "Profiling.h"
 #include <MyGUI_OgrePlatform.h>
 
 
@@ -44,12 +45,18 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 	
 	MyGUI::Gui::getInstance().load("game_imageset.xml");
 	//////////////////////////////////////////////////////////////////////////
+	if (!CProfiling::Initialized())
+		KNEW CProfiling();
+	CProfiling::GetSingletonPtr()->Init();
 
 	return true;
 }
 
 KVOID Kylin::GuiManager::Destroy()
 {
+	if (CProfiling::Initialized())
+		KDEL CProfiling::GetSingletonPtr();
+
 	RemoveAllGui(true);
 	//////////////////////////////////////////////////////////////////////////
 	if (m_pGUI)
@@ -118,6 +125,10 @@ KVOID Kylin::GuiManager::Update( KFLOAT fElapsed )
 			it->second->Render(fElapsed);
 	}
 	
+	if(	CProfiling::Initialized() && CProfiling::GetSingleton().m_bShow==true)
+	{
+		CProfiling::GetSingleton().Render( fElapsed );
+	}
 }
 
 Kylin::GuiBase* Kylin::GuiManager::GetGuiBase( KSTR sName )

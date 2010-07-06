@@ -269,3 +269,8 @@ KVOID Kylin::Node::SetBoundingBox( const KPoint3& kSize )
 	m_pOgreEntity->getMesh()->_setBounds(box,false);
 	m_pOgreEntity->getParentSceneNode()->_updateBounds();
 }
+
+KFLOAT Kylin::Node::GetBoundingRadius()
+{
+	return m_pOgreEntity->getBoundingRadius();
+}

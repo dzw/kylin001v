@@ -9,7 +9,7 @@
 #include "FileUtils.h"
 #include "EffectManager.h"
 #include "uiLoadingProgress.h"
-
+#include "profile.h"
 
 namespace Kylin
 {
@@ -188,6 +188,8 @@ namespace Kylin
 	
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
 	{
+		PROFILE("frameRendering");
+
 		if(m_pWindow->isClosed())
 			return false;
 		
@@ -218,6 +220,8 @@ namespace Kylin
 
 	KVOID AppFrame::OnIdle( KFLOAT fElapsed )
 	{
+		PROFILE("OnIdle");
+
 		if (m_bStartTick)
 			OnStartTick();
 

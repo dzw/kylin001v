@@ -88,6 +88,8 @@ void Kylin::DebugConsole::notifyButtonPressed( MyGUI::Widget* _sender, MyGUI::Ke
 	if (_key == MyGUI::KeyCode::Return)
 	{
 		KSTR sCmd	= m_spCmdWidget->getCaption();
+		if (sCmd.empty())
+			return;
 
 		m_spCmdWidget->setCaption("");
 		//-----------------------------------

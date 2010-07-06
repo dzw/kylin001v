@@ -23,6 +23,8 @@ public:
 
 	bool m_bShow; // whether to show
 
+	void notifyKeyPressed(MyGUI::Widget* _sender, MyGUI::KeyCode _key, MyGUI::Char _char);
+
 private:
 	CProfileIterator * m_pItrParent;	// profile iterator to navigate in profile node tree. this presents current parent node
 	CProfileNode* m_pRoot;				//the root profile node
