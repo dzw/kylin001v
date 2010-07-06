@@ -196,6 +196,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Source\DamageSystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Entity.cpp"
 				>
 			</File>
@@ -323,6 +327,10 @@
 			</File>
 			<File
 				RelativePath=".\corepch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DamageSystem.h"
 				>
 			</File>
 			<File
