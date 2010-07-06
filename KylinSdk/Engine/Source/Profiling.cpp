@@ -64,46 +64,45 @@ void  CProfiling::Init()
 		"Main"
 		);
 
+	m_spContentWidget->eventKeyButtonPressed = newDelegate(this, &CProfiling::notifyKeyPressed);
+
 	CProfileIterator::bProfileIterator=false; 
 	
 	m_spContentWidget->setVisible(false);
 } 
 // 
-// void CProfiling::OnKeyDown(const unsigned char nVKey)	
-// {
-// 	if(!m_bShow)
-// 		return;
-// 
-// 	if(nVKey == VK_ESCAPE)	//minimize or revert
-// 		m_bMined = !m_bMined;
-// 
-// 	CDXUTTextBox *pTextBox = NULL;
-// 	int x = 0, y = 0;
-// 
-// 	if(!m_bMined)	//not minimized, handle input
-// 	{
-// 		switch(nVKey)
-// 		{
-// 		case VK_UP:
-// 			{
-// 				if(m_nOrder > 0)
-// 					--m_nOrder;
-// 			}
-// 			break;
-// 		case VK_DOWN:
-// 			{
-// 				CProfileIterator itrNext = *m_pItrParent;
-// 
-// 				assert(m_nOrder >= 0);
-// 
-// 				//try to enter the next child
-// 				const int nNextOrder = m_nOrder + 1;
-// 				itrNext.Enter_Child(nNextOrder - 1);
-// 
-// 				if(itrNext.Get_CurrentParentNode() != m_pItrParent->Get_CurrentParentNode())
-// 					m_nOrder = nNextOrder;
-// 			}
-// 			break;
+void CProfiling::notifyKeyPressed(MyGUI::Widget* _sender, MyGUI::KeyCode _key, MyGUI::Char _char)	
+{
+	if(!m_bShow)
+		return;
+ 
+	if(_key == MyGUI::KeyCode::Escape)	//minimize or revert
+		m_bMined = !m_bMined;
+
+ 	if(!m_bMined)	//not minimized, handle input
+ 	{
+ 		switch(_key.toValue())
+ 		{
+		case MyGUI::KeyCode::ArrowUp:
+ 			{
+ 				if(m_nOrder > 0)
+ 					--m_nOrder;
+ 			}
+ 			break;
+		case MyGUI::KeyCode::ArrowDown:
+			{
+				CProfileIterator itrNext = *m_pItrParent;
+
+				assert(m_nOrder >= 0);
+
+				//try to enter the next child
+				const int nNextOrder = m_nOrder + 1;
+				itrNext.Enter_Child(nNextOrder - 1);
+
+				if(itrNext.Get_CurrentParentNode() != m_pItrParent->Get_CurrentParentNode())
+					m_nOrder = nNextOrder;
+			}
+			break;
 // 		case VK_LEFT:
 // 			{
 // 				pTextBox = m_pProfile_Dialog->GetTextBox(IDC_TEXTBOX);
@@ -118,27 +117,27 @@ void  CProfiling::Init()
 // 				pTextBox->SetLocation(x + g_nDlgMoveOffset, y);
 // 			}
 // 			break;
-// 		case VK_RETURN:
-// 			{
-// 				assert(m_nOrder >= 0);
-// 
-// 				if(m_nOrder == 0)	//enter parent
-// 				{
-// 					EnterParent();
-// 				}
-// 				else	//enter a child
-// 				{
-// 					EnterChild();
-// 				}
-// 			}
-// 			break;
-// 		case VK_BACK:
-// 			//enter parent
-// 			EnterParent();
-// 			break;
-// 		}
-// 	}
-// }
+		case MyGUI::KeyCode::Return:
+			{
+				assert(m_nOrder >= 0);
+
+				if(m_nOrder == 0)	//enter parent
+				{
+					EnterParent();
+				}
+				else	//enter a child
+				{
+					EnterChild();
+				}
+			}
+			break;
+		case MyGUI::KeyCode::Backspace:
+			//enter parent
+			EnterParent();
+			break;
+ 		}
+ 	}
+}
 
 void CProfiling::EnterParent()
 {
@@ -223,14 +222,20 @@ void CProfiling::ProfileDraw(void)
 					temp.Get_Current_Parent_One_Time() * g_fTimeScale,
                     CalcCallRate(temp.Get_CurrentParentNode())
 					);
-				MultiByteToWideChar(CP_ACP, 0, acOut, -1, acOutW, sizeof(acOutW));
 				{
-					MultiByteToWideChar(CP_ACP, 0, acOut, -1, acOutW, sizeof(acOutW));
 					//pTxtBox->AddText(acOutW,m_nOrder == 0 ? g_kFocusTxtColor : g_kTxtColor);
-					int nCount	= m_spContentWidget->getItemCount();
-					m_spContentWidget->addItem(acOutW, nCount);
+					KSTR st = acOut;
+					m_spContentWidget->addItem(st);
 				}
-
+			}
+			else
+			{
+				if ( m_pItrParent->Get_CurrentChildNode() )
+				{
+					//m_pItrParent->
+					//m_pItrParent->Enter_Child(0);
+					//CProfileIterator temp = *m_pItrParent;
+				}
 			}
 
 			//print all children
@@ -240,29 +245,28 @@ void CProfiling::ProfileDraw(void)
 
 				char cCurrentName[128]="";
 				sprintf(cCurrentName," (%d)%s",nNodeNum,temp.Get_Current_Name());
-				sprintf(acOut, g_pDataFormat,
-					cCurrentName,
-					temp.Get_Current_Total_Ave_Time() * g_fTimeScale,
-					temp.Get_Current_Total_Max_Time() * g_fTimeScale,
-					temp.Get_Current_Total_Min_Time() * g_fTimeScale,
-					temp.Get_Current_Total_One_Time() * g_fTimeScale,
-					CalcCallRate(temp.Get_CurrentChildNode())
-					);
-
-				MultiByteToWideChar(CP_ACP, 0, acOut, -1, acOutW, sizeof(acOutW));
+// 				sprintf(acOut, g_pDataFormat,
+// 					cCurrentName,
+// 					temp.Get_Current_Total_Ave_Time() * g_fTimeScale,
+// 					temp.Get_Current_Total_Max_Time() * g_fTimeScale,
+// 					temp.Get_Current_Total_Min_Time() * g_fTimeScale,
+// 					//temp.Get_Current_Total_One_Time() * g_fTimeScale,
+// 					CalcCallRate(temp.Get_CurrentChildNode())
+// 					);
 
 				if (temp.Get_Current_Total_One_Time()*1000>=temp.Get_Current_Total_Ave_Time()*1000*1.5)
 				{
 					//pTxtBox->AddText(acOutW, g_kAlertTxtColor);
-					int nCount	= m_spContentWidget->getItemCount();
-					m_spContentWidget->addItem(acOutW, nCount);
+					KSTR st = cCurrentName;
+					
+					m_spContentWidget->addItem(st);
 				}
 				else
 				{
 					//const Ogre::ColourValue& textColor = nNodeNum == m_nOrder ? g_kFocusTxtColor : g_kTxtColor;	//highlight focused line
 					//pTxtBox->AddText(acOutW,textColor);	
-					int nCount	= m_spContentWidget->getItemCount();
-					m_spContentWidget->addItem(acOutW, nCount);
+					KSTR st = cCurrentName;
+					m_spContentWidget->addItem(st);
 				}
 				temp.Next();
 			}

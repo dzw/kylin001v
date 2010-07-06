@@ -3,6 +3,7 @@
 #include "rOgreRoot.h"
 #include "CameraControl.h"
 #include "EffectManager.h"
+#include "Profiling.h"
 
 
 namespace Kylin
@@ -41,7 +42,8 @@ namespace Kylin
 				pConsole->PrintLine(">editor	- open editor window");
 				pConsole->PrintLine(">camera	- set camera mode (free and chase)");
 				pConsole->PrintLine(">effect	- debug look effect, (effname true/false)");
-				pConsole->PrintLine("================================================================");
+				pConsole->PrintLine(">profile	- profiling");
+				//pConsole->PrintLine("================================================================");
 			}
 		}
 
@@ -81,6 +83,10 @@ namespace Kylin
 				else if (kCmd[0] == "help")
 				{
 					PrintHelpInfo();
+				}
+				else if (kCmd[0] == "profile")
+				{
+					CProfiling::GetSingletonPtr()->Profiling();
 				}
 			}
 		}

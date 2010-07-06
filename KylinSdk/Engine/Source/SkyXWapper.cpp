@@ -48,7 +48,7 @@ KVOID Kylin::SkyXWapper::Tick( KFLOAT fElapsed )
 	
 	if (m_pSkyX)
 	{
-		m_pSkyX->setTimeMultiplier(0.1f);
+		m_pSkyX->setTimeMultiplier(0.001f);
 		
 		if (m_pSkyX->getVCloudsManager()->getVClouds())
 		{

@@ -57,7 +57,8 @@ namespace Kylin
 		//-----------------------------------------------------------------
 		// 获得包围盒
 		Ogre::AxisAlignedBox	GetWorldBoundingBox();
-		
+		// 获得包围盒半径
+		KFLOAT					GetBoundingRadius();
 		// 设置包围盒大小
 		KVOID					SetBoundingBox(const KPoint3& kSize);
 
