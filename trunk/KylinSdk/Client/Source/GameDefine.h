@@ -2,7 +2,6 @@
 
 #define CLICK_DISTANCE	50			// 鼠标可点击的距离
 
-
 // 关系
 enum ENUM_RELATION
 {

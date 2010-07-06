@@ -4,8 +4,10 @@
 #include "ActionDispatcher.h"
 #include "registerclass.h"
 #include "KylinRoot.h"
+#include "rOgreUtils.h"
 #include "Entity.h"
 #include "AnimationProxy.h"
+#include "RemoteEvents.h"
 
 
 Kylin::ActSkill::ActSkill( ActionDispatcher* pDispatcher )
@@ -57,5 +59,30 @@ Kylin::Factor* Kylin::ActSkill::SpawnFactor()
 
 KVOID Kylin::ActSkill::OnTriggered( Factor* pFactor )
 {
+	KPoint3 kPos = pFactor->GetTranslate();
+	KFLOAT fRadius = 5.0f;
+	KVEC<Ogre::Entity*> kEnts;
+
+	OgreUtils::SphereQuery(kPos,fRadius,kEnts,KylinRoot::KR_NPC_MASK);
+	
+	for (KUINT i =0; i < kEnts.size(); i++)
+	{
+		KUINT uID = Ogre::any_cast<KUINT>(kEnts[i]->getUserAny());
+		Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
+		if (pTarget)
+		{
+			// ·¢ËÍÉËº¦ÏûÏ¢
+			EventPtr spEV(
+				new Event(
+				&ev_post_damage, 
+				Event::ev_immediate, 
+				0, 
+				0, 
+				NULL
+				));
+
+			KylinRoot::GetSingletonPtr()->PostMessage(uID,spEV);
+		}
+	}
 
 }
