@@ -5,7 +5,7 @@
 #include "RemoteEvents.h"
 
 
-KUINT Kylin::DamageSystem::Calculate( const DamageUnit& kDamage, KUINT uEntityID )
+KINT Kylin::DamageSystem::Calculate( const DamageUnit& kDamage, KUINT uEntityID )
 {
 	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(uEntityID);
 	if (pEnt)

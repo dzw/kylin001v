@@ -23,7 +23,7 @@ namespace Kylin
 	{
 	public:
 
-		static KUINT Calculate(const DamageUnit& kDamage, KUINT uEntityID);
+		static KINT Calculate(const DamageUnit& kDamage, KUINT uEntityID);
 		
 
 	};
