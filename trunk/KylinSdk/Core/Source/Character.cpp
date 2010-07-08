@@ -29,12 +29,12 @@ Kylin::Character::Character()
 
 }
 
-KVOID Kylin::Character::OnEntityCllsn( Node* pCollidee,const KPoint3& rNormal )
+KVOID Kylin::Character::OnEntityCllsn( Entity* pCollidee,const KPoint3& rNormal )
 {
 	int i = 0;
 }
 
-KBOOL Kylin::Character::OnShouldCllsn( Node* pCollidee )
+KBOOL Kylin::Character::OnShouldCllsn( Entity* pCollidee )
 {
 	if (this != pCollidee)
 		return true;

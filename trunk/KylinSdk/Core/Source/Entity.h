@@ -8,6 +8,7 @@
 
 #define Declare_Entity_Creator(classname) static Kylin::Entity * CreateInstance() {return KNEW classname;}
 
+
 ///This is the root of all the entity class hierarchy
 namespace Kylin
 {
@@ -26,8 +27,6 @@ namespace Kylin
 		virtual KVOID	Tick(KFLOAT fElapsed);
 		virtual KVOID	SetupCllsn(PropertySet kProp);
 
-		static KVOID	OnEntityCllsn(const PhyX::CollisionMonitor::CollisionPair& kPair);
-
 
 		KVOID	SetID(KUINT uID) { m_uID = uID; }
 		KUINT	GetID() const { return m_uID; }
@@ -36,6 +35,10 @@ namespace Kylin
 		KCCHAR*	GetName() const { return m_sName.data(); }
 
 		PropertySet&	GetPropertyRef() { return m_kProperty; }
+	
+	public:
+		virtual KVOID OnEntityCllsn(Entity* pCollidee,const KPoint3& rNormal){}
+		virtual KBOOL OnShouldCllsn(Entity* pCollidee){ return false; }
 
 	protected:
 		KVOID	EV_PostDestroy(EventPtr spEV);
@@ -50,5 +53,6 @@ namespace Kylin
 		KSTR		m_sName;
 		PropertySet m_kProperty;
 	};
-
+	
 }
+

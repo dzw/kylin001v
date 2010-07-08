@@ -1,6 +1,7 @@
 #include "corepch.h"
 #include "rCollisionMonitor.h"
 #include "Node.h"
+#include "Entity.h"
 #include "KylinRoot.h"
 #include "rOgreUtils.h"
 
@@ -180,7 +181,8 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 					kPair.m_pObj1 = m_kCollider[i]->m_pHost;
 					kPair.m_pObj2 = m_kCollidee[j]->m_pHost;
 
-					m_kCollider[i]->m_pCallback(kPair);
+					//m_kCollider[i]->m_pCallback(kPair);
+					CollideCallback(kPair);
 
 					if (m_kCollidee[j]->m_eMode == CLLSN_BREAK)
 						break;
@@ -231,11 +233,11 @@ bool Kylin::PhyX::CollisionMonitor::CollisionGroup::IsMarked( const CollisionDat
 }
 //////////////////////////////////////////////////////////////////////////
 
-KVOID Kylin::PhyX::CollisionMonitor::CollisionData::SetCallbackFunc( Func pFunc )
-{
-	assert(pFunc);
-	m_pCallback = pFunc;
-}
+// KVOID Kylin::PhyX::CollisionMonitor::CollisionData::SetCallbackFunc( Func pFunc )
+// {
+// 	assert(pFunc);
+// 	m_pCallback = pFunc;
+// }
 
 KVOID Kylin::PhyX::CollisionMonitor::CollisionData::SetCollsionMode( CllsnMode eMode )
 {
@@ -245,4 +247,22 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionData::SetCollsionMode( CllsnMode e
 KVOID Kylin::PhyX::CollisionMonitor::CollisionData::SetEnable( KBOOL bEnable )
 {
 	m_bEnable = bEnable;
+}
+
+
+KVOID CollideCallback( const Kylin::PhyX::CollisionMonitor::CollisionPair& kPair )
+{
+	Kylin::Node* pNode1 = kPair.m_pObj1;
+	Kylin::Node* pNode2 = kPair.m_pObj2;
+	
+	Kylin::Entity* pEnt1 = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(pNode1->GetWorldID());
+	Kylin::Entity* pEnt2 = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(pNode2->GetWorldID());
+	
+	if (pEnt1 && pEnt2)
+	{
+		if ( pEnt1->OnShouldCllsn(pEnt2) )
+		{
+			pEnt1->OnEntityCllsn(pEnt2,KPoint3::ZERO);
+		}
+	}
 }
