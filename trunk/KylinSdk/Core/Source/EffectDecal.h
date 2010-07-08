@@ -22,7 +22,7 @@ namespace Kylin
 			mDecal->setQueryFlags(0);
 			mDecal->setDynamic(true);
 
-			mDecal->begin(matName , RenderOperation::OT_TRIANGLE_LIST); 
+			mDecal->begin(matName , Ogre::RenderOperation::OT_TRIANGLE_LIST); 
 
 			for (int i=0; i<mSize; i++)
 			{

@@ -63,7 +63,7 @@ namespace Kylin
 			virtual KVOID Commit(Node* pNode, const KPoint3 fSpeed, KFLOAT fGravity = _WGravity);
 			//-----------------------------------------------------
 			// ÌÞ³ýÄ£Äâ¶ÔÏó
-			virtual KVOID Reject(Node* pNode);
+			virtual KVOID Erase(Node* pNode);
 			
 		public:
 			//-----------------------------------------------------

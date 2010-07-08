@@ -71,6 +71,8 @@ KVOID Kylin::Entity::EV_PostDestroy( EventPtr spEV )
 
 KVOID Kylin::Entity::PostDestroy()
 {
+	PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->Erase(this);
+
 	Node::Destroy();
 
 	KylinRoot::GetSingletonPtr()->DestroyEntity(this->GetID());

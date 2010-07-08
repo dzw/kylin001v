@@ -109,7 +109,7 @@ KVOID Kylin::PhyX::MotionSimulator::Commit( Node* pNode, const KPoint3 kSpeed, K
 	}
 }
 
-KVOID Kylin::PhyX::MotionSimulator::Reject( Node* pNode )
+KVOID Kylin::PhyX::MotionSimulator::Erase( Node* pNode )
 {
 	assert(pNode);
 

@@ -39,7 +39,7 @@ namespace Kylin
 			};
 
 			//////////////////////////////////////////////////////////////////////////
-			typedef KVOID(*Func)(const CollisionPair& kPair);
+			//typedef KVOID(*Func)(const CollisionPair& kPair);
 
 			class CollisionData
 			{
@@ -48,7 +48,7 @@ namespace Kylin
 					: m_pHost(pHost)
 					, m_bEnable(false)
 					, m_bCollider(bCollider)
-					, m_pCallback(NULL)
+					//, m_pCallback(NULL)
 					, m_eMode(CLLSN_BREAK)
 					, m_uSelf(COT_NONE)
 					, m_uMate(COT_NONE)
@@ -66,7 +66,7 @@ namespace Kylin
 				KBOOL			m_bCollider;
 				KBOOL			m_bEnable;
 				
-				Func			m_pCallback;
+				//Func			m_pCallback;
 				Node*			m_pHost;
 				
 				KUINT			m_uSelf;
@@ -89,6 +89,8 @@ namespace Kylin
 				KVEC<CollisionData*> m_kCollider;
 				KVEC<CollisionData*> m_kCollidee;
 		
+				KVOID CollideCallback(const CollisionPair& kPair);
+
 			protected:
 				void AddPair(const CollisionData& kCllsn, const CollisionData& kCllsn_1);	//order insensitive
 				bool IsMarked(const CollisionData& kCllsn, const CollisionData& kCllsn_1)const;	//order insensitive
@@ -118,6 +120,7 @@ namespace Kylin
 			virtual KVOID Destroy();
 			//-----------------------------------------------------------------
 			virtual CollisionData* Commit(Node* pHost,KBOOL bCollider = false,KUINT uSelf = COT_DYNAMIC,KUINT uMate = COT_STATIC | COT_DYNAMIC);
+			virtual KVOID Erase(Node* pHost);
 			//-----------------------------------------------------------------
 			// 查询场景碰撞， 
 			// pos 要查询的位置，dir 朝向， 查询半径
@@ -142,5 +145,3 @@ namespace Kylin
 		};
 	}
 }
-
-KVOID CollideCallback(const Kylin::PhyX::CollisionMonitor::CollisionPair& kPair);
