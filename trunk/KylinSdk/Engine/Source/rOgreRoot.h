@@ -67,8 +67,7 @@ namespace Kylin
 		Ogre::TerrainGroup*				CreateTerrainGroup(KINT nMapSize, KFLOAT fWorldSize);
 
 		// 创建场景射线
-		Ogre::RaySceneQuery*			CreateRaySceneQuery();
-		Ogre::SphereSceneQuery*			CreateSphereSceneQuery();
+		KVOID							CreateSceneQuery();
 
 		inline Ogre::RaySceneQuery*		GetRayQuery() { return m_pRaySceneQuery; }
 		inline Ogre::SphereSceneQuery*	GetSphereQuery() { return m_pSphereSceneQuery; }
