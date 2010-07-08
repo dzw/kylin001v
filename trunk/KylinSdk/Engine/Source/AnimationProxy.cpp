@@ -45,7 +45,7 @@ KVOID Kylin::AnimationProxy::Play( KCSTR& sAnim, KBOOL bL /*= false*/, BlendingT
 	else 
 	{ 
 		//先取得新的动画状态
-		AnimationState *newTarget = m_pEntity->getAnimationState( sAnim );
+		Ogre::AnimationState *newTarget = m_pEntity->getAnimationState( sAnim );
 		if( m_fTimeleft > 0 ) //前一次的混合尚未结束
 		{
 			if( newTarget == m_pTarget )
@@ -157,13 +157,13 @@ KVOID Kylin::AnimationProxy::SetTarget( Ogre::Entity * pEnt )
 	{
 		m_kAnimNameList.clear();
 		//初始化所有动作的AnimationState
-		AnimationStateSet *set = m_pEntity->getAllAnimationStates();
+		Ogre::AnimationStateSet *set = m_pEntity->getAllAnimationStates();
 		if (set)
 		{
-			AnimationStateIterator it = set->getAnimationStateIterator();
+			Ogre::AnimationStateIterator it = set->getAnimationStateIterator();
 			while(it.hasMoreElements())
 			{
-				AnimationState *pAnim = it.getNext();
+				Ogre::AnimationState *pAnim = it.getNext();
 				pAnim->setEnabled(false);
 				pAnim->setWeight(0);
 				pAnim->setTimePosition(0);

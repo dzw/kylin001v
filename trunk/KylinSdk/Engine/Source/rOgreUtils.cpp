@@ -539,8 +539,8 @@ KBOOL Kylin::OgreUtils::PickEntities( Ogre::Ray &ray, KVEC<Ogre::Entity *>& resu
 
 KVOID Kylin::OgreUtils::SetDefaultMaterial( Ogre::Entity* pEnt )
 {
-	SubEntity* pSub = NULL;
-	String sName	= "";
+	Ogre::SubEntity* pSub = NULL;
+	Ogre::String sName	= "";
 	for(int i = 0 ; i < pEnt->getNumSubEntities(); i++)
 	{
 		pSub = pEnt->getSubEntity(i);

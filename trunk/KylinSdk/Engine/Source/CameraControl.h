@@ -17,7 +17,7 @@ namespace Kylin
 			CC_THIRD,
 		};
 
-		KBOOL Initialize(SceneManager* pSceneMgr, Camera* pCamera, KSTR sName="kylin_camera_control");
+		KBOOL Initialize(Ogre::SceneManager* pSceneMgr, Ogre::Camera* pCamera, KSTR sName="kylin_camera_control");
 
 		KVOID SetTarget(Ogre::SceneNode* pNode);
 		KVOID SetMode(KSTR sMode);
@@ -25,7 +25,7 @@ namespace Kylin
 
 		KVOID Update(KFLOAT fElapsed);
 
-		Camera* GetActiveCamera();
+		Ogre::Camera* GetActiveCamera();
 
 	protected:
 		//CCS::CameraControlSystem* m_pCameraCS;

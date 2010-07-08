@@ -10,25 +10,25 @@ KBOOL Kylin::EffectFade::Initialize()
 		m_sName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME
 		);
 
-	CompositionTechnique *t;
-	CompositionTechnique::TextureDefinition *td;
-	CompositionTargetPass *tp;
-	CompositionPass *pass;
+	Ogre::CompositionTechnique *t;
+	Ogre::CompositionTechnique::TextureDefinition *td;
+	Ogre::CompositionTargetPass *tp;
+	Ogre::CompositionPass *pass;
 
 	t = spCompositor->createTechnique();
 	td = t->createTextureDefinition("scene");
 	td->width = 1;
 	td->height = 1;
-	td->formatList.push_back(PF_X8R8G8B8);
+	td->formatList.push_back(Ogre::PF_X8R8G8B8);
 
 	tp = t->createTargetPass();
-	tp->setInputMode(CompositionTargetPass::IM_PREVIOUS);
+	tp->setInputMode(Ogre::CompositionTargetPass::IM_PREVIOUS);
 	tp->setOutputName("scene");
 
 	tp = t->getOutputTargetPass();
-	tp->setInputMode(CompositionTargetPass::IM_NONE);
+	tp->setInputMode(Ogre::CompositionTargetPass::IM_NONE);
 	pass = tp->createPass();
-	pass->setType(CompositionPass::PT_RENDERQUAD);
+	pass->setType(Ogre::CompositionPass::PT_RENDERQUAD);
 	pass->setMaterialName("PostFilters/Fade");
 	pass->setInput(0, "scene");
 	pass->setIdentifier(0xDEADBADE);
@@ -38,9 +38,9 @@ KBOOL Kylin::EffectFade::Initialize()
 	m_fGrayAmount	= 1;
 	if (!pass->getMaterial().isNull())
 	{
-		GpuProgramParametersSharedPtr parameters = pass->getMaterial()->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
+		Ogre::GpuProgramParametersSharedPtr parameters = pass->getMaterial()->getTechnique(0)->getPass(0)->getFragmentProgramParameters();
 /*#if OGRE_VERSION >= 0x010300*/
-		const GpuConstantDefinition* def;
+		const Ogre::GpuConstantDefinition* def;
 
 		def = parameters->_findNamedConstantDefinition("colour_amount");
 		if (def)
