@@ -72,7 +72,7 @@ namespace Kylin
 {
 	/** Converts KFLOAT in uint32 format to a a half in uint16 format
 	*/
-	static inline uint16 floatToHalfI(uint32 i)
+	static inline Ogre::uint16 floatToHalfI(Ogre::uint32 i)
 	{
 		register KINT s =  (i >> 16) & 0x00008000;
 		register KINT e = ((i >> 23) & 0x000000ff) - (127 - 15);
@@ -114,7 +114,7 @@ namespace Kylin
 	/** Converts a half in uint16 format to a KFLOAT
 	in uint32 format
 	*/
-	static inline uint32 halfToFloatI(uint16 y)
+	static inline Ogre::uint32 halfToFloatI(Ogre::uint16 y)
 	{
 		register KINT s = (y >> 15) & 0x00000001;
 		register KINT e = (y >> 10) & 0x0000001f;
@@ -160,17 +160,17 @@ namespace Kylin
 	* Convert a float16 (NV_half_float) to a float32
 	* Courtesy of OpenEXR
 	*/
-	static inline KFLOAT halfToFloat(uint16 y)
+	static inline KFLOAT halfToFloat(Ogre::uint16 y)
 	{
-		uint32 r = halfToFloatI(y);
+		Ogre::uint32 r = halfToFloatI(y);
 		return *reinterpret_cast<KFLOAT*>(&r);
 	}
 
 	/** Convert a float32 to a float16 (NV_half_float)
 	Courtesy of OpenEXR
 	*/
-	static inline uint16 floatToHalf(KFLOAT i)
+	static inline Ogre::uint16 floatToHalf(KFLOAT i)
 	{
-		return floatToHalfI(*reinterpret_cast<uint32*>(&i));
+		return floatToHalfI(*reinterpret_cast<Ogre::uint32*>(&i));
 	}
 }
