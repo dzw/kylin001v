@@ -1,5 +1,11 @@
-ID,TYPE,NAME,MESH,MATERIAL,SCALE,IDLE_EFF,SPAWN_EFF,DESTROY_EFF,IDLE_ANIM,SPAWN_ANIM,DESTROY_ANIM,ATTACH,TIMES,VELOCITY
-INT,STRING,STRING,STRING,STRING,FLOAT,INT,INT,INT,STRING,STRING,STRING,BOOL,FLOAT,FLOAT
-0,id_factor,Bomb,,,0.1,0,-1,-1,,,,1,1,1
-1,id_factor,Bomb,,,0.1,1,-1,-1,,,,1,2,1
-2,id_bullet_factor,Bullet,Media\models\weapons\pistols_04\pistols_04.MESH,pistols_04,1,2,4,1,,,,0,10,30
+ID,TYPE,NAME,MESH,MATERIAL,SCALE,COLLIDE,IDLE_EFF,SPAWN_EFF,DESTROY_EFF,IDLE_ANIM,SPAWN_ANIM,DESTROY_ANIM,ATTACH,TIMES,VELOCITY,WARD,EXPLAIN
+INT,STRING,STRING,STRING,STRING,FLOAT,BOOL,INT,INT,INT,STRING,STRING,STRING,BOOL,FLOAT,FLOAT,INT,STRING
+0,id_factor,Bomb,,,0.1,0,0,-1,-1,,,,1,1,1,-1,ÆÕÍ¨¹¥»÷
+1,id_summon_factor,Pet,Media\models\npc\gel\gel.MESH,21_-_Default,1,0,-1,5,-1,idle,spawn2,die,0,2,5,7,ÕÙ»½³èÎï¹·
+2,id_bullet_factor,Bullet,Media\models\weapons\pistols_04\pistols_04.MESH,pistols_04,1,1,2,4,1,,,,0,10,30,-1,µ¯Íè
+3,id_chain_factor,lightning,,,,0,,,,,,,,,,,ÉÁµç
+4,,,,,,,,,,,,,,,,,ºÚ¶´
+,,,,,,,,,,,,,,,,,¾Þ½£
+,,,,,,,,,,,,,,,,,ÒþÉí
+,,,,,,,,,,,,,,,,,»Ø¸´
+,,,,,,,,,,,,,,,,,³èÎï¹·¹¥»÷

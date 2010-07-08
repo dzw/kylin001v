@@ -1,7 +1,9 @@
-ID,NAME,CLASS,ANIMATION,ICON,COOLDOWN,FACTOR_ID,TIMELAG,MIN_COUNT,MAX_DAMAGE,MIN_DAMAGE,DAMAGE_TYPE,EXPLAIN
-INT,STRING,STRING,STRING,STRING,FLOAT,INT,FLOAT,INT,INT,INT,INT,STRING
-1,技能,ActSkill,Attach01,pic_skill_1,1,1,0,1,0,0,0,111111
-2,技能,ActSkill,Attach02,pic_skill_2,1,2,0,1,0,0,0,222222
-3,Nomarl,ActSkill,attack_4,pic_skill_3,1,-1,0,0,0,0,0,男角色普通攻击
-4,火球,ActSkill,attack_4,pic_skill_4,1,2,0,1,,0,0,火球术
-5,僵尸,SummonSkill,attack_4,pic_skill_4,1,100000000,1,0,0,0,0,僵尸
+ID,NAME,CLASS,TYPE,ANIMATION,ICON,COOLDOWN,FACTOR_ID,TIMELAG,MIN_COUNT,MAX_DAMAGE,MIN_DAMAGE,DAMAGE_TYPE,EXPLAIN
+INT,STRING,STRING,STRING,STRING,STRING,FLOAT,INT,FLOAT,INT,INT,INT,INT,STRING
+1,技能,ActSkill,AT_IMM,Attach01,pic_skill_1,1,-1,0,1,0,0,0,加血法术
+2,技能,ActSkill,AT_IMM,Attach02,pic_skill_2,1,-1,0,1,0,0,0,黑洞吞噬
+3,Nomarl,ActSkill,AT_TAR,attack_4,pic_skill_3,1,-1,0,0,0,0,0,巨剑攻击
+4,火球,ActSkill,AT_TAR,Rpistol1,pic_skill_4,1,2,0,1,,0,0,火球术
+5,宠物狗,SummonSkill,AT_IMM,special_summon,pic_skill_5,1,1,1,1,0,0,0,召唤法术
+6,闪电,ActSkill,AT_POS,attack_5,pic_skill_6,1,3,1,0,0,0,0,霹雳
+7,僵尸,SummonSkill,AT_IMM,attack_6,pic_skill_7,1,-1,1,0,0,0,0,茅山术
