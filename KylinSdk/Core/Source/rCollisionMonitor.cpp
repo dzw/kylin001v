@@ -135,6 +135,21 @@ KVOID Kylin::PhyX::CollisionMonitor::AddSceneCllsnBox( const OrientedBox& kBox )
 	box.mOBB = kBox;
 	m_kSceneVec.push_back(box);
 }
+
+KVOID Kylin::PhyX::CollisionMonitor::Erase( Node* pHost )
+{
+	for ( CllsnObjMap::iterator it = m_kObjsMap.begin();
+		it != m_kObjsMap.end();
+		it++ )
+	{
+		if (it->first == pHost)
+		{
+			SAFE_DEL(it->second);
+			it = m_kObjsMap.erase(it);
+			break;
+		}
+	}
+}
 //////////////////////////////////////////////////////////////////////////
 KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::AddCollider( CollisionData* pData )
 {
@@ -188,6 +203,24 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::Update()
 						break;
 				}
 			}
+		}
+	}
+}
+
+
+KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::CollideCallback( const CollisionPair& kPair )
+{
+	Node* pNode1 = kPair.m_pObj1;
+	Node* pNode2 = kPair.m_pObj2;
+
+	Entity* pEnt1 = KylinRoot::GetSingletonPtr()->GetEntity(pNode1->GetWorldID());
+	Entity* pEnt2 = KylinRoot::GetSingletonPtr()->GetEntity(pNode2->GetWorldID());
+
+	if (pEnt1 && pEnt2)
+	{
+		if ( pEnt1->OnShouldCllsn(pEnt2) )
+		{
+			pEnt1->OnEntityCllsn(pEnt2,KPoint3::ZERO);
 		}
 	}
 }
@@ -249,20 +282,3 @@ KVOID Kylin::PhyX::CollisionMonitor::CollisionData::SetEnable( KBOOL bEnable )
 	m_bEnable = bEnable;
 }
 
-
-KVOID CollideCallback( const Kylin::PhyX::CollisionMonitor::CollisionPair& kPair )
-{
-	Kylin::Node* pNode1 = kPair.m_pObj1;
-	Kylin::Node* pNode2 = kPair.m_pObj2;
-	
-	Kylin::Entity* pEnt1 = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(pNode1->GetWorldID());
-	Kylin::Entity* pEnt2 = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(pNode2->GetWorldID());
-	
-	if (pEnt1 && pEnt2)
-	{
-		if ( pEnt1->OnShouldCllsn(pEnt2) )
-		{
-			pEnt1->OnEntityCllsn(pEnt2,KPoint3::ZERO);
-		}
-	}
-}

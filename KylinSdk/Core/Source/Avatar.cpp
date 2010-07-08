@@ -67,13 +67,13 @@ KVOID Kylin::Avatar::Exchange( KUINT uGID )
 
 KVOID Kylin::Avatar::Exchange( Ogre::Entity* pHost, AvatarPart eType, KSTR sMat )
 {
-	SubEntity* pSub = NULL;
+	Ogre::SubEntity* pSub = NULL;
 	for(int i = 0 ; i < pHost->getNumSubEntities(); i++)
 	{
 		pSub = pHost->getSubEntity(i);
 		if (pSub)
 		{		
-			String sName = pSub->getSubMesh()->getMaterialName();
+			Ogre::String sName = pSub->getSubMesh()->getMaterialName();
 			if (eType == AP_CHEST && sName.find("/chest") != -1)
 				goto FLAG_T;
 			else if (eType == AP_HELMET && sName.find("/helmet") != -1)

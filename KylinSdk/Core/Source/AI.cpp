@@ -117,7 +117,7 @@ RC_RESULT Kylin::BaseAI::Enter_Move( FLOAT fDestX, FLOAT fDestZ )
 	kDir.y = 0;
 	kSrc.normalise(); 
 
-	Quaternion kQuat = kSrc.getRotationTo(kDir);
+	Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);
 	m_pHostChar->GetSceneNode()->rotate(kQuat);
 
 	m_fDistance = (m_kDestination - m_pHostChar->GetTranslate()).length();
