@@ -70,4 +70,4 @@ struct lua_State;
 class EntityMaterialInstance;
 //---------------------------------------------------------
 
-using namespace Ogre;
+//using namespace Ogre;
