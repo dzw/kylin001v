@@ -45,7 +45,7 @@ Kylin::PlayerController::PlayerController()
 		"Game/UnitSelect",1 );
 	//-----------------------------------------------------
 	// 创建射线交集
-	OgreRoot::GetSingletonPtr()->CreateRaySceneQuery();
+	OgreRoot::GetSingletonPtr()->CreateSceneQuery();
 }
 
 
@@ -285,8 +285,12 @@ KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 			m_kSelectAction.uActionGID = uActID;
 			m_kSelectAction.uActionType= type;
 		}
-
-		if (type == AT_TAR)
+		
+		if (type == AT_IMM)
+		{
+			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+		}
+		else if (type == AT_TAR)
 		{
 			// update cursor
 		}
@@ -369,13 +373,17 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 			Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
 			if (pTarget)
 			{
+				// 设置焦点在选中对象上
+				FocusTarget(uID);
+
+				// 设置默认技能
 				if (m_kSelectAction.uActionGID == INVALID_ID)
 				{
 					SelectDefaultAction();
 				}
 
 				if (m_kSelectAction.uActionType == AT_TAR)
-				{
+				{	// 若超出攻击距离则接近后攻击
 					KFLOAT fDistance = pTarget->GetTranslate().distance(m_pHost->GetTranslate());
 					KFLOAT fValidDis = pTarget->GetBoundingRadius() + m_pHost->GetBoundingRadius();	// test code
 					if (fDistance > fValidDis)			
@@ -392,9 +400,11 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 						m_kSelectAction.Reset();
 					}
 				}
-
-				//
-				FocusTarget(uID);
+				else if (m_kSelectAction.uActionType == AT_IMM)
+				{
+					SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID));
+					m_kSelectAction.Reset();
+				}
 			}
 		}
 
@@ -406,9 +416,6 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 
 KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 {
-	if (m_kSelectAction.uActionType == AT_TAR)
-		return ;
-	
 	KPoint3 kHitPos; 
 	//-------------------------------------------------------
 	if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
@@ -425,6 +432,8 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 				m_kSelectAction.Reset();
 				return ;
 			}
+			
+			CancelCurrentAction();
 			//-------------------------------------------------------
 
 			m_fDistance		= fDistance;
@@ -468,3 +477,19 @@ KVOID Kylin::PlayerController::SelectDefaultAction()
 		}
 	}
 }	
+
+KVOID Kylin::PlayerController::SetDefaultAction( KUINT uActID )
+{
+	m_uDefaultActionID = uActID;
+}
+
+KVOID Kylin::PlayerController::CancelCurrentAction()
+{
+	if (m_kSelectAction.uActionGID != INVALID_ID)
+	{
+		m_kSelectAction.Reset();
+
+		// 重置鼠标
+
+	}
+}

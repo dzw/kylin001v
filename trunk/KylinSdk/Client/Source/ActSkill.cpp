@@ -67,6 +67,9 @@ KVOID Kylin::ActSkill::OnTriggered( Factor* pFactor )
 	
 	for (KUINT i =0; i < kEnts.size(); i++)
 	{
+		if (kEnts[i]->getUserAny().isEmpty())
+			continue;
+
 		KUINT uID = Ogre::any_cast<KUINT>(kEnts[i]->getUserAny());
 		Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
 		if (pTarget)

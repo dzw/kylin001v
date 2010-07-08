@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 06/30/10 10:10:10.
+** Generated automatically by tolua++-1.0.92 on 07/07/10 07:49:12.
 */
 
 #ifndef __cplusplus
@@ -118,6 +118,34 @@ static int tolua_clscript_to_bind_weapon00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: set_default_action */
+#ifndef TOLUA_DISABLE_tolua_clscript_set_default_action00
+static int tolua_clscript_set_default_action00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uActID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   set_default_action(uActID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'set_default_action'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
 {
@@ -128,6 +156,7 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
   tolua_function(tolua_S,"ui_reg_char_info",tolua_clscript_ui_reg_char_info00);
   tolua_function(tolua_S,"to_learn_skill",tolua_clscript_to_learn_skill00);
   tolua_function(tolua_S,"to_bind_weapon",tolua_clscript_to_bind_weapon00);
+  tolua_function(tolua_S,"set_default_action",tolua_clscript_set_default_action00);
   tolua_constant(tolua_S,"id_cl_entity",id_cl_entity);
   tolua_constant(tolua_S,"id_bullet_factor",id_bullet_factor);
   tolua_constant(tolua_S,"id_summon_factor",id_summon_factor);

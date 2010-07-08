@@ -48,6 +48,8 @@ namespace Kylin
 		// test
 		KVOID			UseSkill(KUINT uActID);
 		KVOID			SelectDefaultAction();
+		KVOID			SetDefaultAction(KUINT uActID);
+		KVOID			CancelCurrentAction();
 
 		// …Ë÷√Ωπµ„
 		KVOID			FocusTarget(KUINT uTargetID);

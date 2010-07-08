@@ -30,9 +30,13 @@ namespace Kylin
 		virtual KVOID PostSpawn();
 		virtual KVOID PostDestroy();
 		virtual KVOID EndTime(KCSTR& sClass,KCSTR& sName, KANY aUserData);
+		
+		virtual KVOID OnEntityCllsn(Entity* pCollidee,const KPoint3& rNormal);
+		virtual KBOOL OnShouldCllsn(Entity* pCollidee);
 
 	protected:
 		KFLOAT m_fVelocity;		// ËÙ¶È
 		
 	};
 }
+
