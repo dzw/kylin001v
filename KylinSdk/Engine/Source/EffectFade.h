@@ -6,7 +6,7 @@
 namespace Kylin
 {
 	class EffectFade : public EffectCompositor
-					 , public CompositorInstance::Listener
+					 , public Ogre::CompositorInstance::Listener
 	{
 	public:
 		EffectFade():EffectCompositor("Fade"){}
@@ -16,7 +16,7 @@ namespace Kylin
 		virtual KVOID Activate(KBOOL bFlag);
 
 	protected:
-		void notifyMaterialSetup(uint32 pass_id, MaterialPtr &mat)
+		void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
 		{
 			if (pass_id == 0xDEADBADE)
 			{
@@ -24,7 +24,7 @@ namespace Kylin
 			}
 		}
 
-		void notifyMaterialRender(uint32 pass_id, MaterialPtr &mat)
+		void notifyMaterialRender(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
 		{
 			if (pass_id == 0xDEADBADE)
 			{
@@ -41,6 +41,6 @@ namespace Kylin
 		KBOOL		m_bActived;
 		KINT		m_nDelay;
 
-		GpuProgramParametersSharedPtr m_spFProgParam;
+		Ogre::GpuProgramParametersSharedPtr m_spFProgParam;
 	};
 }

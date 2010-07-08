@@ -38,6 +38,6 @@ namespace Kylin
 		KFLOAT			m_fProgressBarMaxSize;
 		KFLOAT			m_fProgressBarScriptSize;
 		KFLOAT			m_fProgressBarInc;
-		OverlayElement* m_pLoadingBarElement;
+		Ogre::OverlayElement* m_pLoadingBarElement;
 	};
 }

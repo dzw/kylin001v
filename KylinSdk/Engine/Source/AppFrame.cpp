@@ -140,8 +140,8 @@ namespace Kylin
 		m_pSceneMgr = m_pRoot->createSceneManager(Ogre::ST_EXTERIOR_CLOSE);
 
 		// set shadow properties
-		m_pSceneMgr->setShadowTechnique(SHADOWTYPE_TEXTURE_MODULATIVE);
-		m_pSceneMgr->setShadowColour(ColourValue(0.5, 0.5, 0.5));
+		m_pSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
+		m_pSceneMgr->setShadowColour(Ogre::ColourValue(0.5, 0.5, 0.5));
 		m_pSceneMgr->setShadowTextureSize(1024);
 		m_pSceneMgr->setShadowTextureCount(1);
 		//////////////////////////////////////////////////////////////////////////

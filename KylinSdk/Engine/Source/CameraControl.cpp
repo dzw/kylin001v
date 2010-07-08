@@ -16,7 +16,7 @@ Kylin::CameraControl::~CameraControl()
 	//SAFE_DEL(m_pCameraCS);
 }
 
-KBOOL Kylin::CameraControl::Initialize( SceneManager* pSceneMgr, Camera* pCamera, KSTR sName/*="kylin_camera_control"*/ )
+KBOOL Kylin::CameraControl::Initialize( Ogre::SceneManager* pSceneMgr, Ogre::Camera* pCamera, KSTR sName/*="kylin_camera_control"*/ )
 {
 	
 // 	m_pCameraCS = new CCS::CameraControlSystem(pSceneMgr, sName, pCamera);
@@ -97,7 +97,7 @@ KVOID Kylin::CameraControl::Update( KFLOAT fElapsed )
 // 	}
 }
 
-Camera* Kylin::CameraControl::GetActiveCamera()
+Ogre::Camera* Kylin::CameraControl::GetActiveCamera()
 {
 	return NULL;//m_pCameraCS->getOgreCamera();
 }
