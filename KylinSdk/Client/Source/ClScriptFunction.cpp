@@ -12,6 +12,9 @@
 #include "Action.h"
 #include "Avatar.h"
 #include "DataManager.h"
+#include "ClSceneLoader.h"
+#include "Scene.h"
+#include "PlayerController.h"
 
 
 namespace Script
@@ -73,4 +76,12 @@ namespace Script
 		}
 	}
 
+	extern void set_default_action( unsigned int uActID )
+	{
+		Kylin::ClSceneLoader* pLoader = (Kylin::ClSceneLoader*)Kylin::KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+		if (pLoader)
+		{
+			pLoader->GetController()->SetDefaultAction(uActID);
+		}
+	}
 }
