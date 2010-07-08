@@ -7,6 +7,7 @@
 #include "RemoteEvents.h"
 #include "KylinRoot.h"
 #include "EffectManager.h"
+#include "Action.h"
 
 
 namespace Kylin
@@ -21,6 +22,7 @@ namespace Kylin
 
 	BulletFactor::BulletFactor()
 		: m_fVelocity(.0f)
+		, m_bExplode(false)
 	{
 
 	}
@@ -63,7 +65,7 @@ namespace Kylin
 
 	KVOID BulletFactor::PostDestroy()
 	{
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Reject(this);
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Erase(this);
 
 		Factor::PostDestroy();
 	}
@@ -76,15 +78,7 @@ namespace Kylin
 
 	KVOID BulletFactor::EV_PostTouchdown( EventPtr spEV )
 	{
-		KSTR sEffect;
-		if (m_kProperty.GetStrValue("$DestroyEffect",sEffect))
-			ActivateEffect(sEffect,true);
-
-		if (m_kProperty.GetStrValue("$IdleEffect",sEffect))
-			ActivateEffect(sEffect,false);
-		
-		// 接触地面后速度为0
-		m_fVelocity = .0f;
+		OnExplode();
 	}
 
 	KVOID BulletFactor::EndTime( KCSTR& sClass,KCSTR& sName, KANY aUserData )
@@ -182,14 +176,62 @@ namespace Kylin
 		pData->SetEnable(true);
 	}
 
-	KBOOL BulletFactor::OnShouldCllsn( Entity* pCollidee )
+	KBOOL BulletFactor::OnShouldCllsn( Kylin::Entity* pCollidee )
 	{
+		Kylin::Entity* pHost = KylinRoot::GetSingletonPtr()->GetEntity(m_spHostAct->GetHostWorldID());
+		
+		// 被碰撞者是武器发射者不做碰撞
+		if (pHost && pHost == pCollidee)
+			return false;
+		
+		// 爆炸后不做碰撞
+		if (m_bExplode)
+			return false;
+
 		return true;
 	}
 
-	KVOID BulletFactor::OnEntityCllsn( Entity* pCollidee,const KPoint3& rNormal )
+	KVOID BulletFactor::OnEntityCllsn( Kylin::Entity* pCollidee,const KPoint3& rNormal )
 	{
-		int i = 0;
+		PostDamage(pCollidee);
+		OnExplode();
+	}
+
+	KVOID BulletFactor::OnExplode()
+	{
+		if (!m_bExplode)
+		{
+			KSTR sEffect;
+			if (m_kProperty.GetStrValue("$DestroyEffect",sEffect))
+				ActivateEffect(sEffect,true);
+
+			if (m_kProperty.GetStrValue("$IdleEffect",sEffect))
+				ActivateEffect(sEffect,false);
+
+			// 接触地面后速度为0
+			m_fVelocity = .0f;
+			m_bExplode	= true;
+
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Erase(this);
+			
+		}
+	}
+
+	KVOID BulletFactor::PostDamage( Entity* pCollidee )
+	{
+		if (!m_bExplode)
+		{
+			EventPtr spEV(
+				new Event(
+				&ev_post_damage, 
+				Event::ev_immediate, 
+				0, 
+				0, 
+				NULL
+				));
+
+			KylinRoot::GetSingletonPtr()->PostMessage(pCollidee->GetID(),spEV);
+		}
 	}
 }
 

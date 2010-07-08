@@ -82,9 +82,9 @@ KVOID Kylin::PlayerController::Tick( KFLOAT fElapsed )
 
 KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 {
-	m_kGoalDirection = Vector3::ZERO;   // we will calculate this
+	m_kGoalDirection = KPoint3::ZERO;   // we will calculate this
 
-	if (m_kKeyDirection != Vector3::ZERO)
+	if (m_kKeyDirection != KPoint3::ZERO)
 	{
 		// calculate actually goal direction in world based on player's key directions
 		m_kGoalDirection += m_kKeyDirection.z * m_pCamera->GetCameraNode()->getOrientation().zAxis();
@@ -92,18 +92,18 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		m_kGoalDirection.y = 0;
 		m_kGoalDirection.normalise();
 
-		Quaternion toGoal = m_pHost->GetSceneNode()->getOrientation().zAxis().getRotationTo(m_kGoalDirection);
+		Ogre::Quaternion toGoal = m_pHost->GetSceneNode()->getOrientation().zAxis().getRotationTo(m_kGoalDirection);
 
 		// calculate how much the character has to turn to face goal direction
 		KFLOAT yawToGoal = toGoal.getYaw().valueDegrees();
 		// this is how much the character CAN turn this frame
-		KFLOAT yawAtSpeed = yawToGoal / Math::Abs(yawToGoal) * fElapsed * TURN_SPEED;
+		KFLOAT yawAtSpeed = yawToGoal / Ogre::Math::Abs(yawToGoal) * fElapsed * TURN_SPEED;
 
 		// turn as much as we can, but not more than we need to
 		if (yawToGoal < 0) yawToGoal		= std::min<KFLOAT>(0, std::max<KFLOAT>(yawToGoal, yawAtSpeed)); 
 		else if (yawToGoal > 0) yawToGoal	= std::max<KFLOAT>(0, std::min<KFLOAT>(yawToGoal, yawAtSpeed));
 
-		m_pHost->GetSceneNode()->yaw(Degree(yawToGoal));
+		m_pHost->GetSceneNode()->yaw(Ogre::Degree(yawToGoal));
 
 		// move in current body direction (not the goal direction)
 		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, 0, RUN_SPEED));
@@ -317,7 +317,7 @@ KVOID Kylin::PlayerController::FocusTarget( KUINT uTargetID )
 		kDir.y = 0;
 		kSrc.normalise();                                                           
 		{                                                                           
-			Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+			Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);                        
 			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
 		}
 		
@@ -455,7 +455,7 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 		kDir.y = 0;
 		kSrc.normalise();                                                           
 		{                                                                           
-			Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+			Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);                        
 			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
 		}
 	}
