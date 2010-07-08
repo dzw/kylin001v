@@ -16,6 +16,7 @@
 #include "rPhyXSystem.h"
 #include "rCollisionMonitor.h"
 #include "rOrientedBox.h"
+#include "profile.h"
 
 
 #pragma warning(disable:4390)
@@ -932,6 +933,8 @@ KVOID DotSceneLoader::Unload( Kylin::SceneHag* pHag )
 
 KVOID DotSceneLoader::Tick( KFLOAT fElapsed )
 {
+	PROFILE("DotSceneLoader::Tick");
+
 	Kylin::ClSceneLoader::Tick(fElapsed);
 
 	UpdataHydrax(fElapsed);
