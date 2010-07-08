@@ -10,9 +10,11 @@ namespace Kylin
 	
 		virtual KVOID Tick(KFLOAT fElapsed);
 		
+	protected:
+		virtual KVOID OnCheck(KFLOAT fElapsed);
 
 	protected:
 
-
+		KVEC<KUINT>		m_kEntitiesList;
 	};
 }

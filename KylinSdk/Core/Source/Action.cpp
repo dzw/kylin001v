@@ -151,6 +151,14 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 
 		kFactorProp.SetValue("$CLASS_ID",uClassid);
 	}
+
+	// 获得碰撞信息
+	if (dbItem.QueryField("COLLIDE",dbField))
+	{
+		KBOOL bCollide	= boost::any_cast<KBOOL>(dbField.m_aValue);
+		
+		kFactorProp.SetValue("$Collision",bCollide);
+	}
 	//////////////////////////////////////////////////////////////////////////
 	// 设置特效属性，三种状态
 	if (dbItem.QueryField("SPAWN_EFF",dbField))

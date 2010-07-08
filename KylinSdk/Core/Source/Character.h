@@ -27,8 +27,8 @@ namespace Kylin
 
 	protected:
 		
-		virtual KVOID OnEntityCllsn(Node* pCollidee,const KPoint3& rNormal);
-		virtual KBOOL OnShouldCllsn(Node* pCollidee);
+		virtual KVOID OnEntityCllsn(Entity* pCollidee,const KPoint3& rNormal);
+		virtual KBOOL OnShouldCllsn(Entity* pCollidee);
 		
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);

@@ -55,7 +55,7 @@ namespace Kylin
 				{
 				}
 				
-				KVOID SetCallbackFunc(Func pFunc);
+				//KVOID SetCallbackFunc(Func pFunc);
 				KVOID SetCollsionMode(CllsnMode eMode);
 				
 				KVOID SetEnable(KBOOL bEnable);
@@ -142,3 +142,5 @@ namespace Kylin
 		};
 	}
 }
+
+KVOID CollideCallback(const Kylin::PhyX::CollisionMonitor::CollisionPair& kPair);
