@@ -11,6 +11,7 @@ extern Kylin::AppFrame* g_theApp;
 
 Kylin::OgreRoot::OgreRoot()
 : m_pRaySceneQuery(NULL)
+, m_pSphereSceneQuery(NULL)
 {
 
 }
@@ -222,20 +223,13 @@ KVOID Kylin::OgreRoot::DestroyCameraControl()
 
 //-----------------------------------------------------
 // 创建射线交集
-Ogre::RaySceneQuery* Kylin::OgreRoot::CreateRaySceneQuery()
+KVOID Kylin::OgreRoot::CreateSceneQuery()
 {
 	if (!m_pRaySceneQuery)
 		m_pRaySceneQuery = OgreRoot::GetSingletonPtr()->GetSceneManager()->createRayQuery(Ogre::Ray());
 	
-	return m_pRaySceneQuery;
-}
-
-Ogre::SphereSceneQuery* Kylin::OgreRoot::CreateSphereSceneQuery()
-{
 	if (!m_pSphereSceneQuery)
 		m_pSphereSceneQuery = OgreRoot::GetSingletonPtr()->GetSceneManager()->createSphereQuery(Ogre::Sphere());
-
-	return m_pSphereSceneQuery;
 }
 
 KVOID Kylin::OgreRoot::DestroyQuery()
@@ -244,6 +238,12 @@ KVOID Kylin::OgreRoot::DestroyQuery()
 	{
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyQuery(m_pRaySceneQuery);
 		m_pRaySceneQuery = NULL;
+	}
+
+	if (m_pSphereSceneQuery)
+	{
+		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyQuery(m_pSphereSceneQuery);
+		m_pSphereSceneQuery = NULL;
 	}
 }
 
