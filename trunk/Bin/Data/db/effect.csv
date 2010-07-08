@@ -5,3 +5,4 @@ INT,INT,STRING,FLOAT,FLOAT,STRING
 2,0,huoba01,-1,0.01,小火把
 3,0,huoba02,-1,0.03,火把
 4,0,baofu,0.1,0.05,开枪特效
+5,0,baofu,1,0.05,宠物出生特效
