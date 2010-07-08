@@ -67,7 +67,7 @@ namespace Kylin
 
 	KVOID SummonFactor::PostDestroy()
 	{
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Reject(this);
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Erase(this);
 		
 		// 特效播放完毕后调用
 		DoSummon();
