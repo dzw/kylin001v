@@ -1,9 +1,10 @@
 #include "CorePCH.h"
 #include "Level.h"
 #include "RegisterClass.h"
-#include "LevelController.h"
 #include "rOgreRoot.h"
+#include "KylinRoot.h"
 #include "ScriptVM.h"
+#include "RemoteEvents.h"
 
 
 namespace Kylin
@@ -12,12 +13,13 @@ namespace Kylin
 
 	Implement_Event_Handler(Level, Entity)
 	{
+		{&ev_on_timer,				&EV_OnTimer},
 		{NULL, NULL}
 	};
 
 	
 	Level::Level(KVOID)
-		: m_fInitTimeStep(.0f)
+		: m_fTimeStep(.0f)
 		, m_bTimerEnable(false)
 	{
 
@@ -48,19 +50,6 @@ namespace Kylin
 		return true;
 	}
 
-	KVOID Level::Tick(KFLOAT fElapsed)
-	{
-		if (m_bTimerEnable)
-		{
-			m_fTimeStep += fElapsed;
-			if (m_fTimeStep >= m_fInitTimeStep)
-			{
-				OnTimer();
-				m_fTimeStep = .0f;
-			}
-		}
-	}
-
 	KVOID Level::Destroy()
 	{
 		KSTR sName;
@@ -73,6 +62,8 @@ namespace Kylin
 
 		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"destroy",true,"i",GetID());
 		//-----------------------------------------------------------------
+
+		Entity::Destroy();
 	}
 
 	KVOID Level::OnTimer()
@@ -80,26 +71,77 @@ namespace Kylin
 		KSTR sName;
 		m_kProperty.GetStrValue("$Name",sName);
 		//-----------------------------------------------------------------
-		//
+		// 调用脚步计时器
 		KVEC<KCCHAR *> kModules;
 		kModules.push_back(sName.data());
 		kModules.push_back("lvl");
 
 		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"on_timer",true,"i",GetID());
+
 		//-----------------------------------------------------------------
+		// 发送消息
+		EventPtr spEV(
+			KNEW Event(
+			&ev_on_timer, 
+			Event::ev_timing, 
+			m_fTimeStep,
+			0, 
+			NULL
+			));
+
+		KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spEV);
 	}
 
 	KVOID Level::SetTimer( KFLOAT fTimeStep )
 	{
-		m_fInitTimeStep = fTimeStep;
-		m_fTimeStep		= .0f;
-		
+		m_fTimeStep		= fTimeStep;
 		m_bTimerEnable	= true;
+
+		OnTimer();
 	}
 
 	KVOID Level::KillTimer()
 	{
 		m_bTimerEnable = false;
 	}
+
+	KVOID Level::EV_OnTimer( EventPtr spEV )
+	{
+		if (m_bTimerEnable)
+		{
+			OnTimer();
+		}
+	}
+
+// 	KVOID Level::SetVictoryFactors( KINT nCount )
+// 	{
+// 		assert(nCount > 0);
+// 		m_nVictoryFactors = nCount;
+// 	}
+// 
+// 	KVOID Level::AddVictoryFactor()
+// 	{
+// 		m_nVictoryFactors--;
+// 		if (m_nVictoryFactors <= 0)
+// 		{
+// 			DoTotalling();
+// 		}
+// 	}
+// 
+// 	KVOID Level::DoTotalling()
+// 	{
+// 		//-----------------------------------------------------------------
+// 		// 发送消息
+// 		EventPtr spEV(
+// 			KNEW Event(
+// 			&ev_sync_gameresult, 
+// 			Event::ev_immediate, 
+// 			0,
+// 			1, 
+// 			EventArg(m_nVictoryFactors <= 0)
+// 			));
+// 
+// 		KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spEV);
+// 	}
 }
 

@@ -21,9 +21,13 @@ namespace Kylin
 		// fDelay		先后两个monster 的产生时间间隔
 		// nMaxCount	最多会产生多少个monster
 		// uSpawnID		monster 的 gid
-		virtual KVOID	Accept(float fInterval, float fDelay, int nMaxCount, KUINT uSpawnID);
+		// bAllDead		当所有产生出的 monster 死亡后才可产生下一批monster的标记
+		virtual KVOID	Accept(KFLOAT fInterval, KFLOAT fDelay, KINT nMaxCount, KUINT uSpawnID,KBOOL bAllDead = false);
 
 		virtual KVOID	DoSpawn();
+	
+	protected:
+		virtual KBOOL	CheckAllDead();
 
 	protected:
 		KVOID			EV_DoSpawn(EventPtr spEV);
@@ -38,7 +42,8 @@ namespace Kylin
 		KFLOAT		m_fSpawnDelay;
 		KFLOAT		m_fTempTime;
 		KINT		m_nMaxCount;
-
-		//KVEC<KUINT>	m_kChildList;
+		
+		KBOOL		m_bAllDead;
+		KVEC<KUINT>	m_kChildList;
 	};
 }

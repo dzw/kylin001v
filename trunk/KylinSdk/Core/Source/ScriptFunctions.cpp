@@ -83,7 +83,7 @@ namespace Script
 		}
 	}
 
-	extern void set_spawner( unsigned int uEntID, float fInterval, float fDelay, int nMaxCount, unsigned int uSpawnID )
+	extern void set_spawner( unsigned int uEntID, float fInterval, float fDelay, int nMaxCount, unsigned int uSpawnID, bool bFlag)
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 
@@ -91,7 +91,7 @@ namespace Script
 		{
 			Kylin::ObjectSpawner* pObj = BtStaticCast(Kylin::ObjectSpawner,pEnt);
 
-			pObj->Accept(fInterval,fDelay,nMaxCount,uSpawnID);
+			pObj->Accept(fInterval,fDelay,nMaxCount,uSpawnID,bFlag);
 		}
 	}
 

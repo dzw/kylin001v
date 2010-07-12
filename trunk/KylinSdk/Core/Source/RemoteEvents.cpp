@@ -26,3 +26,7 @@ EventTemplate ev_sync_gametime			("ev_sync_gametime");
 
 //////////////////////////////////////////////////////////////////////////
 EventTemplate ev_do_spawn				("ev_do_spawn");
+EventTemplate ev_on_timer				("ev_on_timer");
+EventTemplate ev_sync_gameresult		("ev_sync_gameresult");
+
+

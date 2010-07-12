@@ -32,7 +32,7 @@ namespace Script
 	extern void query_near_foeman( unsigned int uEntID, float r );
 
 	// 设置spawner参数
-	extern void set_spawner(unsigned int uEntID, float fInterval, float fDelay, int nMaxCount, unsigned int uSpawnID);
+	extern void set_spawner(unsigned int uEntID, float fInterval, float fDelay, int nMaxCount, unsigned int uSpawnID, bool bFlag);
 
 	// 设置位置
 	extern void set_translate(unsigned int uEntID, float x, float z);
