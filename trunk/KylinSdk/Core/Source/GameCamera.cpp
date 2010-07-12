@@ -15,8 +15,9 @@ Kylin::GameCamera::GameCamera( Ogre::Camera* pCam,Ogre::SceneManager* pSceneMgr 
 , m_fCamPosY(0.8f)
 , m_fCameraDistance(CAMERA_DIS)
 , m_eMode(CM_NULL)
+, m_pFreeNode(NULL)
 {
-
+	
 }
 
 KVOID Kylin::GameCamera::SetTarget( Ogre::SceneNode* pTargetNode )
@@ -41,8 +42,13 @@ KVOID Kylin::GameCamera::SetTarget( Ogre::SceneNode* pTargetNode )
 	m_pCamera->setPosition(m_pCameraNode->getPosition());
 	m_fPivotPitch = 0;
 
-	// test code
+	// 
 	m_eMode = CM_3P;
+
+	//------------------------------------------------------------------
+	// 初始化游离摄像机节点位置
+	m_pFreeNode = m_pSceneMnger->getRootSceneNode()->createChildSceneNode();
+	m_pFreeNode->setPosition(m_pCamera->getPosition());
 }
 
 KVOID Kylin::GameCamera::Update( KFLOAT fElapsed )
@@ -65,6 +71,10 @@ KVOID Kylin::GameCamera::Update( KFLOAT fElapsed )
 		m_pCamera->setPosition(DistPos);
 		m_pCamera->lookAt(m_pCameraPivot->_getDerivedPosition());
 	}
+	else if (m_eMode == CM_FREE)
+	{
+		m_pCamera->setPosition(m_pFreeNode->getPosition());
+	}
 }
 
 KVOID Kylin::GameCamera::Destroy()
@@ -74,8 +84,16 @@ KVOID Kylin::GameCamera::Destroy()
 	if (m_pCameraPivot)
 		m_pSceneMnger->destroySceneNode(m_pCameraPivot);
 
-	m_pCameraNode  = NULL;
-	m_pCameraPivot = NULL;
+	if (m_pCameraGoal)
+		m_pSceneMnger->destroySceneNode(m_pCameraGoal);
+
+	if (m_pFreeNode)
+		m_pSceneMnger->destroySceneNode(m_pFreeNode);
+	
+	m_pCameraNode	= NULL;
+	m_pCameraPivot	= NULL;
+	m_pCameraGoal	= NULL;
+	m_pFreeNode		= NULL;
 }
 
 
@@ -157,14 +175,11 @@ KVOID Kylin::GameCamera::SetMode( GameCameraMode eMod )
 {
 	if (eMod == CM_FREE)
 	{
-		m_kOldPos = m_pCamera->getPosition();
+		m_pFreeNode->setPosition(m_pCamera->getPosition());
 	}
 	else if (eMod == CM_3P)
 	{
-		if (m_eMode == CM_FREE)
-		{
-			m_pCamera->setPosition(m_kOldPos);
-		}
+
 	}
 
 	m_eMode = eMod;

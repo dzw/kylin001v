@@ -5,8 +5,9 @@
 #include "RemoteEvents.h"
 
 
-KINT Kylin::DamageSystem::Calculate( const DamageUnit& kDamage, KUINT uEntityID )
+DamageResult Kylin::DamageSystem::Calculate( const DamageUnit& kDamage, KUINT uEntityID )
 {
+	DamageResult kResult;
 	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(uEntityID);
 	if (pEnt)
 	{
@@ -18,29 +19,14 @@ KINT Kylin::DamageSystem::Calculate( const DamageUnit& kDamage, KUINT uEntityID 
 			KINT nDamage = Ogre::Math::RangeRandom(kDamage.mMinValue,kDamage.mMaxValue);
 
 			nHp -= nDamage * kDamage.mLevel;
-
-			if (nHp <= 0)
-			{
-				// ·¢ËÍËÀÍöÏûÏ¢
-				EventPtr spEV(
-					new Event(
-					&ev_post_killed, 
-					Event::ev_immediate, 
-					0, 
-					0, 
-					NULL
-					));
-
-				KylinRoot::GetSingletonPtr()->PostMessage(uEntityID,spEV);
-			}
-			else
 			{
 				kProp.SetValue("$HP",nHp);
 			}
 
-			return nDamage;
+			kResult.mDamage = nDamage;
+			kResult.mDIFF   = nHp;
 		}
 	}
 
-	return -1;
+	return kResult;
 }

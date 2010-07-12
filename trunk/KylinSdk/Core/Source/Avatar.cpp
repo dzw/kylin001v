@@ -141,9 +141,9 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 
 	PropertySet kProp;
 	kProp.SetValue("$Mesh",sName);
-	kProp.SetValue("$Materials",sMaterials);
+	//kProp.SetValue("$Materials",sMaterials);
 	kProp.SetValue("$GID",uGID);
-	kProp.SetValue("$Shadows",true);
+	//kProp.SetValue("$Shadows",true);
 
 	Node* pWeapon = KNEW Node();
 

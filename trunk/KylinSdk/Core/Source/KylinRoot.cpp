@@ -171,8 +171,14 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 	DataItem::DataField dbField;
 	dbItem.QueryField("MESH",dbField);
 	KSTR sModel = boost::any_cast<KSTR>(dbField.m_aValue);
-	dbItem.QueryField("MATERIAL",dbField);
-	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+// 	dbItem.QueryField("MATERIAL",dbField);
+// 	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	dbItem.QueryField("HP",dbField);
+	KINT nHP = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("STR",dbField);
+	KINT nSTR = boost::any_cast<KINT>(dbField.m_aValue);
 
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sModel))
@@ -195,12 +201,14 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 	PropertySet kProp;
 	kProp.SetValue("$CLASS_ID",(KUINT)uCid);
 	kProp.SetValue("$Mesh",sName);
-	kProp.SetValue("$Materials",sMaterials);
+	//kProp.SetValue("$Materials",sMaterials);
 	kProp.SetValue("$GID",uGid);
 	kProp.SetValue("$Shadows",true);
-	//kProp.SetValue("$CLLSN_SHAPE",(KUINT)1);
-	//kProp.SetValue("$CLLSN_TYPE", (KUINT)0);
+	kProp.SetValue("$HP",nHP);
+	kProp.SetValue("$STR", nSTR);
 	kProp.SetValue("$Collision",true);
+	kProp.SetValue("$Level", (KINT)1);
+	kProp.SetValue("$EXP",(KINT)0);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 	//////////////////////////////////////////////////////////////////////////

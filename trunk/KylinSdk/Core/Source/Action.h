@@ -32,12 +32,16 @@ namespace Kylin
 		virtual Factor* SpawnFactor(PropertySet& kFactorProp);
 		virtual KVOID	RemoveFactor(KUINT uFactorID);
 
-		virtual KUINT	GetGID();
+		KUINT	GetGID();
 		
-		virtual KSTR	GetIcon();
-		virtual KSTR	GetExplain();
-		
-		virtual KUINT	GetHostWorldID();
+		KSTR	GetIcon();
+		KSTR	GetExplain();
+		KINT	GetMaxDamage();
+		KINT	GetMinDamage();
+		KFLOAT	GetRange();
+		KFLOAT	GetCooldawn();
+
+		KUINT	GetHostWorldID();
 		
 		static ActionType TransformType(KCSTR& sType);
 

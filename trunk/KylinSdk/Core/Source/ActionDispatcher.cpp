@@ -9,7 +9,6 @@
 Kylin::ActionDispatcher::ActionDispatcher( KUINT uHostID )
 : m_uHostID(uHostID)
 , m_pActionFactory(NULL)
-, m_bBusy(false)
 {
 
 }
@@ -105,7 +104,6 @@ Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID/*,const KPoint3& kPos*/
 	if (pAct)
 	{
 		pFactor = pAct->SpawnFactor();
-		//SAFE_CALL(pFactor,SetTranslate(kPos));
 		
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uHostID);
 		if (pEnt)

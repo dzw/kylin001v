@@ -23,7 +23,6 @@ namespace Kylin
 		KVOID SetHost(Entity* pEnt);
 		KUINT GetHostWorldID() { return m_uHostID; }
 
-	protected:
 		Action* GetActionPtr(KUINT uGID);
 
 	protected:
@@ -34,9 +33,6 @@ namespace Kylin
 
 		// host id
 		KUINT			m_uHostID;
-		
-		// ÊÇ·ñ·±Ã¦
-		KBOOL			m_bBusy;
 	};
 }
 

@@ -30,7 +30,6 @@ namespace Kylin
 
 	protected:
 		KVOID	EV_Damage(EventPtr spEV);
-		KVOID	EV_Killed(EventPtr spEV);
 
 	protected:
 		BaseAI*		m_pAIHandler;

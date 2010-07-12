@@ -29,6 +29,10 @@ Kylin::Action::~Action()
 KBOOL Kylin::Action::Init( const PropertySet& kProp )
 {
 	m_kProperty = kProp;
+	
+	KUINT uType = m_eType;
+	m_kProperty.GetUIntValue("$Type",uType);
+	m_eType = (ActionType)uType;
 
 	return true;
 }
@@ -130,10 +134,16 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 		}	
 	}
 	// 获得材质
-	if (dbItem.QueryField("MATERIAL",dbField))
+// 	if (dbItem.QueryField("MATERIAL",dbField))
+// 	{
+// 		KSTR sMat = boost::any_cast<KSTR>(dbField.m_aValue);	
+// 		kFactorProp.SetValue("$Material",sMat);
+// 	}
+	// 设置时限
+	if (dbItem.QueryField("TIMES",dbField))
 	{
-		KSTR sMat = boost::any_cast<KSTR>(dbField.m_aValue);	
-		kFactorProp.SetValue("$Material",sMat);
+		KFLOAT fTimes = boost::any_cast<KFLOAT>(dbField.m_aValue);
+		kFactorProp.SetValue("$Times",fTimes);
 	}
 
 	// 获得缩放
@@ -256,7 +266,7 @@ KSTR Kylin::Action::GetIcon()
 KSTR Kylin::Action::GetExplain()
 {
 	KSTR sValue = "";
-	//m_kProperty.GetStrValue("$Icon",sValue);
+	m_kProperty.GetStrValue("$Explain",sValue);
 
 	return sValue;
 }
@@ -274,5 +284,37 @@ KUINT Kylin::Action::GetHostWorldID()
 ActionType Kylin::Action::TransformType( KCSTR& sType )
 {
 	return (ActionType)(KUINT)OgreRoot::GetSingletonPtr()->GetScriptVM()->GetGlobalNumber(sType.data());
+}
+
+KINT Kylin::Action::GetMaxDamage()
+{
+	KINT nValue = 1;
+	m_kProperty.GetIntValue("$MaxDamage",nValue);
+
+	return nValue;
+}
+
+KINT Kylin::Action::GetMinDamage()
+{
+	KINT nValue = 0;
+	m_kProperty.GetIntValue("$MinDamage",nValue);
+
+	return nValue;
+}
+
+KFLOAT Kylin::Action::GetRange()
+{
+	KFLOAT fValue = 0;
+	m_kProperty.GetFloatValue("$Range",fValue);
+
+	return fValue;
+}
+
+KFLOAT Kylin::Action::GetCooldawn()
+{
+	KFLOAT fValue = 0;
+	m_kProperty.GetFloatValue("$Cooldawn",fValue);
+
+	return fValue;
 }
 //-------------------------------------------------------------------

@@ -27,10 +27,7 @@ namespace Script
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 
-		if (pEnt)
-		{
-			pEnt->GetAnimationProxy()->Play(sAnim,fTimes < 0);
-		}
+		SAFE_CALL(pEnt->GetAnimationProxy(),Play(sAnim,fTimes < 0));
 	}
 
 	extern void add_effect( unsigned int uEntID, unsigned int uEffectID)
@@ -103,5 +100,12 @@ namespace Script
 		KPoint3 kPos;
 		if ( Kylin::KylinRoot::GetSingletonPtr()->HitTest(KPoint3(x,0,z),KPoint3::NEGATIVE_UNIT_Y,kPos) )
 			SAFE_CALL(pEnt,SetTranslate(kPos));
+	}
+
+	extern void add_anim_queue( unsigned int uEntID, const char* sAnim )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		SAFE_CALL(pEnt->GetAnimationProxy(),AddQueue(sAnim));
 	}
 }

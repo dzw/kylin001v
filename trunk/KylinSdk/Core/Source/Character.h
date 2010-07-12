@@ -21,9 +21,6 @@ namespace Kylin
 		Avatar*	GetAvatar();
 
 	public:
-		// 将位置设置到地面
-		//virtual KVOID	SetTranslateToTerrain(KPoint3 vPos);
-		
 
 	protected:
 		
