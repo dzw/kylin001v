@@ -103,7 +103,7 @@ KVOID Kylin::ActSkill::HitTarget( KUINT uID )
 	{
 		// ·¢ËÍÉËº¦ÏûÏ¢
 		EventPtr spEV(
-			new Event(
+			KNEW Event(
 			&ev_post_damage, 
 			Event::ev_immediate, 
 			0, 

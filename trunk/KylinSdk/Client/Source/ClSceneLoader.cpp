@@ -11,6 +11,7 @@
 #include "PlayerController.h"
 #include "Scene.h"
 #include "uiCharInfoMenu.h"
+#include "StringUtils.h"
 
 
 Kylin::ClSceneLoader::ClSceneLoader()
@@ -83,11 +84,15 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	return true;
 }
 
-KVOID Kylin::ClSceneLoader::LoadLevel()
+KVOID Kylin::ClSceneLoader::LoadLevel(KSTR sSceneName)
 {
+	KSTR sName = StringUtils::replace(sSceneName,".xml","");
+
 	PropertySet kProp;
 
 	kProp.SetValue("$CLASS_ID",(KUINT)id_level);
+	kProp.SetValue("$Name",sName);
+
 	KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 }
 

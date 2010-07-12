@@ -92,7 +92,7 @@ namespace Kylin
 			if (nData == 1)
 			{
 				EventPtr spPosEV(
-					new Event(
+					KNEW Event(
 					&ev_post_destroy, 
 					Event::ev_nextframe,
 					0, 
