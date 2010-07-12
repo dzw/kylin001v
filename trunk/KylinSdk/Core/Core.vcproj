@@ -216,10 +216,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\LevelController.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\RegisterClass.cpp"
 				>
 			</File>
@@ -303,10 +299,6 @@
 			</File>
 			<File
 				RelativePath=".\Source\KylinRoot.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\LevelController.h"
 				>
 			</File>
 			<File
