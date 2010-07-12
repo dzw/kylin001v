@@ -33,7 +33,6 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	KSTR sMesh, sMaterials;
 	if (kProp.GetStrValue("$Mesh",sMesh) && !sMesh.empty())
 	{
-		//kProp.GetStrValue("$Materials",sMaterials);
 		// 加载模型资源
 		m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
 		if (uID != -1)
@@ -60,11 +59,6 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		if (!m_pTransparency)
 			m_pTransparency = KNEW EntityMaterialInstance (m_pOgreEntity);
 		//-----------------------------------------------------------
-
-		// 设置渲染距离
-		KFLOAT fRenderDisance = -1.0f;
-		if (kProp.GetFloatValue("$RENDER_DISTANCE",fRenderDisance) && fRenderDisance > 0)
-			m_pOgreEntity->setRenderingDistance(fRenderDisance);
 		
 		// 设置动画
 		m_pAnimProxy->SetTarget(m_pOgreEntity);
@@ -82,9 +76,7 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 	if (kProp.GetBoolValue("$Collision",bCollide))
 	{
 		if (bCollide)
-		{
 			SetupCllsn(kProp);	
-		}
 	}
 
 	return true;
