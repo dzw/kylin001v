@@ -43,10 +43,11 @@ namespace Kylin
 
 		m_fTempTime			= m_fSpawnInterval;
 		
-		//-----------------------------------------------------------------
+		//-----------------------------------------------------------
 		DoSpawn();
 	}
 
+	//---------------------------------------------------------------
 	KVOID ObjectSpawner::DoSpawn()
 	{
 		Assert(m_uSpawnID != INVALID_ID);
@@ -58,7 +59,7 @@ namespace Kylin
 			return;
 
 		EventPtr spEV(
-			new Event(
+			KNEW Event(
 			&ev_do_spawn, 
 			Event::ev_timing, 
 			m_fTempTime,
@@ -104,7 +105,5 @@ namespace Kylin
 				OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"on_final",true,"ii",this->GetID(),m_nLevel);
 			}
 		}
-
 	}
-
 }

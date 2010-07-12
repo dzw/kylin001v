@@ -12,6 +12,8 @@
 #include "Entity.h"
 #include "Zone.h"
 #include "rPhyXSystem.h"
+#include "StringUtils.h"
+#include "ScriptVM.h"
 
 
 Kylin::SceneHag::SceneHag()
@@ -76,9 +78,18 @@ KVOID Kylin::Scene::SpawnScene()
 	Ogre::FileInfoListPtr resPtr = Ogre::ResourceGroupManager::getSingletonPtr()->findResourceFileInfo("General", m_kSceneHag.m_sSceneFile);
 	Ogre::FileInfo fInfo = (*(resPtr->begin()));
 
-	Ogre::String fname = fInfo.archive->getName();
-	fname += "/" + m_kSceneHag.m_sSceneFile;
-
+	KSTR sName = fInfo.archive->getName();
+	sName += "/" + m_kSceneHag.m_sSceneFile;
+	
+	//------------------------------------------------------------------
+	// 执行lua文件
+	KSTR sLua = StringUtils::replace(sName,".xml",".lua");
+	OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile(sLua.data());
+	//-----------------------------------------------------------------
+	// 加载level
+	m_pSceneLoader->LoadLevel(m_kSceneHag.m_sSceneFile);
+	//-----------------------------------------------------------------
+	// 加载场景，NPC等
 	if (!m_pSceneLoader->LoadScene(m_kSceneHag.m_sSceneFile))
 	{
 		AssertEx(NULL,"场景加载失败！");
@@ -88,10 +99,7 @@ KVOID Kylin::Scene::SpawnScene()
 	// 加载玩家
 	m_pSceneLoader->LoadPlayer();
 	//-----------------------------------------------------------------
-	// 加载NPC等
-	m_pSceneLoader->LoadLevel();
-	//-----------------------------------------------------------------
-	m_pZone->Initialize(fname.data());
+	m_pZone->Initialize(sName.data());
 }
 
 KVOID Kylin::Scene::Tick( KFLOAT fElapsed )

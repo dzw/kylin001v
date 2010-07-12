@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 07/12/10 14:54:44.
+** Generated automatically by tolua++-1.0.92 on 07/12/10 18:35:58.
 */
 
 #ifndef __cplusplus
@@ -175,6 +175,32 @@ static int tolua_script_add_global_effect00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: add_victory_factor */
+#ifndef TOLUA_DISABLE_tolua_script_add_victory_factor00
+static int tolua_script_add_victory_factor00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnoobj(tolua_S,1,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  {
+   add_victory_factor();
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'add_victory_factor'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* function: exchange_avatar */
 #ifndef TOLUA_DISABLE_tolua_script_exchange_avatar00
 static int tolua_script_exchange_avatar00(lua_State* tolua_S)
@@ -335,6 +361,92 @@ static int tolua_script_set_translate00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: set_timer */
+#ifndef TOLUA_DISABLE_tolua_script_set_timer00
+static int tolua_script_set_timer00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,3,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  float fTimeStep = ((float)  tolua_tonumber(tolua_S,2,0));
+  {
+   set_timer(uEntID,fTimeStep);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'set_timer'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* function: kill_timer */
+#ifndef TOLUA_DISABLE_tolua_script_kill_timer00
+static int tolua_script_kill_timer00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   kill_timer(uEntID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'kill_timer'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* function: kill_character */
+#ifndef TOLUA_DISABLE_tolua_script_kill_character00
+static int tolua_script_kill_character00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   kill_character(uEntID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'kill_character'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_script_open (lua_State* tolua_S)
 {
@@ -354,11 +466,15 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_function(tolua_S,"add_anim_queue",tolua_script_add_anim_queue00);
   tolua_function(tolua_S,"add_effect",tolua_script_add_effect00);
   tolua_function(tolua_S,"add_global_effect",tolua_script_add_global_effect00);
+  tolua_function(tolua_S,"add_victory_factor",tolua_script_add_victory_factor00);
   tolua_function(tolua_S,"exchange_avatar",tolua_script_exchange_avatar00);
   tolua_function(tolua_S,"add_pathway_pos",tolua_script_add_pathway_pos00);
   tolua_function(tolua_S,"query_near_foeman",tolua_script_query_near_foeman00);
   tolua_function(tolua_S,"set_spawner",tolua_script_set_spawner00);
   tolua_function(tolua_S,"set_translate",tolua_script_set_translate00);
+  tolua_function(tolua_S,"set_timer",tolua_script_set_timer00);
+  tolua_function(tolua_S,"kill_timer",tolua_script_kill_timer00);
+  tolua_function(tolua_S,"kill_character",tolua_script_kill_character00);
   tolua_constant(tolua_S,"AT_IMM",AT_IMM);
   tolua_constant(tolua_S,"AT_POS",AT_POS);
   tolua_constant(tolua_S,"AT_TAR",AT_TAR);

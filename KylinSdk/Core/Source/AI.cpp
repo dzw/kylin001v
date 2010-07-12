@@ -15,6 +15,7 @@ Kylin::BaseAI::BaseAI( Character* pHost )
 : m_pHostChar(pHost)
 , m_pRandomGenerator(NULL)
 , m_eCurrState(AS_INVALID)
+, m_uTargetFoe(INVALID_ID)
 , m_fDistance(.0f)
 , m_kDestination(KPoint3::ZERO)
 , m_nPathwayIndex(0)
@@ -75,6 +76,11 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 	case AS_FOLLOW:
 
 		bRet = Tick_Follow(fElapsed);
+		break;
+	
+	case AS_PURSUE:
+		
+		bRet = Tick_Pursue(fElapsed);
 		break;
 
 	//default:
@@ -181,9 +187,14 @@ KBOOL Kylin::BaseAI::Tick_Move( KFLOAT fElapsed )
 	if (m_fDistance < KZERO)
 	{				
 		m_kDestination = KPoint3::ZERO;
-
+		
 		// ÇÐ»»×´Ì¬
 		Enter_Idle();
+		//-----------------------------------------------------------
+		if (m_nPathwayIndex == m_kPathway.size())
+		{
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"on_endpoint");
+		}
 	}
 	else 
 	{
@@ -232,17 +243,17 @@ KVOID Kylin::BaseAI::AddPathwayPos( const KPoint3& kPos )
 
 RC_RESULT Kylin::BaseAI::Enter_Patrol()
 {
-	RC_RESULT kRet = RC_RESULT::RC_ERROR;
+	RC_RESULT kRet = RC_ERROR;
 	if (m_nPathwayIndex >= 0 && m_nPathwayIndex < m_kPathway.size())
 	{
 		kRet = Enter_Move(m_kPathway[m_nPathwayIndex].x,m_kPathway[m_nPathwayIndex].z);
 		m_nPathwayIndex++;
-		if (m_nPathwayIndex == m_kPathway.size())
-		{
-			m_nPathwayIndex = 0;
-		}
 	}
-		
+	else if (m_nPathwayIndex == m_kPathway.size())
+	{
+		m_nPathwayIndex = 0;
+	}
+
 	return kRet;
 }
 
@@ -254,7 +265,7 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 	m_fScanTime += fElapsed;
 	if (m_fScanTime > g_radar_time)
 	{
-		//--------------------
+		//-----------------------------------------------------------
 		// radar
 		KPoint3	kPos = m_pHostChar->GetTranslate();
 		kPos.y += m_pHostChar->GetEntityPtr()->getBoundingRadius();
@@ -264,22 +275,43 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 		Ogre::Ray kRay(kPos,kDes);
 		Ogre::Entity* pEnt = NULL;
 		
-		m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_SCENE_OBJ | KylinRoot::KR_NPC_MASK,g_adjust_angle);
-
+		m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_SCENE_OBJ,g_adjust_angle); //  | KylinRoot::KR_NPC_MASK
 		if (m_bToBlock)
 		{
 			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(m_fSpeed, 0, 0));
 			// random move dir ( left or right )
 			// radar
 		}
-			
-		m_fScanTime = .0f;
-	}
+		else
+		{
+			m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_NPC_MASK,g_adjust_angle);
 
-	if (m_bToBlock)
-	{
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(m_fSpeed, 0, 0));
+			if (!pEnt->getUserAny().isEmpty())
+			{
+				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+				// is enemy judge
+				Enter_Pursue(uID);
+			}
+		}
+
+		m_fScanTime = .0f;
 	}
 		
 	return m_bToBlock;
+}
+
+RC_RESULT Kylin::BaseAI::Enter_Pursue( KUINT uTargetObj )
+{
+	m_uTargetFoe = uTargetObj;
+
+	//---------------------------------------------------------------
+	m_eCurrState = AS_PURSUE;
+	return RC_OK;
+}
+
+KBOOL Kylin::BaseAI::Tick_Pursue( KFLOAT fElapsed )
+{
+	
+
+	return true;
 }

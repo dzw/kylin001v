@@ -2,6 +2,8 @@
 #include "Level.h"
 #include "RegisterClass.h"
 #include "LevelController.h"
+#include "rOgreRoot.h"
+#include "ScriptVM.h"
 
 
 namespace Kylin
@@ -15,44 +17,89 @@ namespace Kylin
 
 	
 	Level::Level(KVOID)
+		: m_fInitTimeStep(.0f)
+		, m_bTimerEnable(false)
 	{
-		//SetEntityFlag(c_flagTick);
-		m_pController = KNEW LevelController;
+
 	}
 
 	Level::~Level(KVOID)
 	{
-		SAFE_DEL(m_pController);
+		
+	}
+
+	KBOOL Level::Init( const PropertySet& kProp )
+	{
+		if (!Entity::Init(kProp))
+			return false;
+		
+		KSTR sName;
+		if ( !m_kProperty.GetStrValue("$Name",sName) )
+			return false;
+		//-----------------------------------------------------------------
+		//
+		KVEC<KCCHAR *> kModules;
+		kModules.push_back(sName.data());
+		kModules.push_back("lvl");
+
+		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"init",true,"i",GetID());
+		//-----------------------------------------------------------------
+
+		return true;
 	}
 
 	KVOID Level::Tick(KFLOAT fElapsed)
 	{
-		m_pController->Tick(fElapsed);
+		if (m_bTimerEnable)
+		{
+			m_fTimeStep += fElapsed;
+			if (m_fTimeStep >= m_fInitTimeStep)
+			{
+				OnTimer();
+				m_fTimeStep = .0f;
+			}
+		}
 	}
 
-
-	KVOID Level::EV_LVLInit(EventPtr ev)
+	KVOID Level::Destroy()
 	{
-		m_pController->EV_LVLInit(ev);
+		KSTR sName;
+		m_kProperty.GetStrValue("$Name",sName);
+		//-----------------------------------------------------------------
+		//
+		KVEC<KCCHAR *> kModules;
+		kModules.push_back(sName.data());
+		kModules.push_back("lvl");
+
+		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"destroy",true,"i",GetID());
+		//-----------------------------------------------------------------
 	}
 
-	//common event handler, which is event without params
-	KVOID Level::EV_LVLCommonEvent(EventPtr ev)
+	KVOID Level::OnTimer()
 	{
-		m_pController->EV_LVLCommonEvent(ev);
+		KSTR sName;
+		m_kProperty.GetStrValue("$Name",sName);
+		//-----------------------------------------------------------------
+		//
+		KVEC<KCCHAR *> kModules;
+		kModules.push_back(sName.data());
+		kModules.push_back("lvl");
+
+		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"on_timer",true,"i",GetID());
+		//-----------------------------------------------------------------
 	}
 
-	KVOID Level::ExecuteScriptFunc(Entity * pEnt, const EventTemplate * pTemplate, const char * sig, ...)
+	KVOID Level::SetTimer( KFLOAT fTimeStep )
 	{
-		va_list vl;
-		va_start(vl, pTemplate);
-		m_pController->ExecuteScriptFunc(pEnt, pTemplate, sig, vl);
-		va_end(vl);
+		m_fInitTimeStep = fTimeStep;
+		m_fTimeStep		= .0f;
+		
+		m_bTimerEnable	= true;
 	}
 
-	LevelController* Level::GetController()
+	KVOID Level::KillTimer()
 	{
-		return m_pController;
+		m_bTimerEnable = false;
 	}
 }
 

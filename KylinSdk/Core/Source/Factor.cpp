@@ -37,7 +37,7 @@ KBOOL Kylin::Factor::Init( const PropertySet& kProp )
 	if (m_kProperty.GetFloatValue("$Times",fTimes))
 	{
 		EventPtr spEV(
-			new Event(
+			KNEW Event(
 			&ev_post_destroy, 
 			Event::ev_timing, 
 			fTimes, 
