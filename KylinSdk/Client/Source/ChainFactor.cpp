@@ -44,7 +44,7 @@ namespace Kylin
 		}
 
 // 		EventPtr spPosEV(
-// 			new Event(
+// 			KNEW Event(
 // 			&ev_post_destroy, 
 // 			Event::ev_timing,
 // 			1, 

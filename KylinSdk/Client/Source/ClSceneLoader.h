@@ -14,7 +14,7 @@ namespace Kylin
 		virtual KVOID Unload(SceneHag* pHag);
 		virtual KBOOL LoadScene(KSTR mSceneFile){ return true; }
 		virtual KBOOL LoadPlayer();
-		virtual KVOID LoadLevel();
+		virtual KVOID LoadLevel(KSTR sSceneName);
 		
 		virtual KVOID Tick(KFLOAT fElapsed);
 		

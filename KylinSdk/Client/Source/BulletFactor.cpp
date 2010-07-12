@@ -97,7 +97,7 @@ namespace Kylin
 			else if (nData == 3)
 			{
 				EventPtr spPosEV(
-					new Event(
+					KNEW Event(
 					&ev_post_destroy, 
 					Event::ev_nextframe,
 					0, 
@@ -222,7 +222,7 @@ namespace Kylin
 		if (!m_bExplode)
 		{
 			EventPtr spEV(
-				new Event(
+				KNEW Event(
 				&ev_post_damage, 
 				Event::ev_immediate, 
 				0, 
