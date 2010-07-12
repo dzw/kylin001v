@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 07/12/10 18:35:58.
+** Generated automatically by tolua++-1.0.92 on 07/12/10 19:30:28.
 */
 
 #ifndef __cplusplus
@@ -305,7 +305,8 @@ static int tolua_script_set_spawner00(lua_State* tolua_S)
      !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
      !tolua_isnumber(tolua_S,4,0,&tolua_err) ||
      !tolua_isnumber(tolua_S,5,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,6,&tolua_err)
+     !tolua_isboolean(tolua_S,6,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,7,&tolua_err)
  )
   goto tolua_lerror;
  else
@@ -316,8 +317,9 @@ static int tolua_script_set_spawner00(lua_State* tolua_S)
   float fDelay = ((float)  tolua_tonumber(tolua_S,3,0));
   int nMaxCount = ((int)  tolua_tonumber(tolua_S,4,0));
   unsigned int uSpawnID = ((unsigned int)  tolua_tonumber(tolua_S,5,0));
+  bool bFlag = ((bool)  tolua_toboolean(tolua_S,6,0));
   {
-   set_spawner(uEntID,fInterval,fDelay,nMaxCount,uSpawnID);
+   set_spawner(uEntID,fInterval,fDelay,nMaxCount,uSpawnID,bFlag);
   }
  }
  return 0;

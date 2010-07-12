@@ -2,7 +2,6 @@
 
 #include "Entity.h"
 #include "core.h"
-#include "LevelController.h"
 
 namespace Kylin
 {
@@ -17,18 +16,25 @@ namespace Kylin
 		Level(KVOID);
 		virtual ~Level(KVOID);
 			
-		virtual	KBOOL Init(const PropertySet& kProp);
-		virtual KVOID Tick(KFLOAT fElapsed);
-		virtual KVOID Destroy();
+		virtual	KBOOL	Init(const PropertySet& kProp);
+		virtual KVOID	Destroy();
 		
-		virtual KVOID OnTimer();
-		virtual KVOID SetTimer(KFLOAT fTimeStep);
-		virtual KVOID KillTimer();
+		virtual KVOID	OnTimer();
+		virtual KVOID	SetTimer(KFLOAT fTimeStep);
+		virtual KVOID	KillTimer();
+		
+		// 胜利条件处理
+// 		virtual KVOID	DoTotalling();
+// 		virtual KVOID	SetVictoryFactors(KINT nCount);
+// 		virtual KVOID	AddVictoryFactor();
 
 	protected:
+		KVOID			EV_OnTimer(EventPtr spEV);
+		
+	protected:
 		KBOOL	m_bTimerEnable;
-		KFLOAT	m_fInitTimeStep;
 		KFLOAT	m_fTimeStep;
+//		KINT	m_nVictoryFactors;
 	};
 };
 
