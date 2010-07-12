@@ -48,6 +48,8 @@ namespace Kylin
 		KVOID			Downhill(KFLOAT fUnit);
 		KVOID			Leftward(KFLOAT fUnit);
 		KVOID			Rightward(KFLOAT fUnit);
+		KVOID			Forward(KFLOAT fUnit);
+		KVOID			Backward(KFLOAT fUnit);
 
 	public:
 		virtual KVOID UpdateCameraGoal(KFLOAT fDeltaYaw, KFLOAT fDeltaPitch, KFLOAT fDeltaZoom);
@@ -59,8 +61,8 @@ namespace Kylin
 		Ogre::SceneNode*		m_pCameraPivot;
 		Ogre::SceneNode*		m_pCameraGoal;
 		Ogre::SceneNode*		m_pCameraNode;
-		
-		KPoint3			m_kOldPos;
+		Ogre::SceneNode*		m_pFreeNode;			// 游离摄像机节点
+
 		KFLOAT			m_fPivotPitch;
 		KFLOAT			m_fCameraDistance;
 

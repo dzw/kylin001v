@@ -20,6 +20,7 @@ Kylin::BaseAI::BaseAI( Character* pHost )
 , m_nPathwayIndex(0)
 , m_fScanTime(.0f)
 , m_bToBlock(false)
+, m_fSpeed(1.0f)
 {
 
 }
@@ -172,11 +173,10 @@ KBOOL Kylin::BaseAI::Tick_Idle( KFLOAT fElapsed )
 	return true;
 }
 
-// test code
-const int g_speed = 5;
+
 KBOOL Kylin::BaseAI::Tick_Move( KFLOAT fElapsed )
 {
-	KFLOAT fOffset = fElapsed * g_speed;
+	KFLOAT fOffset = fElapsed * m_fSpeed;
 	m_fDistance -= fOffset;
 	if (m_fDistance < KZERO)
 	{				
@@ -188,7 +188,7 @@ KBOOL Kylin::BaseAI::Tick_Move( KFLOAT fElapsed )
 	else 
 	{
 		// move in current body direction (not the goal direction)
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, g_speed));
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, m_fSpeed));
 	}
 
 	return true;
@@ -268,7 +268,7 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 
 		if (m_bToBlock)
 		{
-			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(g_speed, 0, 0));
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(m_fSpeed, 0, 0));
 			// random move dir ( left or right )
 			// radar
 		}
@@ -278,7 +278,7 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 
 	if (m_bToBlock)
 	{
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(g_speed, 0, 0));
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(m_fSpeed, 0, 0));
 	}
 		
 	return m_bToBlock;

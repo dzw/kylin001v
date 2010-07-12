@@ -16,6 +16,18 @@ struct DamageUnit
 	KUINT mType;
 };
 
+struct DamageResult
+{
+	DamageResult() : mDamage(-1)
+				   , mDIFF(-1)
+	{
+	}
+
+	KINT mDamage;
+	KINT mDIFF;
+};
+
+
 namespace Kylin
 {
 
@@ -23,7 +35,7 @@ namespace Kylin
 	{
 	public:
 
-		static KINT Calculate(const DamageUnit& kDamage, KUINT uEntityID);
+		static DamageResult Calculate(const DamageUnit& kDamage, KUINT uEntityID);
 		
 
 	};

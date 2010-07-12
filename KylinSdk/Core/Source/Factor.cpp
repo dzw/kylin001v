@@ -4,6 +4,7 @@
 #include "RemoteEvents.h"
 #include "KylinRoot.h"
 #include "Action.h"
+#include "EffectManager.h"
 
 
 namespace Kylin
@@ -18,6 +19,7 @@ namespace Kylin
 
 Kylin::Factor::Factor()
 : m_spHostAct(NULL)
+, m_bNeedCallback(true)
 {
 
 }
@@ -54,12 +56,16 @@ KVOID Kylin::Factor::PostDestroy()
 {
 	// 恢复特效
 	KSTR sEffect;
-	if (m_kProperty.GetStrValue("$Effect",sEffect))
+	if (m_kProperty.GetStrValue("$DestroyEffect",sEffect))
 		ActivateEffect(sEffect,false);
 
 	//////////////////////////////////////////////////////////////////////////
 	// 反馈信息
-	SAFE_CALL(m_spHostAct,OnTriggered(this));
+	if (m_bNeedCallback)
+	{
+		SAFE_CALL(m_spHostAct,OnTriggered(this));
+	}
+	
 	SAFE_CALL(m_spHostAct,RemoveFactor(this->GetID()));
 
 	Entity::PostDestroy();
@@ -81,6 +87,42 @@ KVOID Kylin::Factor::PostSpawn()
 {
 	// 激活特效
 	KSTR sEffect;
-	if (m_kProperty.GetStrValue("$Effect",sEffect))
+	if (m_kProperty.GetStrValue("$SpawnEffect",sEffect))
 		ActivateEffect(sEffect,true);
+}
+
+KVOID Kylin::Factor::BindEffect( PropertySet kProp )
+{
+	//////////////////////////////////////////////////////////////////////////
+	// 加载特效
+	KSTR sEffect;
+	if (kProp.GetStrValue("$SpawnEffect",sEffect))
+	{
+		KFLOAT fTimes = -1.0f;
+		kProp.GetFloatValue("$SpawnEffectTime",fTimes);
+
+		EffectObject* pObj = AttachEffect(sEffect,fTimes);
+		if (pObj)
+		{	// 设置特效缩放
+			KFLOAT fEfScale;
+			if (kProp.GetFloatValue("$SpawnEffectScale",fEfScale))
+			{
+				pObj->SetScale(fEfScale);
+			}
+		}
+	}
+}
+
+KVOID Kylin::Factor::SetTarget( KUINT uTarget )
+{
+	m_kProperty.SetValue("$TargetFoe",uTarget);
+}
+
+KUINT Kylin::Factor::GetTarget()
+{
+	KUINT uTargetFoe = INVALID_ID;
+	
+	m_kProperty.GetUIntValue("$TargetFoe",uTargetFoe);
+
+	return uTargetFoe;
 }

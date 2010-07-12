@@ -11,7 +11,9 @@ namespace Script
 	
 	// 设置Entity动画
 	extern void set_next_anim( unsigned int uEntID, const char* sAnim, float fTimes );
-	
+	// 加入动画队列(无循环动画)
+	extern void add_anim_queue( unsigned int uEntID, const char* sAnim );
+
 	// 对Entity加入特效
 	extern void add_effect( unsigned int uEntID, unsigned int uEffectID );
 	// 加入全局特效

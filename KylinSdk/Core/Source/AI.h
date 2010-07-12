@@ -76,11 +76,14 @@ namespace Kylin
 		Pathway		m_kPathway;					// 路径
 		KINT		m_nPathwayIndex;			// 当前路径点索引
 		
+		KFLOAT		m_fSpeed;					// 移动速度
 		KFLOAT		m_fStayTime;				// 停留时间
 		KFLOAT		m_fScanTime;				// 上一次的扫描时间
 		KBOOL		m_bToBlock;					// 前面存在障碍
 
 		CRandomMersenne* m_pRandomGenerator;	// 随机数发生器
+
+		friend class NpcObject;
 	};
 }
 

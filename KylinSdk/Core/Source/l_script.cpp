@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 06/30/10 10:14:17.
+** Generated automatically by tolua++-1.0.92 on 07/12/10 14:54:44.
 */
 
 #ifndef __cplusplus
@@ -82,6 +82,36 @@ static int tolua_script_set_next_anim00(lua_State* tolua_S)
 #ifndef TOLUA_RELEASE
  tolua_lerror:
  tolua_error(tolua_S,"#ferror in function 'set_next_anim'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* function: add_anim_queue */
+#ifndef TOLUA_DISABLE_tolua_script_add_anim_queue00
+static int tolua_script_add_anim_queue00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isstring(tolua_S,2,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,3,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  const char* sAnim = ((const char*)  tolua_tostring(tolua_S,2,0));
+  {
+   add_anim_queue(uEntID,sAnim);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'add_anim_queue'.",&tolua_err);
  return 0;
 #endif
 }
@@ -321,6 +351,7 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_constant(tolua_S,"id_last",id_last);
   tolua_function(tolua_S,"lua_break",tolua_script_lua_break00);
   tolua_function(tolua_S,"set_next_anim",tolua_script_set_next_anim00);
+  tolua_function(tolua_S,"add_anim_queue",tolua_script_add_anim_queue00);
   tolua_function(tolua_S,"add_effect",tolua_script_add_effect00);
   tolua_function(tolua_S,"add_global_effect",tolua_script_add_global_effect00);
   tolua_function(tolua_S,"exchange_avatar",tolua_script_exchange_avatar00);
