@@ -164,15 +164,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\AI.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\Avatar.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Character.cpp"
 				>
 			</File>
 			<File
@@ -200,19 +192,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\Entity.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\EntityManager.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\EventManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Factor.cpp"
 				>
 			</File>
 			<File
@@ -236,31 +216,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\Level.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\LevelController.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\NpcObject.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ObjectSpawner.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\PetAI.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rCollisionMonitor.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rCoverMonitor.cpp"
 				>
 			</File>
 			<File
@@ -269,14 +225,6 @@
 			</File>
 			<File
 				RelativePath=".\Source\RemoteEvents.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rMotionSimulator.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rPhyXSystem.cpp"
 				>
 			</File>
 			<File
@@ -310,15 +258,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\AI.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\Avatar.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Character.h"
 				>
 			</File>
 			<File
@@ -338,23 +278,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\Entity.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\EntityManager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\Event.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\EventManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\Factor.h"
 				>
 			</File>
 			<File
@@ -378,31 +306,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Source\Level.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Source\LevelController.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\NpcObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\ObjectSpawner.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\PetAI.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rCollisionMonitor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rCoverMonitor.h"
 				>
 			</File>
 			<File
@@ -411,14 +315,6 @@
 			</File>
 			<File
 				RelativePath=".\Source\RemoteEvents.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rMotionSimulator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\rPhyXSystem.h"
 				>
 			</File>
 			<File
@@ -443,6 +339,134 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="Data"
+			>
+			<File
+				RelativePath=".\Source\DataPool.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\DataPool.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="PhyX"
+			>
+			<File
+				RelativePath=".\Source\rCollisionMonitor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rCollisionMonitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rCoverMonitor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rCoverMonitor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rMotionSimulator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rMotionSimulator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rPhyXSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rPhyXSystem.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="AI"
+			>
+			<File
+				RelativePath=".\Source\AI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\AI.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PetAI.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PetAI.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Entity"
+			>
+			<File
+				RelativePath=".\Source\Character.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Character.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Entity.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Entity.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EntityManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\EntityManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Factor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Factor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Level.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Level.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NpcObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NpcObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ObjectSpawner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ObjectSpawner.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
