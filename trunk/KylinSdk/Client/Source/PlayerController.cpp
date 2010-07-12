@@ -385,7 +385,12 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 				if (m_kSelectAction.uActionType == AT_TAR)
 				{	// 若超出攻击距离则接近后攻击
 					KFLOAT fDistance = pTarget->GetTranslate().distance(m_pHost->GetTranslate());
-					KFLOAT fValidDis = pTarget->GetBoundingRadius() + m_pHost->GetBoundingRadius();	// test code
+					KFLOAT fValidDis = pTarget->GetBoundingRadius() + m_pHost->GetBoundingRadius();
+					Action* pAct	= m_pHost->GetActionDispatcher()->GetActionPtr(m_kSelectAction.uActionGID);
+					assert(pAct);
+					if (pAct && pAct->GetRange() > 0)
+						fValidDis = pAct->GetRange() + pTarget->GetBoundingRadius();
+
 					if (fDistance > fValidDis)			
 					{
 						KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();
@@ -424,6 +429,18 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 		// 超过可点击距离
 		if ( fDistance < CLICK_DISTANCE )
 		{
+				//////////////////////////////////////////////////////////////////////////
+		// 旋转到拾取的方向
+		KPoint3 kDir = kHitPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
+		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
+		kSrc.y = 0;														// Ignore pitch difference angle
+		kDir.y = 0;
+		kSrc.normalise();                                                           
+		{                                                                           
+			Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);                        
+			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+		}
+			
 			//-------------------------------------------------------
 			// 使用技能
 			if (m_kSelectAction.uActionType == AT_POS)
@@ -438,25 +455,13 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 
 			m_fDistance		= fDistance;
 			m_kMousePickPos = kHitPos;
-
+			
 			// 在选中位置播放动画
 			m_pGuideEffect->MoveTo(kHitPos);
 			m_pGuideEffect->SetVisible(true);
 
 			// 播放角色动画
 			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
-		}
-
-		//////////////////////////////////////////////////////////////////////////
-		// 旋转到拾取的方向
-		KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
-		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
-		kSrc.y = 0;														// Ignore pitch difference angle
-		kDir.y = 0;
-		kSrc.normalise();                                                           
-		{                                                                           
-			Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);                        
-			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
 		}
 	}
 }

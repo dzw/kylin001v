@@ -21,8 +21,8 @@ namespace Kylin
 		KVOID SetWidgetHeightPct(KSTR sName, KFLOAT fH);
 		KVOID SetWidgetWidthPct(KSTR sName, KFLOAT fW);
 
-		KVOID SetSkillIcon(KSTR sIcon,KCHAR cP);
-
+		KVOID SetSkillInfo(KSTR sIcon, KCHAR cP, KUINT uActionID);
+		
 	public:
 		KVOID NotifyClick_Skill(MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id);
 
@@ -43,6 +43,8 @@ namespace Kylin
 		MyGUI::StaticImage* m_pImageSkill_2;
 
 	protected:
-		KPoint4		m_kImageHealthCoord;
+		KPoint4				m_kImageHealthCoord;
+
+		KMAP<KCHAR, KUINT>	m_kActionShortcutMap;
 	};
 }

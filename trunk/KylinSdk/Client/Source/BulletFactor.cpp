@@ -209,11 +209,11 @@ namespace Kylin
 				ActivateEffect(sEffect,false);
 
 			// 接触地面后速度为0
-			m_fVelocity = .0f;
-			m_bExplode	= true;
+			m_fVelocity		= .0f;
+			m_bExplode		= true;
+			m_bNeedCallback = false;
 
 			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Erase(this);
-			
 		}
 	}
 
@@ -226,8 +226,10 @@ namespace Kylin
 				&ev_post_damage, 
 				Event::ev_immediate, 
 				0, 
-				0, 
-				NULL
+				3, 
+				EventArg(m_spHostAct->GetHostWorldID()),
+				EventArg(m_spHostAct->GetMinDamage()),
+				EventArg(m_spHostAct->GetMaxDamage())
 				));
 
 			KylinRoot::GetSingletonPtr()->PostMessage(pCollidee->GetID(),spEV);

@@ -18,8 +18,9 @@ namespace Kylin
 
 	protected:
 		virtual KVOID OnTriggered(Factor* pFactor);
+		virtual KVOID RevertHost();
 
 	protected:
-
+		virtual KVOID HitTarget(KUINT uID);
 	};
 }

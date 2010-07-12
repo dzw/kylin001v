@@ -4,7 +4,7 @@
 
 #define NUM_ANIMS 4           // number of animations the character has
 #define CHAR_HEIGHT 5          // height of character's center of mass above ground
-#define RUN_SPEED 9//17           // character running speed in units per second
+#define RUN_SPEED 7//17           // character running speed in units per second
 #define TURN_SPEED 1200.0f//500.0f      // character turning in degrees per second
 #define ANIM_FADE_SPEED 7.5f   // animation crossfade speed in % of full weight per second
 #define JUMP_ACCEL 50.0f       // character jump acceleration in upward units per squared second

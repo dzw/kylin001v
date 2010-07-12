@@ -46,7 +46,7 @@ namespace Script
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));
 
 			Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
-			pMenu->SetSkillIcon(pAct->GetIcon(),chPos[0]);
+			pMenu->SetSkillInfo(pAct->GetIcon(),chPos[0],uActID);
 		}
 	}
 
@@ -71,7 +71,7 @@ namespace Script
 				{	SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode())); }
 				//---------------------------------------------------------------
 				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
-				pMenu->SetSkillIcon(pAct->GetIcon(),'l');
+				pMenu->SetSkillInfo(pAct->GetIcon(),'l',uActID);
 			}
 		}
 	}
