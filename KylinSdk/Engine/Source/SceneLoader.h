@@ -14,9 +14,9 @@ namespace Kylin
 					  , m_pTerrainGroup(NULL)
 		{}
 		
-		virtual KBOOL LoadScene(KSTR mSceneFile) = 0;
+		virtual KBOOL LoadScene(KSTR sSceneFile) = 0;
 		virtual KBOOL LoadPlayer() = 0;
-		virtual KVOID LoadLevel() = 0;
+		virtual KVOID LoadLevel(KSTR sSceneName) = 0;
 		virtual KVOID Tick(KFLOAT fElapsed)
 		{
 			SAFE_CALL(m_pSkyWapper,Tick(fElapsed));
