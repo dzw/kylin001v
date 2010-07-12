@@ -11,6 +11,7 @@ enum ClClassID
 	id_bullet_factor,
 	id_summon_factor,
 	id_chain_factor,
+	id_normal_factor,
 };
 //tolua_end
 

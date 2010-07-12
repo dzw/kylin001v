@@ -25,6 +25,11 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 	dbItem.QueryField("CLASS",dbField);
 	KSTR sClass = boost::any_cast<KSTR>(dbField.m_aValue);
 
+	dbItem.QueryField("TYPE",dbField);
+	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);	
+
+	ActionType eType = Action::TransformType(sType);
+
 	dbItem.QueryField("FACTOR_ID",dbField);
 	KUINT uFactor = boost::any_cast<KINT>(dbField.m_aValue);	
 
@@ -34,12 +39,34 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 	dbItem.QueryField("ICON",dbField);
 	KSTR sIcon = boost::any_cast<KSTR>(dbField.m_aValue);	
 
+	dbItem.QueryField("COOLDOWN",dbField);
+	KFLOAT fCooldown = boost::any_cast<KFLOAT>(dbField.m_aValue);	
+
+	dbItem.QueryField("RANGE",dbField);
+	KFLOAT fRange = boost::any_cast<KFLOAT>(dbField.m_aValue);	
+
+	dbItem.QueryField("MAX_DAMAGE",dbField);
+	KINT fMaxDamage = boost::any_cast<KINT>(dbField.m_aValue);	
+
+	dbItem.QueryField("MIN_DAMAGE",dbField);
+	KINT fMinDamage = boost::any_cast<KINT>(dbField.m_aValue);	
+
+	dbItem.QueryField("EXPLAIN",dbField);
+	KSTR sExplain = boost::any_cast<KSTR>(dbField.m_aValue);	
+
 	PropertySet kProp;
 	kProp.SetValue("$GID",uGID);
+	kProp.SetValue("$Type",(KUINT)eType);
 	kProp.SetValue("$FactorID",uFactor);
 	kProp.SetValue("$Animation",sAnim);
 	kProp.SetValue("$Icon",sIcon);
+	kProp.SetValue("$Cooldown",fCooldown);
+	kProp.SetValue("$Range",fRange);
+	kProp.SetValue("$MaxDamage",fMaxDamage);
+	kProp.SetValue("$MinDamage",fMinDamage);
+	kProp.SetValue("$Explain",sExplain);
 	//////////////////////////////////////////////////////////////////////////
+	//
 	Action* pAct = NULL;
 	if (sClass == "ActSkill")
 	{

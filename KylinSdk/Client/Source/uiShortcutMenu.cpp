@@ -94,7 +94,7 @@ KVOID Kylin::ShortcutMenu::SetWidgetWidthPct( KSTR sName, KFLOAT fW )
 }
 
 //-----------------------------------------------------------------------------
-KVOID Kylin::ShortcutMenu::SetSkillIcon( KSTR sIcon,KCHAR cP )
+KVOID Kylin::ShortcutMenu::SetSkillInfo( KSTR sIcon, KCHAR cP, KUINT uActionID )
 {
 	MyGUI::ResourceImageSetPtr resource_img = nullptr;
 	resource_img = MyGUI::ResourceManager::getInstance().getByName(sIcon)->castType<MyGUI::ResourceImageSet>();
@@ -128,7 +128,8 @@ KVOID Kylin::ShortcutMenu::SetSkillIcon( KSTR sIcon,KCHAR cP )
 
 	pImage->setItemResourcePtr(resource_img);
 	pImage->setItemGroup("States");
-
+	//------------------------------------------------------------------
+	m_kActionShortcutMap.insert(std::pair<KCHAR,KUINT>(cP,uActionID));
 }
 
 KVOID Kylin::ShortcutMenu::NotifyClick_Skill( MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id )
@@ -137,12 +138,24 @@ KVOID Kylin::ShortcutMenu::NotifyClick_Skill( MyGUI::WidgetPtr _sender, int _lef
 	ClSceneLoader* pLoader = (ClSceneLoader*)KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
 	if (pLoader)
 	{
-		if ( _sender == m_pImageSkill_L )
-			pLoader->GetController()->UseSkill(4);
-		else if ( _sender == m_pImageSkill_1)
-			pLoader->GetController()->UseSkill(5);
+		KCHAR cKey = 'l';
+
+		if ( _sender == m_pImageSkill_1)
+			cKey = '1';
 		else if ( _sender == m_pImageSkill_2)
-			pLoader->GetController()->UseSkill(6);
+			cKey = '2';
+// 		else if ( _sender == m_pImageSkill_2)
+// 			cKey = '3';
+// 		else if ( _sender == m_pImageSkill_2)
+// 			cKey = '4';
+// 		else if ( _sender == m_pImageSkill_2)
+// 			cKey = '5';
+
+		KMAP<KCHAR, KUINT>::iterator it = m_kActionShortcutMap.find(cKey);
+		if ( it != m_kActionShortcutMap.end())
+		{
+			pLoader->GetController()->UseSkill(it->second);
+		}
 	}
 }
 //-----------------------------------------------------------------------------

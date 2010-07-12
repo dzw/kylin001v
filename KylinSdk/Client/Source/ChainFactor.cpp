@@ -19,9 +19,7 @@ namespace Kylin
 	};
 
 	ChainFactor::ChainFactor()
-		: m_uTarget(INVALID_ID)
 	{
-
 	}
 
 	KBOOL ChainFactor::Init( const PropertySet& kProp )
@@ -34,29 +32,27 @@ namespace Kylin
 
 	KVOID ChainFactor::PostSpawn()
 	{
-		//Factor::PostSpawn();
 		// ¼¤»îÌØÐ§
-
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_spHostAct->GetHostWorldID());
-		Kylin::Entity* pTgt = KylinRoot::GetSingletonPtr()->GetEntity(m_uTarget);
+		Kylin::Entity* pTgt = KylinRoot::GetSingletonPtr()->GetEntity(GetTarget());
 		if (pEnt && pTgt)
 		{
 			KSTR sName = "factor_lightning_" + Ogre::StringConverter::toString(this->GetID());
 			EffectLightning* pEffect = static_cast<EffectLightning*>(EffectManager::GetSingletonPtr()->Generate(KNEW EffectLightning(sName)));
 
-			pEffect->Attach(KPoint3(pTgt->GetTranslate().x,1000.0f,pTgt->GetTranslate().z),pTgt->GetTranslate());
+			pEffect->Attach(KPoint3(pEnt->GetTranslate().x,1000.0f,pEnt->GetTranslate().z),pTgt->GetTranslate());
 		}
 
-		EventPtr spPosEV(
-			new Event(
-			&ev_post_destroy, 
-			Event::ev_timing,
-			1, 
-			0, 
-			NULL
-			));
-
-		KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spPosEV);
+// 		EventPtr spPosEV(
+// 			new Event(
+// 			&ev_post_destroy, 
+// 			Event::ev_timing,
+// 			1, 
+// 			0, 
+// 			NULL
+// 			));
+// 
+// 		KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spPosEV);
 	}
 
 	KVOID ChainFactor::PostDestroy()
@@ -66,16 +62,5 @@ namespace Kylin
 
 		Factor::PostDestroy();
 	}
-
-	KVOID ChainFactor::SetTarget( KUINT uTarget )
-	{
-		m_uTarget = uTarget;
-	}
-
-	KVOID ChainFactor::Tick( KFLOAT fElapsed )
-	{
-		Factor::Tick(fElapsed);
-	}
-
 }
 

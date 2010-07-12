@@ -73,4 +73,5 @@ KVOID Kylin::MonsterInfoMenu::SetWidgetWidthPct( KSTR sName, KFLOAT fW )
 KVOID Kylin::MonsterInfoMenu::SetTitle( KCSTR sTitle )
 {
 	m_pTextName->setCaption(sTitle.data());
+	
 }
