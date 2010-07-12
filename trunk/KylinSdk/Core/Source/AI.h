@@ -10,7 +10,8 @@ enum AI_STATE
 	AS_USE_SKILL,			//技能使用中
 	AS_DEAD,				//死亡
 	AS_FOLLOW,				//跟随
-	
+	AS_PURSUE,				//追赶
+
 	AS_NUMBERS
 };
 
@@ -54,6 +55,7 @@ namespace Kylin
 		virtual RC_RESULT	Enter_Dead( KVOID );
 		virtual RC_RESULT	Enter_Follow( KUINT uTargetObj );
 		virtual RC_RESULT	Enter_Patrol();
+		virtual RC_RESULT	Enter_Pursue( KUINT uTargetObj );
 
 	protected:
 		//-------------------------------------
@@ -65,11 +67,14 @@ namespace Kylin
 		virtual KBOOL		Tick_Dead( KFLOAT fElapsed );
 		virtual KBOOL		Tick_Follow( KFLOAT fElapsed );
 		virtual KBOOL		Tick_Radar( KFLOAT fElapsed );
+		virtual KBOOL		Tick_Pursue( KFLOAT fElapsed );
 
 	protected:
 		Character*	m_pHostChar;
 		AI_STATE	m_eCurrState;
 		
+		KUINT		m_uTargetFoe;				// 目标敌人
+
 		KPoint3		m_kDestination;				// 目的地位置
 		KFLOAT		m_fDistance;				// 离目标点的距离
 

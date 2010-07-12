@@ -21,7 +21,7 @@ KVOID Kylin::PhyX::MotionDummy::Touchdown()
 		{
 			//////////////////////////////////////////////////////////////////////////
 			EventPtr spEV(
-				new Event(
+				KNEW Event(
 				&ev_post_touchdown, 
 				Event::ev_immediate, 
 				0, 

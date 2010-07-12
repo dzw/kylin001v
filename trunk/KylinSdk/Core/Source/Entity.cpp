@@ -40,7 +40,7 @@ KBOOL Kylin::Entity::Init( const PropertySet& kProp )
 	
 	//////////////////////////////////////////////////////////////////////////
 	EventPtr spEV(
-		new Event(
+		KNEW Event(
 		&ev_post_spawn, 
 		Event::ev_nextframe, 
 		0, 

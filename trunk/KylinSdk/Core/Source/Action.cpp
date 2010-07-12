@@ -66,7 +66,7 @@ KVOID Kylin::Action::Destroy()
 	for (FactorList::iterator it=beg; it != end; it++)
 	{
 		EventPtr spEV(
-			new Event(
+			KNEW Event(
 			&ev_post_destroy, 
 			Event::ev_nextframe, 
 			0, 

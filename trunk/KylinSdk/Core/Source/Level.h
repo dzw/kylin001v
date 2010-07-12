@@ -16,18 +16,19 @@ namespace Kylin
 
 		Level(KVOID);
 		virtual ~Level(KVOID);
-
-		KVOID Tick(KFLOAT fElapsed);
-
-		LevelController* GetController();
+			
+		virtual	KBOOL Init(const PropertySet& kProp);
+		virtual KVOID Tick(KFLOAT fElapsed);
+		virtual KVOID Destroy();
+		
+		virtual KVOID OnTimer();
+		virtual KVOID SetTimer(KFLOAT fTimeStep);
+		virtual KVOID KillTimer();
 
 	protected:
-		void EV_LVLCommonEvent(EventPtr ev);
-		void EV_LVLInit(EventPtr ev);
-		void ExecuteScriptFunc(Kylin::Entity * pEnt, const EventTemplate * pTemplate, KCCHAR * sig, ...);
-
-	protected:
-		LevelController* m_pController;
+		KBOOL	m_bTimerEnable;
+		KFLOAT	m_fInitTimeStep;
+		KFLOAT	m_fTimeStep;
 	};
 };
 

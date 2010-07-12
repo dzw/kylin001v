@@ -11,6 +11,8 @@
 #include "NpcObject.h"
 #include "rOgreUtils.h"
 #include "ObjectSpawner.h"
+#include "RemoteEvents.h"
+#include "Level.h"
 
 
 namespace Script
@@ -107,5 +109,53 @@ namespace Script
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 
 		SAFE_CALL(pEnt->GetAnimationProxy(),AddQueue(sAnim));
+	}
+
+	extern void kill_character( unsigned int uEntID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+		
+		if (pEnt)
+		{
+			EventPtr spEV(
+				KNEW Event(
+				&ev_post_killed, 
+				Event::ev_immediate, 
+				0, 
+				1, 
+				EventArg(0)
+				));
+
+			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(uEntID,spEV);
+		}
+	}
+
+	extern void add_victory_factor()
+	{
+		int i = 0;
+	}
+
+	extern void set_timer( unsigned int uEntID, float fTimeStep )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->SetTimer(fTimeStep);
+		}
+	}
+
+	extern void kill_timer( unsigned int uEntID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->KillTimer();
+		}
 	}
 }

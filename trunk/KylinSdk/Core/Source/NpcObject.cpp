@@ -110,7 +110,7 @@ namespace Kylin
 
 			// 发送销毁消息
 			EventPtr spEV(
-				new Event(
+				KNEW Event(
 				&ev_post_destroy, 
 				Event::ev_timing, 
 				3, 
