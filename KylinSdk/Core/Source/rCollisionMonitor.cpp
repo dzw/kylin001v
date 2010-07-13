@@ -145,7 +145,7 @@ KVOID Kylin::PhyX::CollisionMonitor::Erase( Node* pHost )
 		if (it->first == pHost)
 		{
 			SAFE_DEL(it->second);
-			it = m_kObjsMap.erase(it);
+			m_kObjsMap.erase(it);
 			break;
 		}
 	}
