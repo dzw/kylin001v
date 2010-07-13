@@ -23,7 +23,7 @@ KBOOL Kylin::MonsterInfoMenu::Initialize()
 	resource_anima_back = MyGUI::ResourceManager::getInstance().getByName("pic_monster_anima_b")->castType<MyGUI::ResourceImageSet>();
 
 	MyGUI::ResourceImageSetPtr resource_anima_front = nullptr;
-	resource_anima_front = MyGUI::ResourceManager::getInstance().getByName("pic_monster_anima_f")->castType<MyGUI::ResourceImageSet>();
+  	resource_anima_front = MyGUI::ResourceManager::getInstance().getByName("pic_monster_anima_f")->castType<MyGUI::ResourceImageSet>();
 
 	//-----------------------------------------------------
 	m_pImageHeadBack->setItemResourcePtr(resource_head_back);
@@ -41,7 +41,7 @@ KBOOL Kylin::MonsterInfoMenu::Initialize()
 	//-----------------------------------------------------
 	// test code
 
-	//SetWidgetWidthPct("image_anima_front",0.6f);
+	SetWidgetWidthPct("image_anima_front",0.6f);
 
 	SetVisible(false);
 
