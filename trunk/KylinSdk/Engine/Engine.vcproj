@@ -463,6 +463,14 @@
 				RelativePath=".\Source\EffectMotionBlur.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\WeaponTrail.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\WeaponTrail.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="util"
