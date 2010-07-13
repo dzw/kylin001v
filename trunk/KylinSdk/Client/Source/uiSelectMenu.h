@@ -2,17 +2,15 @@
 
 #include "GuiManager.h"
 #include "BaseLayout/BaseLayout.h"
-//#include "InputListener.h"
+
 
 namespace Kylin
 {
 	class ItemMenu;
 	class TipMenu;
 	class ItemBoxContainer;
-	//ATTRIBUTE_CLASS_LAYOUT(SelectMenu, "select_char.layout");
+
 	class SelectMenu : public GuiBase
-		//, public wraps::BaseLayout
-		//, public InputListener
 	{
 	public:
 		SelectMenu();

@@ -7,10 +7,9 @@
 
 
 Kylin::OptionMenu::OptionMenu()
+: GuiBase(CLASS_TO(OptionMenu))
 {
 	initialiseByAttributes(this);
-
-	m_sGuiName = "OptionMenu";
 
 	SetVisible(false);
 }

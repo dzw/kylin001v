@@ -8,6 +8,7 @@
 #include "uiKitbagMenu.h"
 #include "uiConsole.h"
 #include "uiMonsterInfoMenu.h"
+#include "uiTaskTipsMenu.h"
 #include "CameraControl.h"
 #include "UserCommandHandler.h"
 
@@ -58,12 +59,15 @@ KVOID Kylin::ClGame::UiLoader()
 
 	MonsterInfoMenu* pMonsterInfo = KNEW MonsterInfoMenu();
 	pMonsterInfo->Initialize();
-
+	
 // 	CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
 // 	pCharInfo->Initialize();
 
 	KitbagMenu* pKitbag = KNEW KitbagMenu();
 	pKitbag->Initialize();
+
+	TaskTipsMenu* pTaskTip = KNEW TaskTipsMenu();
+	pTaskTip->Initialize();
 
 	OptionMenu* pOption = KNEW OptionMenu();
 	pOption->Initialize();	
@@ -72,6 +76,7 @@ KVOID Kylin::ClGame::UiLoader()
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pShortcut);
 	
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pMonsterInfo);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pTaskTip);
 
 //	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
