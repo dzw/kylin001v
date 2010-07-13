@@ -149,12 +149,15 @@ Kylin::GuiBase* Kylin::GuiManager::GetGuiBase( KSTR sName )
 
 KVOID Kylin::GuiManager::RemoveAllGui(KBOOL bFlag)
 {
-	for (GuiMap::iterator it = m_kGuiMap.begin(); it != m_kGuiMap.end(); it++)
+	for (GuiMap::iterator it = m_kGuiMap.begin(); it != m_kGuiMap.end();)
 	{
 		//-----------------------------------------------------------
 		// 加载界面不可销毁
 		if (!bFlag && it->first == "LoadingProgress")
+		{
+			++it;
 			continue;
+		}
 		//-----------------------------------------------------------
 		it->second->Destroy();
 		SAFE_DEL(it->second);
