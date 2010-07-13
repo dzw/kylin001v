@@ -335,14 +335,6 @@
 		<Filter
 			Name="Data"
 			>
-			<File
-				RelativePath=".\Source\DataPool.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Source\DataPool.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="PhyX"
