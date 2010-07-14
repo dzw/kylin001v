@@ -51,15 +51,20 @@ namespace Kylin
 	class GSGame : public GameStatus
 	{
 	public:
-		GSGame(){ m_eStatus = GS_GAME_; }
+		GSGame();
 
 		virtual KBOOL Initialize();
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID Destroy();
+		
+		inline virtual KFLOAT GetGameTime() { return m_fGameTime; }
 
 	protected:
 		friend class KylinRoot;
 
 		WorldManager*	m_pWorldManager;
+		
+		// ”Œœ∑ ±º‰
+		KFLOAT			m_fGameTime;
 	};
 }
