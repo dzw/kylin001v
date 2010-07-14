@@ -452,6 +452,34 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Item"
+			>
+			<File
+				RelativePath=".\Source\ItemCell.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ItemCell.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ItemEntity.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ItemEntity.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Kitbag.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\Kitbag.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
