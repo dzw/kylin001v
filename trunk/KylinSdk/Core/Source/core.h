@@ -14,6 +14,7 @@ namespace Kylin
 
 	class Character;
 	class NpcObject;
+	class ItemEntity;
 
 	class EventManager;
 	class EntityManager;
@@ -37,6 +38,11 @@ namespace Kylin
 
 	class Avatar;
 	class BaseAI;
+	
+	class Kitbag;
+	class ItemCell;
+
+	class DamageSystem;
 
 	namespace PhyX
 	{
@@ -47,3 +53,5 @@ namespace Kylin
 }
 
 class EventTemplate;
+
+struct DamageResult;
