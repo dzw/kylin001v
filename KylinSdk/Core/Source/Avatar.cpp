@@ -6,19 +6,26 @@
 #include "DataManager.h"
 #include "Character.h"
 #include "FileUtils.h"
+#include "rOgreRoot.h"
 #include "rOgreUtils.h"
+#include "WeaponTrail.h"
 
 
 Kylin::Avatar::Avatar(Character* pChar)
 : m_pHost(pChar)
 , m_pLWeapon(NULL)
 , m_pRWeapon(NULL)
+, m_pLWeaponTrail(NULL)
+, m_pRWeaponTrail(NULL)
 {
 
 }
 
 Kylin::Avatar::~Avatar()
 {
+	SAFE_DEL(m_pLWeaponTrail);
+	SAFE_DEL(m_pRWeaponTrail);
+
 	DetachWeapon(AP_RWEAPON);
 	DetachWeapon(AP_LWEAPON);
 }
@@ -185,4 +192,47 @@ KVOID Kylin::Avatar::DetachWeapon( AvatarPart ePart )
 			SAFE_DEL(m_pLWeapon);
 		}
 	}
+}
+
+Kylin::Node* Kylin::Avatar::GetRWeaponNode()
+{
+	return m_pRWeapon;
+}
+
+KVOID Kylin::Avatar::BindWeaponTrail( AvatarPart ePart )
+{
+	if (ePart == AP_RWEAPON)
+	{		
+		SAFE_DEL(m_pRWeaponTrail);
+		
+		KSTR sName = m_pRWeapon->GetEntityPtr()->getName() + "__trail_";
+		m_pRWeaponTrail = KNEW WeaponTrail(sName,OgreRoot::GetSingletonPtr()->GetSceneManager());
+
+		m_pRWeaponTrail->setWeaponEntity(m_pRWeapon->GetEntityPtr());
+		m_pRWeaponTrail->setWidth(2);
+		m_pRWeaponTrail->setActive(false);
+	}
+	else if (ePart == AP_LWEAPON)
+	{
+		SAFE_DEL(m_pLWeaponTrail);
+
+		KSTR sName = m_pLWeapon->GetEntityPtr()->getName() + "__trail_";
+		m_pLWeaponTrail = KNEW WeaponTrail(sName,OgreRoot::GetSingletonPtr()->GetSceneManager());
+
+		m_pLWeaponTrail->setWeaponEntity(m_pLWeapon->GetEntityPtr());
+		m_pLWeaponTrail->setWidth(2);
+		m_pLWeaponTrail->setActive(false);
+	}
+}
+
+KVOID Kylin::Avatar::SetWeaponTrailVisible( KBOOL bFlag )
+{
+	SAFE_CALL(m_pRWeaponTrail,setActive(bFlag));
+	SAFE_CALL(m_pLWeaponTrail,setActive(bFlag));
+}
+
+KVOID Kylin::Avatar::Update( KFLOAT fElapsed )
+{
+	SAFE_CALL(m_pRWeaponTrail,onUpdate(fElapsed));
+	SAFE_CALL(m_pLWeaponTrail,onUpdate(fElapsed));
 }

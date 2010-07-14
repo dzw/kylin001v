@@ -8,5 +8,6 @@ $cfile "core.h"
 $cfile "RegisterClass.h"
 $cfile "ScriptFunctions.h"
 $cfile "Action.h"
+$cfile "ItemCell.h"
 
 $using namespace Script;

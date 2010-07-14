@@ -111,7 +111,7 @@ namespace Script
 		SAFE_CALL(pEnt->GetAnimationProxy(),AddQueue(sAnim));
 	}
 
-	extern void kill_character( unsigned int uEntID )
+	extern void kill_character( unsigned int uEntID, unsigned int uKiller )
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 		
@@ -123,16 +123,11 @@ namespace Script
 				Event::ev_immediate, 
 				0, 
 				1, 
-				EventArg(0)
+				EventArg(uKiller)
 				));
 
 			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(uEntID,spEV);
 		}
-	}
-
-	extern void add_victory_factor()
-	{
-		int i = 0;
 	}
 
 	extern void set_timer( unsigned int uEntID, float fTimeStep )
@@ -156,6 +151,26 @@ namespace Script
 			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
 
 			pLevel->KillTimer();
+		}
+	}
+
+	extern void destroy_entity( unsigned int uEntID , float fTimeDelay )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (pEnt)
+		{
+			// 发送销毁消息
+			EventPtr spEV(
+				KNEW Event(
+				&ev_post_destroy, 
+				Event::ev_timing, 
+				fTimeDelay, 
+				0, 
+				NULL
+				));
+
+			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(uEntID,spEV);
 		}
 	}
 }

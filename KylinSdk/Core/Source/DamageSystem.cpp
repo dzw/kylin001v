@@ -20,6 +20,7 @@ DamageResult Kylin::DamageSystem::Calculate( const DamageUnit& kDamage, KUINT uE
 
 			nHp -= nDamage * kDamage.mLevel;
 			{
+				if (nHp < 0) nHp = 0;
 				kProp.SetValue("$HP",nHp);
 			}
 

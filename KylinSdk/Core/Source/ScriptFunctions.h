@@ -19,9 +19,6 @@ namespace Script
 	// 加入全局特效
 	extern void add_global_effect( unsigned int uEffectID );
 	
-	// 加入一个胜利条件
-	extern void add_victory_factor();
-
 	// 换装
 	extern void exchange_avatar( unsigned int uEntID, unsigned int uAvatarID );
 	
@@ -42,9 +39,12 @@ namespace Script
 	// 销毁计时器
 	extern void kill_timer(unsigned int uEntID);
 
-	// 销毁entity
-	extern void kill_character(unsigned int uEntID);
+	// 杀死entity
+	extern void kill_character(unsigned int uEntID, unsigned int uKiller);
 	
+	// 销毁entity
+	extern void destroy_entity(unsigned int uEntID , float fTimeDelay);
+
 //tolua_end
 };
 

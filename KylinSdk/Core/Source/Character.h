@@ -19,11 +19,12 @@ namespace Kylin
 		ActionDispatcher* GetActionDispatcher();
 		
 		Avatar*	GetAvatar();
-
-	public:
+		Kitbag*	GetKitbag();
 
 	protected:
-		
+		KVOID	EV_Damage(EventPtr spEV);
+
+	protected:
 		virtual KVOID OnEntityCllsn(Entity* pCollidee,const KPoint3& rNormal);
 		virtual KBOOL OnShouldCllsn(Entity* pCollidee);
 		
@@ -31,7 +32,7 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID PostSpawn();
 		
-		virtual KVOID Destroy();
+		virtual KVOID PostDestroy();
 
 	protected:
 		// multiple player...
@@ -42,6 +43,9 @@ namespace Kylin
 		
 		// 装备信息
 		Avatar*				m_pAvatar;
+		
+		// 背包
+		Kitbag*				m_pKitbag;
 
 		// 行为派发
 		ActionDispatcher*	m_pActDispatcher;
