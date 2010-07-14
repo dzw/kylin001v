@@ -13,6 +13,16 @@ namespace Kylin
 	public:
 		KylinRoot();
 
+		// 关系
+		enum ENUM_RELATION
+		{
+			RELATION_INVALID	= -1,
+			RELATION_ENEMY,				// 敌对
+			RELATION_FRIEND,			// 友好
+
+			RELATION_NUMBERS
+		};
+
 		enum ENTITY_QUERY_MASK 
 		{ 
 			KR_NO_MASK = 0,
@@ -37,10 +47,12 @@ namespace Kylin
 		Entity *	SpawnEntity(PropertySet& rProp);
 		KVOID		DestroyEntity(KUINT uEntID);
 		// 创建角色
-		Entity*		SpawnCharactor(KUINT uGid, ClassID uCid);
+		Entity*		SpawnCharactor(KUINT uGid, KUINT uCid);
+		// 创建道具
+		Entity*		SpawnItem(KUINT uGid,KUINT uCid);
+
 		// 创建装备等
 		
-
 		// 向entity发送消息
 		KVOID		PostMessage(KUINT uEntID,const EventPtr spEvent);
 		// 切换状态
@@ -67,6 +79,12 @@ namespace Kylin
 		
 		// 设置鼠标指针类型
 		KVOID		SetMousePointer(KUINT uType);
+		
+		// 获得游戏时间
+		KFLOAT		GetGameTime();
+	
+		// 检测对象间关系是否可以攻击
+		KUINT		CheckRelation(Kylin::Character* pEnt1,Kylin::Character* pEnt2);
 
 	protected:
 		GameCamera* m_pCamera;

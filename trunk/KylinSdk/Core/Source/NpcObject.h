@@ -19,7 +19,7 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID PostSpawn();
 
-		virtual KVOID Destroy();
+		virtual KVOID PostDestroy();
 		
 	public:
 		BaseAI* GetAIHandler();
@@ -27,9 +27,6 @@ namespace Kylin
 		
 		KUINT	GetMasterWorldID();
 		KVOID	SetMaster(const Character* pChar);
-
-	protected:
-		KVOID	EV_Damage(EventPtr spEV);
 
 	protected:
 		BaseAI*		m_pAIHandler;

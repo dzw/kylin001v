@@ -14,6 +14,7 @@ namespace Kylin
 	Implement_Event_Handler(Level, Entity)
 	{
 		{&ev_on_timer,				&EV_OnTimer},
+		{&ev_do_quit,				&EV_DoQuit},
 		{NULL, NULL}
 	};
 
@@ -50,7 +51,7 @@ namespace Kylin
 		return true;
 	}
 
-	KVOID Level::Destroy()
+	KVOID Level::PostDestroy()
 	{
 		KSTR sName;
 		m_kProperty.GetStrValue("$Name",sName);
@@ -63,7 +64,7 @@ namespace Kylin
 		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"destroy",true,"i",GetID());
 		//-----------------------------------------------------------------
 
-		Entity::Destroy();
+		Entity::PostDestroy();
 	}
 
 	KVOID Level::OnTimer()
@@ -111,6 +112,11 @@ namespace Kylin
 		{
 			OnTimer();
 		}
+	}
+
+	KVOID Level::EV_DoQuit( EventPtr spEV )
+	{
+		OgreRoot::GetSingletonPtr()->ShutDown();
 	}
 
 // 	KVOID Level::SetVictoryFactors( KINT nCount )

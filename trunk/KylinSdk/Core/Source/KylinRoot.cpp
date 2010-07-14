@@ -18,6 +18,7 @@
 #include "GameCamera.h"
 #include "GuiManager.h"
 #include "uiCursorEx.h"
+#include "Character.h"
 
 extern Kylin::AppFrame* g_theApp;
 
@@ -155,7 +156,7 @@ KVOID Kylin::KylinRoot::DestroyEntity( KUINT uEntID )
 }
 
 //////////////////////////////////////////////////////////////////////////
-Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
+Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
 {
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("CHAR_DB",sValue))
@@ -179,6 +180,12 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 
 	dbItem.QueryField("STR",dbField);
 	KINT nSTR = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("SPEED",dbField);
+	KFLOAT fSpeed = boost::any_cast<KFLOAT>(dbField.m_aValue);
+	
+	dbItem.QueryField("CAMP",dbField);
+	KINT nCamp = boost::any_cast<KFLOAT>(dbField.m_aValue);
 
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sModel))
@@ -205,10 +212,13 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, ClassID uCid )
 	kProp.SetValue("$GID",uGid);
 	kProp.SetValue("$Shadows",true);
 	kProp.SetValue("$HP",nHP);
+	kProp.SetValue("$InitHP",nHP);
 	kProp.SetValue("$STR", nSTR);
 	kProp.SetValue("$Collision",true);
 	kProp.SetValue("$Level", (KINT)1);
 	kProp.SetValue("$EXP",(KINT)0);
+	kProp.SetValue("$Speed",fSpeed);
+	kProp.SetValue("$Camp",nCamp);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 	//////////////////////////////////////////////////////////////////////////
@@ -281,4 +291,83 @@ KVOID Kylin::KylinRoot::DebugShowBoundingBox( KBOOL bFlag )
 			kEntPool[i]->ShowBoundingBox(bFlag);
 		}
 	}
+}
+
+KFLOAT Kylin::KylinRoot::GetGameTime()
+{
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		
+		return pStatus->GetGameTime();
+	}
+	
+	return .0f;
+}
+
+KUINT Kylin::KylinRoot::CheckRelation( Kylin::Character* pEnt1,Kylin::Character* pEnt2 )
+{
+	Assert(pEnt1);
+	Assert(pEnt2);
+	
+	KINT nCamp1 = 0,nCamp2 = 0;
+	pEnt1->GetPropertyRef().GetIntValue("$Camp",nCamp1);
+	pEnt2->GetPropertyRef().GetIntValue("$Camp",nCamp2);
+
+	if (nCamp1 == nCamp2)
+		return RELATION_FRIEND;
+	
+	return RELATION_ENEMY;
+}
+
+Kylin::Entity* Kylin::KylinRoot::SpawnItem( KUINT uGid,KUINT uCid )
+{
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("ITEM_DB",sValue))
+		return NULL;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的角色信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(uGid,dbItem))
+		return false;
+
+	DataItem::DataField dbField;
+	dbItem.QueryField("MESH",dbField);
+	KSTR sModel = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	dbItem.QueryField("TYPE",dbField);
+	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
+	KUINT uType = (KUINT)OgreRoot::GetSingletonPtr()->GetScriptVM()->GetGlobalNumber(sType.data());
+
+	dbItem.QueryField("BELONG",dbField);
+	KINT nBelong = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("ICON",dbField);
+	KSTR sIcon = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	dbItem.QueryField("EXPLAIN",dbField);
+	KSTR sExplain = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	// 注： 路径前不可有 "\"
+	if (!FileUtils::IsFileExist(sModel))
+		return false;
+
+	OgreUtils::DynamicLoadMesh(sModel);
+
+	//////////////////////////////////////////////////////////////////////////
+	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
+
+	PropertySet kProp;
+	kProp.SetValue("$CLASS_ID",(KUINT)uCid);
+	kProp.SetValue("$Mesh",sName);
+	kProp.SetValue("$GID",uGid);
+	kProp.SetValue("$TYPE",uType);
+	kProp.SetValue("$BELONG",(KUINT)nBelong);
+	kProp.SetValue("$ICON",sIcon);
+	kProp.SetValue("$EXPLAIN", sExplain);
+
+	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
+	//////////////////////////////////////////////////////////////////////////
 }
