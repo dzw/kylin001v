@@ -1,5 +1,13 @@
 #pragma once
 
+//tolua_begin
+enum ITEM_TYPE
+{
+	IT_AVATAR,
+	IT_ACTION,
+};
+//tolua_end
+
 namespace Kylin
 {
 	class ItemCell
@@ -22,6 +30,7 @@ namespace Kylin
 
 	protected:
 		friend class Kitbag;
+		friend class ItemEntity;
 
 		// 数量上限
 		KUINT		m_uLimit;
@@ -32,6 +41,9 @@ namespace Kylin
 		// 道具ID
 		KUINT		m_uGID;
 		
+		// 道具类型
+		ITEM_TYPE	m_eType;
+
 		// 存储方式
 		StorageType	m_eStorageType;
 
