@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\PlayerObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\Showgirl.cpp"
 				>
 			</File>
@@ -258,6 +262,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\PlayerController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PlayerObject.h"
 				>
 			</File>
 			<File
@@ -371,6 +379,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\uiTaskTipsMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiTaskTipsMenu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\uiTipMenu.cpp"
 				>
 			</File>
@@ -412,6 +428,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\ClActionFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NormalFactor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\NormalFactor.h"
 				>
 			</File>
 			<File
