@@ -20,7 +20,7 @@ namespace Kylin
 		
 
 		KVOID SetTitle(KCSTR sTitle);
-		KVOID SetWidgetWidthPct(KSTR sName, KFLOAT fW);
+		KVOID SetHPWidthPct(KFLOAT fW);
 		
 	protected:
 		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageHeadBack, "_Main");

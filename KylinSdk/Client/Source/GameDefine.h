@@ -2,16 +2,6 @@
 
 #define CLICK_DISTANCE	50			// 鼠标可点击的距离
 
-// 关系
-enum ENUM_RELATION
-{
-	RELATION_INVALID	= -1,
-	RELATION_ENEMY,				// 敌对
-	RELATION_FRIEND,			// 友好
-
-	RELATION_NUMBERS
-};
-
 
 enum WORLD_TIME
 {

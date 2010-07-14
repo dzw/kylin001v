@@ -39,9 +39,6 @@ KBOOL Kylin::MonsterInfoMenu::Initialize()
 	m_pImageAnimaFront->setItemGroup("States");
 
 	//-----------------------------------------------------
-	// test code
-
-	SetWidgetWidthPct("image_anima_front",0.6f);
 
 	SetVisible(false);
 
@@ -62,12 +59,9 @@ KVOID Kylin::MonsterInfoMenu::SetVisible( KBOOL bVisible )
 	m_pTextName->setVisible(bVisible);
 }
 
-KVOID Kylin::MonsterInfoMenu::SetWidgetWidthPct( KSTR sName, KFLOAT fW )
+KVOID Kylin::MonsterInfoMenu::SetHPWidthPct( KFLOAT fW )
 {
-	if (sName == "image_anima_front")
-	{
-		m_pImageAnimaFront->setSize(int(fW*m_pImageAnimaFront->getWidth()),m_pImageAnimaFront->getHeight());
-	}
+	m_pImageAnimaFront->setSize(int(fW*m_pImageAnimaFront->getWidth()),m_pImageAnimaFront->getHeight());
 }
 
 KVOID Kylin::MonsterInfoMenu::SetTitle( KCSTR sTitle )

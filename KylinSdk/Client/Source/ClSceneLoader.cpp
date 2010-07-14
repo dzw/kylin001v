@@ -1,6 +1,7 @@
 #include "cltpch.h"
 #include "ClSceneLoader.h"
 #include "RegisterClass.h"
+#include "ClRegisterClass.h"
 #include "Property.h"
 #include "rOgreRoot.h"
 #include "CameraControl.h"
@@ -38,7 +39,7 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	}
 	
 	// ´´½¨½ÇÉ«
-	Kylin::Entity * pMyself = KylinRoot::GetSingletonPtr()->SpawnCharactor(uGid,id_character);
+	Kylin::Entity * pMyself = KylinRoot::GetSingletonPtr()->SpawnCharactor(uGid,id_player);
 	if (pMyself)
 	{
 		Character* pChar = BtDynamicCast(Character,pMyself);

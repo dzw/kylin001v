@@ -8,6 +8,8 @@
 #include "Character.h"
 #include "uiCharInfoMenu.h"
 #include "uiShortcutMenu.h"
+#include "uiMonsterInfoMenu.h"
+#include "uiTaskTipsMenu.h"
 #include "ActionDispatcher.h"
 #include "Action.h"
 #include "Avatar.h"
@@ -15,6 +17,7 @@
 #include "ClSceneLoader.h"
 #include "Scene.h"
 #include "PlayerController.h"
+#include "RemoteEvents.h"
 
 
 namespace Script
@@ -44,9 +47,12 @@ namespace Script
 			Kylin::Action* pAct		= pChar->GetActionDispatcher()->SpawnAction(uActID);
 			
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));
-
-			Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
-			pMenu->SetSkillInfo(pAct->GetIcon(),chPos[0],uActID);
+			
+			if (!chPos)
+			{
+				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
+				pMenu->SetSkillInfo(pAct->GetIcon(),chPos[0],uActID);
+			}
 		}
 	}
 
@@ -58,6 +64,9 @@ namespace Script
 		{
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 			Kylin::Node* pNode		= pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
+
+			// 绑定刀光
+			pChar->GetAvatar()->BindWeaponTrail(strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
 
 			// 加载武器附加技能
 			KANY aRet;
@@ -72,6 +81,7 @@ namespace Script
 				//---------------------------------------------------------------
 				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
 				pMenu->SetSkillInfo(pAct->GetIcon(),'l',uActID);
+				//---------------------------------------------------------------
 			}
 		}
 	}
@@ -82,6 +92,59 @@ namespace Script
 		if (pLoader)
 		{
 			pLoader->GetController()->SetDefaultAction(uActID);
+		}
+	}
+
+	extern void set_ui_monster_hp( unsigned int uEntID )
+	{
+		Kylin::ClSceneLoader* pLoader = (Kylin::ClSceneLoader*)Kylin::KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+		if (pLoader)
+		{
+			KUINT uMonster = pLoader->GetController()->GetSelected();
+			if (uMonster == uEntID && uMonster != INVALID_ID)
+			{
+				Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+				if (pEnt)
+				{
+					KINT nHp = 0,nInitHP = 0;
+					pEnt->GetPropertyRef().GetIntValue("$HP",nHp);
+					pEnt->GetPropertyRef().GetIntValue("$InitHP",nInitHP);
+
+					Kylin::MonsterInfoMenu* pMenu = GET_GUI_PTR(Kylin::MonsterInfoMenu);
+					Assert(pMenu);
+					pMenu->SetHPWidthPct((float)nHp / (float)nInitHP);
+				}
+			}
+		}
+	}
+
+	extern void set_ui_player_hp( unsigned int uEntID )
+	{
+
+	}
+
+	extern void post_gameresult( bool bFlag )
+	{
+		if (bFlag)
+		{
+			// 游戏胜利，可以进入下一关
+			Kylin::TaskTipsMenu* pMenu = GET_GUI_PTR(Kylin::TaskTipsMenu);
+			pMenu->SetVisible(true);
+
+		}
+		else
+		{
+			// 游戏失败，十秒后自动退出游戏
+			EventPtr spEV(
+				KNEW Event(
+				&ev_do_quit, 
+				Event::ev_timing, 
+				10, 
+				0, 
+				NULL
+				));
+
+			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(0,spEV);
 		}
 	}
 }
