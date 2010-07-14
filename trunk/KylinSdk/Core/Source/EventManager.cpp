@@ -5,6 +5,7 @@
 #include "entity.h"
 #include "Event.h"
 #include "Utility.h"
+#include "KylinRoot.h"
 
 
 Event::Event(const EventTemplate* tp, Flag flag /* = ev_nextframe*/, KFLOAT fTime /* =0.0f*/, KINT nArgCount /* =0 */, ...)
@@ -226,7 +227,7 @@ namespace Kylin
 	KVOID EventManager::HandleEvents(KFLOAT fElapsed)
 	{
 		//PROFILE("EventManager::HandleEvents()");
-		//KFLOAT fTime = .0f;//g_pGame->GetGameTime();
+		KFLOAT fTime = KylinRoot::GetSingletonPtr()->GetGameTime();
 		{
 			//PROFILE("EventManager::DispatchEvent");
 			//dispatch new events
@@ -247,9 +248,8 @@ namespace Kylin
 					break;
 				case Event::ev_timing:
 				case Event::ev_recursive:
-					//ea->fExecuteTime = fTime + ea->spEvent->m_fTime;
-					ea->fExecuteTime = ea->spEvent->m_fTime;
-
+					ea->fExecuteTime = fTime + ea->spEvent->m_fTime;
+					
 					m_timingEventQue.push(ea);
 					break;
 				default:
@@ -293,15 +293,13 @@ namespace Kylin
 				nDebugTimingEvents++;
 				//get the first most recent events
 				EventAssignPtr ea = m_timingEventQue.top();
-				ea->fExecuteTime -= fElapsed;
-
+				
 				if(ea->bRemoved)
 				{
 					//do nothing but remove it
 					m_timingEventQue.pop();
 				}
-				//else if( ea->fExecuteTime <= fTime) //if the event supposed to happen
-				else if( ea->fExecuteTime <= .0f) //if the event supposed to happen
+				else if( ea->fExecuteTime <= fTime) //if the event supposed to happen
 				{
 					m_timingEventQue.pop();
 
@@ -310,8 +308,7 @@ namespace Kylin
 					if(spEvt->m_flag == Event::ev_recursive)
 					{
 						//reinsert into eventque
-						//ea->fExecuteTime = fTime + spEvt->m_fTime;
-						ea->fExecuteTime = spEvt->m_fTime;
+						ea->fExecuteTime = fTime + spEvt->m_fTime;
 						m_timingEventQue.push(ea);
 					}
 
@@ -320,7 +317,6 @@ namespace Kylin
 						// 					if(CmConfig::log_event_id == pEnt->GetID())
 						// 						syslog->debug("Event %s sent to %d\n", ea->spEvent->m_pTemplate->GetName(), pEnt->GetID());
 						TryToHandleEvent(pEnt, spEvt);
-
 					}
 					else
 					{
@@ -328,7 +324,9 @@ namespace Kylin
 					}
 				}
 				else //no more events need to be executed
+				{
 					break;
+				}
 			} 
 		}
 	}

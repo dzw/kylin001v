@@ -7,6 +7,10 @@
 #include "KylinRoot.h"
 #include "randomc.h"
 #include "rOgreUtils.h"
+#include "Action.h"
+#include "Factor.h"
+#include "ActionDispatcher.h"
+
 
 #define _MAX_STAY_T_ 5
 #define _MIN_STAY_T_ 1
@@ -48,12 +52,14 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 	{
 	case AS_IDLE:
 		
-		bRet = Tick_Idle(fElapsed);
+		bRet = Tick_Radar(fElapsed);
+		if (!bRet)
+			bRet = Tick_Idle(fElapsed);
 		break;
 
 	case AS_MOVE:
 		
-		bRet = false;//Tick_Radar(fElapsed);
+		bRet = Tick_Radar(fElapsed);
 		if (!bRet)
 			bRet = Tick_Move(fElapsed);
 		break;
@@ -133,10 +139,25 @@ RC_RESULT Kylin::BaseAI::Enter_Move( FLOAT fDestX, FLOAT fDestZ )
 	return RC_OK;
 }
 
-RC_RESULT Kylin::BaseAI::Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 kPos, KFLOAT fDir )
+RC_RESULT Kylin::BaseAI::Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 kPos, KPoint3 kDir )
 {
+	// 在释放技能之前先面向敌人
+	KPoint3 kSrc = m_pHostChar->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
+	kSrc.y = 0;														// Ignore pitch difference angle
+	kSrc.normalise(); 
 
+	Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);
+	m_pHostChar->GetSceneNode()->rotate(kQuat);
+	
+	Factor* pFactor = m_pHostChar->GetActionDispatcher()->Fire(uSkillId,uTarget);
+	
 	//---------------------------------------------------------------
+	KFLOAT fTimes = 0.3f;
+	if (pFactor->GetPropertyRef().GetFloatValue("$Times",fTimes))
+		m_fStayTime = fTimes * 2;
+	
+	m_uTargetFoe = uTarget;
+
 	m_eCurrState = AS_USE_SKILL;
 	return RC_OK;
 }
@@ -207,6 +228,35 @@ KBOOL Kylin::BaseAI::Tick_Move( KFLOAT fElapsed )
 
 KBOOL Kylin::BaseAI::Tick_UseSkill( KFLOAT fElapsed )
 {
+	if (m_fStayTime > .0f)
+	{
+		m_fStayTime -= fElapsed;
+		if (m_fStayTime <= .0f)
+		{
+			Action* pAction = m_pHostChar->GetActionDispatcher()->GetFirstActionPtr();
+			if (pAction)
+			{	// 若该NPC存在技能
+				KFLOAT fRange = m_pHostChar->GetEntityPtr()->getBoundingRadius() + pAction->GetRange();
+
+				Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetFoe);
+				if ( pEnt && pEnt->GetTranslate().squaredDistance(m_pHostChar->GetTranslate()) < fRange * fRange )
+				{
+					KPoint3 kDir = pEnt->GetTranslate() - m_pHostChar->GetTranslate();
+					kDir.y = 0;
+
+					Enter_UseSkill(pAction->GetGID(),m_uTargetFoe,pEnt->GetTranslate(),kDir);
+					return true;
+				}
+				
+				// 当敌人死亡或超出攻击距离
+				m_uTargetFoe = INVALID_ID;
+			}
+			
+			m_fStayTime = m_pRandomGenerator->Random();
+			Enter_Move(m_kDestination.x,m_kDestination.z);
+		}
+	}
+
 	return true;
 }
 
@@ -267,37 +317,62 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 	{
 		//-----------------------------------------------------------
 		// radar
-		KPoint3	kPos = m_pHostChar->GetTranslate();
-		kPos.y += m_pHostChar->GetEntityPtr()->getBoundingRadius();
-		KPoint3	kDes = m_kDestination;
-		kDes.y = kPos.y;
+// 		KPoint3	kPos = m_pHostChar->GetTranslate();
+// 		kPos.y += m_pHostChar->GetEntityPtr()->getBoundingRadius();
+//		KPoint3	kDes = m_kDestination;
+//		kDes.y = kPos.y;
 
-		Ogre::Ray kRay(kPos,kDes);
-		Ogre::Entity* pEnt = NULL;
+//		Ogre::Ray kRay(kPos,kDes);
+//		Ogre::Entity* pEnt = NULL;
 		
-		m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_SCENE_OBJ,g_adjust_angle); //  | KylinRoot::KR_NPC_MASK
-		if (m_bToBlock)
+// 		m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_SCENE_OBJ,VISIBLE_DISTANCE); //  | KylinRoot::KR_NPC_MASK
+// 		if (m_bToBlock)
+// 		{
+// 			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(m_fSpeed, 0, 0));
+// 			// random move dir ( left or right )
+// 			// radar
+// 		}
+// 		else
 		{
-			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(m_fSpeed, 0, 0));
-			// random move dir ( left or right )
-			// radar
-		}
-		else
-		{
-			m_bToBlock = OgreUtils::PickEntityBoundBox(kRay,&pEnt,kPos,KylinRoot::KR_NPC_MASK,g_adjust_angle);
+			Action* pAction = m_pHostChar->GetActionDispatcher()->GetFirstActionPtr();
+			if (pAction)
+			{	// 若该NPC存在技能
+				KFLOAT fRange = m_pHostChar->GetEntityPtr()->getBoundingRadius() + pAction->GetRange();
 
-			if (!pEnt->getUserAny().isEmpty())
-			{
-				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
-				// is enemy judge
-				Enter_Pursue(uID);
+				KVEC<Ogre::Entity*> kEntities;
+				Kylin::OgreUtils::SphereQuery(m_pHostChar->GetTranslate(),fRange,kEntities,Kylin::KylinRoot::KR_NPC_MASK);
+
+				for (KUINT i = 0; i < kEntities.size(); i++)
+				{
+					if (!kEntities[i]->getUserAny().isEmpty())
+					{
+						KUINT uID = Ogre::any_cast<KUINT>(kEntities[i]->getUserAny());
+
+						Character* pTar = BtDynamicCast(Character,KylinRoot::GetSingletonPtr()->GetEntity(uID));
+
+						if ( pTar && 
+							KylinRoot::GetSingletonPtr()->CheckRelation(pTar,m_pHostChar) == KylinRoot::RELATION_ENEMY )
+						{
+
+							//SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(pAction->GetGID(),uID));
+
+							//---------------------------------------
+							KPoint3 kDir = pTar->GetTranslate() - m_pHostChar->GetTranslate();		// B-A = A->B (see vector questions above)
+							kDir.y = 0;
+
+							Enter_UseSkill(pAction->GetGID(),uID,pTar->GetTranslate(),kDir);
+
+							return true;
+						}
+					}
+				}
 			}
 		}
 
 		m_fScanTime = .0f;
 	}
 		
-	return m_bToBlock;
+	return false;
 }
 
 RC_RESULT Kylin::BaseAI::Enter_Pursue( KUINT uTargetObj )

@@ -51,7 +51,7 @@ namespace Kylin
 		virtual RC_RESULT	Enter_Idle( KVOID );
 		virtual RC_RESULT	Enter_Jump( KVOID );
 		virtual RC_RESULT	Enter_Move( FLOAT fDestX, FLOAT fDestZ );
-		virtual RC_RESULT	Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 kPos, KFLOAT fDir );
+		virtual RC_RESULT	Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 kPos, KPoint3 kDir );
 		virtual RC_RESULT	Enter_Dead( KVOID );
 		virtual RC_RESULT	Enter_Follow( KUINT uTargetObj );
 		virtual RC_RESULT	Enter_Patrol();

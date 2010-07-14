@@ -23,12 +23,23 @@ namespace Kylin
 		virtual Node* AttachWeapon(KUINT uGID, AvatarPart ePart = AP_RWEAPON);
 		virtual KVOID DetachWeapon(AvatarPart ePart);
 
+		Node*	GetRWeaponNode();
+
 		virtual KVOID Exchange(KUINT uGID);
 		virtual KVOID Exchange(Ogre::Entity* pHost, AvatarPart eType, KSTR sMat);
 	
+		// 
+		KVOID		BindWeaponTrail(AvatarPart ePart = AP_RWEAPON);
+		KVOID		SetWeaponTrailVisible(KBOOL bFlag);
+	
+		virtual KVOID Update(KFLOAT fElapsed);
+
 	protected:
 		Node*	m_pLWeapon;
 		Node*	m_pRWeapon;
+
+		WeaponTrail*	m_pLWeaponTrail;
+		WeaponTrail*	m_pRWeaponTrail;
 
 		KUINT	m_uLWeapon;
 		KUINT	m_uRWeapon;

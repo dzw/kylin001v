@@ -12,6 +12,7 @@ enum ClassID
 	id_npc,
 
 	id_factor,
+	id_item,
 
 	id_last,
 };
