@@ -2,9 +2,6 @@
 #include "NpcObject.h"
 #include "RegisterClass.h"
 #include "AI.h"
-#include "RemoteEvents.h"
-#include "KylinRoot.h"
-#include "DamageSystem.h"
 
 
 namespace Kylin
@@ -13,7 +10,6 @@ namespace Kylin
 
 	Implement_Event_Handler(NpcObject, Character)
 	{
-		{&ev_post_damage,			&EV_Damage},
 		{NULL, NULL}
 	};
 
@@ -53,11 +49,11 @@ namespace Kylin
 		SAFE_CALL(m_pAIHandler,Init());
 	}
 
-	KVOID NpcObject::Destroy()
+	KVOID NpcObject::PostDestroy()
 	{
 		SAFE_DEL(m_pAIHandler);
 		//-----------------------------------------------------------
-		Character::Destroy();
+		Character::PostDestroy();
 	}
 
 	KVOID NpcObject::SetAIHandler( BaseAI* pAI )
@@ -82,43 +78,5 @@ namespace Kylin
 	KUINT NpcObject::GetMasterWorldID()
 	{
 		return m_uMasterID;
-	}
-
-	KVOID NpcObject::EV_Damage( EventPtr spEV )
-	{
-		KUINT uKiller	= boost::get<unsigned int>(spEV->args[0]);
-		KINT nMinDamage = boost::get<int>(spEV->args[1]);
-		KINT nMaxDamage = boost::get<int>(spEV->args[2]);
-		KINT nLevel		= 1;
-
-		Kylin::Entity* pKiller = KylinRoot::GetSingletonPtr()->GetEntity(uKiller);
-		if (pKiller)
-			pKiller->GetPropertyRef().GetIntValue("$Level",nLevel);
-
-		DamageUnit kUnit(nLevel,nMinDamage,nMaxDamage,1);
-		
-		DamageResult kResult = DamageSystem::Calculate(kUnit,this->GetID());
-		if (kResult.mDIFF > 0)
-		{
-			// 执行对应的脚步函数
-			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_damage");
-		}
-		else
-		{
-			// 执行对应的脚步函数
-			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_killed");
-
-			// 发送销毁消息
-			EventPtr spEV(
-				KNEW Event(
-				&ev_post_destroy, 
-				Event::ev_timing, 
-				3, 
-				0, 
-				NULL
-				));
-
-			KylinRoot::GetSingletonPtr()->PostMessage(this->GetID(),spEV);
-		}
 	}
 }

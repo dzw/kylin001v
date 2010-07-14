@@ -17,7 +17,7 @@ namespace Kylin
 		virtual ~Level(KVOID);
 			
 		virtual	KBOOL	Init(const PropertySet& kProp);
-		virtual KVOID	Destroy();
+		virtual KVOID	PostDestroy();
 		
 		virtual KVOID	OnTimer();
 		virtual KVOID	SetTimer(KFLOAT fTimeStep);
@@ -30,7 +30,8 @@ namespace Kylin
 
 	protected:
 		KVOID			EV_OnTimer(EventPtr spEV);
-		
+		KVOID			EV_DoQuit(EventPtr spEV);
+
 	protected:
 		KBOOL	m_bTimerEnable;
 		KFLOAT	m_fTimeStep;
