@@ -19,6 +19,7 @@
 #include "Action.h"
 #include "NpcObject.h"
 #include "gamedefine.h"
+#include "WeaponTrail.h"
 
 
 Kylin::PlayerController::PlayerController()
@@ -46,6 +47,8 @@ Kylin::PlayerController::PlayerController()
 	//-----------------------------------------------------
 	// 创建射线交集
 	OgreRoot::GetSingletonPtr()->CreateSceneQuery();
+
+	//-----------------------------------------------------
 }
 
 
@@ -75,7 +78,7 @@ KVOID Kylin::PlayerController::Tick( KFLOAT fElapsed )
 {
 	UpdateBody(fElapsed);
 
-	m_pCamera->Update(fElapsed);
+	SAFE_CALL(m_pCamera,Update(fElapsed));
 
 	UpdateEffect(fElapsed);
 }
@@ -498,3 +501,4 @@ KVOID Kylin::PlayerController::CancelCurrentAction()
 
 	}
 }
+

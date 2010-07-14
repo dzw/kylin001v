@@ -53,6 +53,7 @@ namespace Kylin
 
 		// …Ë÷√Ωπµ„
 		KVOID			FocusTarget(KUINT uTargetID);
+		KUINT			GetSelected() { return m_uTargetID; }
 
 	public:
 		virtual KVOID	Tick(KFLOAT fElapsed);

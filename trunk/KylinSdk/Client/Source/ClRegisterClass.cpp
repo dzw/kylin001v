@@ -5,6 +5,7 @@
 #include "SummonFactor.h"
 #include "ChainFactor.h"
 #include "normalfactor.h"
+#include "PlayerObject.h"
 
 
 using namespace Kylin;
@@ -15,4 +16,6 @@ KVOID ClRegisterClasses()
 	RegEntity(SummonFactor);
 	RegEntity(ChainFactor);
 	RegEntity(NormalFactor);
+
+	RegEntity(PlayerObject);
 }

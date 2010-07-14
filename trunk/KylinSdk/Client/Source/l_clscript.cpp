@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 07/07/10 07:49:12.
+** Generated automatically by tolua++-1.0.92 on 07/14/10 09:42:16.
 */
 
 #ifndef __cplusplus
@@ -146,6 +146,90 @@ static int tolua_clscript_set_default_action00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: set_ui_monster_hp */
+#ifndef TOLUA_DISABLE_tolua_clscript_set_ui_monster_hp00
+static int tolua_clscript_set_ui_monster_hp00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   set_ui_monster_hp(uEntID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'set_ui_monster_hp'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* function: set_ui_player_hp */
+#ifndef TOLUA_DISABLE_tolua_clscript_set_ui_player_hp00
+static int tolua_clscript_set_ui_player_hp00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   set_ui_player_hp(uEntID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'set_ui_player_hp'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
+/* function: post_gameresult */
+#ifndef TOLUA_DISABLE_tolua_clscript_post_gameresult00
+static int tolua_clscript_post_gameresult00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isboolean(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  bool bFlag = ((bool)  tolua_toboolean(tolua_S,1,0));
+  {
+   post_gameresult(bFlag);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'post_gameresult'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
 {
@@ -157,10 +241,15 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
   tolua_function(tolua_S,"to_learn_skill",tolua_clscript_to_learn_skill00);
   tolua_function(tolua_S,"to_bind_weapon",tolua_clscript_to_bind_weapon00);
   tolua_function(tolua_S,"set_default_action",tolua_clscript_set_default_action00);
+  tolua_function(tolua_S,"set_ui_monster_hp",tolua_clscript_set_ui_monster_hp00);
+  tolua_function(tolua_S,"set_ui_player_hp",tolua_clscript_set_ui_player_hp00);
+  tolua_function(tolua_S,"post_gameresult",tolua_clscript_post_gameresult00);
   tolua_constant(tolua_S,"id_cl_entity",id_cl_entity);
   tolua_constant(tolua_S,"id_bullet_factor",id_bullet_factor);
   tolua_constant(tolua_S,"id_summon_factor",id_summon_factor);
   tolua_constant(tolua_S,"id_chain_factor",id_chain_factor);
+  tolua_constant(tolua_S,"id_normal_factor",id_normal_factor);
+  tolua_constant(tolua_S,"id_player",id_player);
  tolua_endmodule(tolua_S);
  return 1;
 }
