@@ -14,6 +14,7 @@ namespace Kylin
 		virtual KVOID Destroy();
 		virtual KVOID Render(KFLOAT fElapsed);
 		virtual KVOID Activate(KBOOL bFlag);
+		virtual KBOOL IsVisible();
 
 	protected:
 		void notifyMaterialSetup(Ogre::uint32 pass_id, Ogre::MaterialPtr &mat)
