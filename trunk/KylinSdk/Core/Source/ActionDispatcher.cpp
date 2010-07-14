@@ -138,3 +138,11 @@ Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID,KUINT uTarget )
 	
 	return NULL;
 }
+
+Kylin::Action* Kylin::ActionDispatcher::GetFirstActionPtr()
+{
+	if (m_kActionList.size() > 0)
+		return *(m_kActionList.begin());
+
+	return NULL;
+}

@@ -24,6 +24,7 @@ namespace Kylin
 		KUINT GetHostWorldID() { return m_uHostID; }
 
 		Action* GetActionPtr(KUINT uGID);
+		Action* GetFirstActionPtr();
 
 	protected:
 		typedef KLIST<Action*> ActionList;
