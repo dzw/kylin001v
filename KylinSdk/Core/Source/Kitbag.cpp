@@ -1,12 +1,25 @@
 #include "corepch.h"
 #include "Kitbag.h"
+#include "ItemCell.h"
+#include "RegisterClass.h"
+#include "KylinRoot.h"
 
 
-
-Kylin::Kitbag::Kitbag()
+Kylin::Kitbag::Kitbag(Character* pHost)
 : m_uUpperLimit(1)
+, m_pHostChar(pHost)
 {
 
+}
+
+
+Kylin::Kitbag::~Kitbag()
+{
+	for (KUINT i = 0; i < m_kItemArray.size(); i++)
+	{
+		SAFE_DEL(m_kItemArray[i]);
+	}
+	m_kItemArray.clear();
 }
 
 KBOOL Kylin::Kitbag::AddItem( ItemCell* pItem )
@@ -24,7 +37,7 @@ KBOOL Kylin::Kitbag::AddItem( ItemCell* pItem )
 		KINT n = HasItem(pItem->GetGID());
 		if (n != -1)
 		{
-			m_kItemArray[n].m_nCount++;
+			m_kItemArray[n]->m_nCount++;
 		}
 		else
 		{
@@ -64,9 +77,20 @@ KVOID Kylin::Kitbag::UseItem( KINT nIndex )
 {
 	if (nIndex < m_kItemArray.size() && nIndex >= 0)
 	{
-		m_kItemArray[i]->UseTheItem();
+		m_kItemArray[nIndex]->UseTheItem();
 	}
 }
+
+KVOID Kylin::Kitbag::FlopItem( KINT nIndex )
+{
+	if (nIndex < m_kItemArray.size() && nIndex >= 0)
+	{
+		ItemCell* pItem = m_kItemArray[nIndex];
+		
+		KylinRoot::GetSingletonPtr()->SpawnItem(pItem->GetGID(),id_item);
+	}
+}
+
 //////////////////////////////////////////////////////////////////////////
 KVOID Kylin::Kitbag::KitbagListener::OnUsed( KINT nIndex )
 {

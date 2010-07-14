@@ -1,13 +1,13 @@
 #pragma once
 
-
 namespace Kylin
 {
 	class Kitbag
 	{
 	public:
-		Kitbag();
-		
+		Kitbag(Character* pHost);
+		~Kitbag();
+
 		class KitbagListener
 		{
 		public:
@@ -27,6 +27,9 @@ namespace Kylin
 		
 		// 使用道具
 		KVOID	UseItem(KINT nIndex);
+		
+		// 掉落道具
+		KVOID	FlopItem(KINT nIndex);
 
 		// 删除并销毁该道具
 		KVOID	RemoveAndDestroyItem(KINT nIndex);
@@ -39,10 +42,11 @@ namespace Kylin
 		
 		// 获得背包上限
 		KINT	GetSize() { return m_uUpperLimit; }
-		KVOID	SetSize(KINT uSize) { m_uUpperLimit = uSize}
+		KVOID	SetSize(KINT uSize) { m_uUpperLimit = uSize; }
 
 	protected:
-		
+		Character*		m_pHostChar;
+
 		// 背包大小上限
 		KUINT			m_uUpperLimit;
 		
