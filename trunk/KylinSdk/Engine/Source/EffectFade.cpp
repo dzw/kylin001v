@@ -114,3 +114,8 @@ KVOID Kylin::EffectFade::Destroy()
 
 	EffectCompositor::Destroy();
 }
+
+KBOOL Kylin::EffectFade::IsVisible()
+{
+	return m_pCompositor->getEnabled();
+}

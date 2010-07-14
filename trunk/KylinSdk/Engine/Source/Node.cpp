@@ -105,8 +105,7 @@ KPoint3 Kylin::Node::GetTranslate()
 
 KVOID Kylin::Node::SetVisible( KBOOL bFlag )
 {
-	if (m_pOgreEntity)
-		m_pOgreEntity->setVisible(bFlag);
+	SAFE_CALL(m_pOgreEntity,setVisible(bFlag));
 }
 
 KBOOL Kylin::Node::GetVisible()
@@ -116,7 +115,7 @@ KBOOL Kylin::Node::GetVisible()
 
 KVOID Kylin::Node::SetScale( KFLOAT fScale )
 {
-	m_pOgreNode->setScale(KPoint3(fScale,fScale,fScale));
+	SAFE_CALL(m_pOgreNode,setScale(KPoint3(fScale,fScale,fScale)));
 }
 
 KFLOAT Kylin::Node::GetScale()

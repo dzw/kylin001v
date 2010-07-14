@@ -68,6 +68,7 @@ namespace MyGUI
 struct lua_State;
 
 class EntityMaterialInstance;
+class WeaponTrail;
 //---------------------------------------------------------
 
 //using namespace Ogre;
