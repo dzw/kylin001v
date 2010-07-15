@@ -3,6 +3,7 @@
 #include "ItemCell.h"
 #include "RegisterClass.h"
 #include "KylinRoot.h"
+#include "Character.h"
 
 
 Kylin::Kitbag::Kitbag(Character* pHost)
@@ -81,13 +82,27 @@ KVOID Kylin::Kitbag::UseItem( KINT nIndex )
 	}
 }
 
-KVOID Kylin::Kitbag::FlopItem( KINT nIndex )
+KVOID Kylin::Kitbag::ThrowItemByIndex( KINT nIndex )
 {
 	if (nIndex < m_kItemArray.size() && nIndex >= 0)
 	{
 		ItemCell* pItem = m_kItemArray[nIndex];
 		
-		KylinRoot::GetSingletonPtr()->SpawnItem(pItem->GetGID(),id_item);
+		Entity* pEnt = KylinRoot::GetSingletonPtr()->SpawnItem(pItem->GetGID(),id_item);
+		if (pEnt)
+		{
+			pEnt->SetTranslate(m_pHostChar->GetTranslate());
+		}
+	}
+}
+
+KVOID Kylin::Kitbag::ThrowItemByGID( KUINT uGid )
+{
+	KINT nIndex = HasItem(uGid);
+	AssertEx(nIndex >= 0,"无此道具");
+	if (nIndex >= 0)
+	{
+		ThrowItemByIndex(nIndex);
 	}
 }
 

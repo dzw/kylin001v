@@ -185,7 +185,7 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
 	KFLOAT fSpeed = boost::any_cast<KFLOAT>(dbField.m_aValue);
 	
 	dbItem.QueryField("CAMP",dbField);
-	KINT nCamp = boost::any_cast<KFLOAT>(dbField.m_aValue);
+	KINT nCamp = boost::any_cast<KINT>(dbField.m_aValue);
 
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sModel))
@@ -317,6 +317,9 @@ KUINT Kylin::KylinRoot::CheckRelation( Kylin::Character* pEnt1,Kylin::Character*
 	if (nCamp1 == nCamp2)
 		return RELATION_FRIEND;
 	
+	if (pEnt1->IsDead() || pEnt2->IsDead())
+		return RELATION_FRIEND;
+
 	return RELATION_ENEMY;
 }
 

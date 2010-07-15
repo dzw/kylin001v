@@ -241,11 +241,17 @@ KBOOL Kylin::BaseAI::Tick_UseSkill( KFLOAT fElapsed )
 				Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetFoe);
 				if ( pEnt && pEnt->GetTranslate().squaredDistance(m_pHostChar->GetTranslate()) < fRange * fRange )
 				{
-					KPoint3 kDir = pEnt->GetTranslate() - m_pHostChar->GetTranslate();
-					kDir.y = 0;
+					Character* pTar = BtDynamicCast(Character,pEnt);
 
-					Enter_UseSkill(pAction->GetGID(),m_uTargetFoe,pEnt->GetTranslate(),kDir);
-					return true;
+					if ( pTar && 
+						KylinRoot::GetSingletonPtr()->CheckRelation(pTar,m_pHostChar) == KylinRoot::RELATION_ENEMY )
+					{
+						KPoint3 kDir = pEnt->GetTranslate() - m_pHostChar->GetTranslate();
+						kDir.y = 0;
+
+						Enter_UseSkill(pAction->GetGID(),m_uTargetFoe,pEnt->GetTranslate(),kDir);
+						return true;
+					}
 				}
 				
 				// 当敌人死亡或超出攻击距离

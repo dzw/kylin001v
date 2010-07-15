@@ -173,4 +173,24 @@ namespace Script
 			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(uEntID,spEV);
 		}
 	}
+
+	extern void throw_item( unsigned int uEntID, unsigned int uItem, float fTimeDelay )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (pEnt)
+		{
+			// 发送销毁消息
+			EventPtr spEV(
+				KNEW Event(
+				&ev_post_throw_item, 
+				Event::ev_timing, 
+				fTimeDelay, 
+				1, 
+				EventArg(uItem)
+				));
+
+			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(uEntID,spEV);
+		}
+	}
 }

@@ -44,6 +44,9 @@ namespace Script
 	
 	// 销毁entity
 	extern void destroy_entity(unsigned int uEntID , float fTimeDelay);
+	
+	// 抛出道具
+	extern void throw_item(unsigned int uEntID, unsigned int uItem, float fTimeDelay);
 
 //tolua_end
 };

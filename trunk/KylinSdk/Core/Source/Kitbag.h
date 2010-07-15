@@ -29,7 +29,9 @@ namespace Kylin
 		KVOID	UseItem(KINT nIndex);
 		
 		// 掉落道具
-		KVOID	FlopItem(KINT nIndex);
+		KVOID	ThrowItemByIndex(KINT nIndex);
+
+		KVOID	ThrowItemByGID(KUINT uGid);
 
 		// 删除并销毁该道具
 		KVOID	RemoveAndDestroyItem(KINT nIndex);
