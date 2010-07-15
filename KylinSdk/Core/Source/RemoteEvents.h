@@ -20,6 +20,8 @@ extern EventTemplate ev_post_picked;
 extern EventTemplate ev_post_pick_terrain;
 extern EventTemplate ev_post_touchdown;			// 触地消息
 
+extern EventTemplate ev_post_throw_item;		// 掉落道具
+
 // 执行
 extern EventTemplate ev_do_spawn;				
 extern EventTemplate ev_on_timer;

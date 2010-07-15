@@ -21,6 +21,7 @@ namespace Kylin
 
 	Implement_Event_Handler(Character, Entity)
 	{
+		{&ev_post_throw_item,		&EV_ThrowItem},
 		{&ev_post_damage,			&EV_Damage},
 		{NULL, NULL}
 	};
@@ -30,6 +31,7 @@ Kylin::Character::Character()
 : m_pActDispatcher(NULL)
 , m_pAvatar(NULL)
 , m_pKitbag(NULL)
+, m_eLifeStatus(LS_NONE)
 {
 
 }
@@ -57,7 +59,8 @@ KVOID Kylin::Character::PostSpawn()
 
 	//////////////////////////////////////////////////////////////////////////
 	KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"do_spawn");
-
+	
+	m_eLifeStatus = LS_ALIVE;
 }
 
 KVOID Kylin::Character::SetActionFactory( ActionFactory* pActFactory )
@@ -117,7 +120,16 @@ KVOID Kylin::Character::EV_Damage( EventPtr spEV )
 	{
 		// 执行对应的脚步函数
 		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_killed");
+
+		m_eLifeStatus = LS_DEAD;
 	}
+}
+
+KVOID Kylin::Character::EV_ThrowItem( EventPtr spEV )
+{
+	KUINT uItem	= boost::get<unsigned int>(spEV->args[0]);
+
+	this->GetKitbag()->ThrowItemByGID(uItem);
 }
 
 KVOID Kylin::Character::OnEntityCllsn( Entity* pCollidee,const KPoint3& rNormal )
@@ -137,3 +149,4 @@ Kylin::Kitbag* Kylin::Character::GetKitbag()
 {
 	return m_pKitbag;
 }
+
