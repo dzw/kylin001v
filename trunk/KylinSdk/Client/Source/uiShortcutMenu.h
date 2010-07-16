@@ -43,7 +43,8 @@ namespace Kylin
 		MyGUI::StaticImage* m_pImageSkill_2;
 
 	protected:
-		KPoint4				m_kImageHealthCoord;
+		MyGUI::IntCoord		m_kImageHealthCoord;
+		MyGUI::IntCoord		m_kHealthWidgetCoord; 
 
 		KMAP<KCHAR, KUINT>	m_kActionShortcutMap;
 	};
