@@ -69,13 +69,21 @@ KVOID Kylin::ShortcutMenu::SetVisible( KBOOL bVisible )
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetHPWidthPct(KFLOAT fH )
 {	
+	if ( fH >= 1.0f)
+	{
+		MyGUI::ResourceImageSetPtr resource_health = nullptr;
+		resource_health = MyGUI::ResourceManager::getInstance().getByName("pic_health")->castType<MyGUI::ResourceImageSet>();
+		m_pImageHealth->setItemResourcePtr(resource_health);
+		m_pImageHealth->setItemGroup("States");
+	}
+
 	KINT h = m_kImageHealthCoord.w * fH;
 	KINT t = m_kImageHealthCoord.y + (1-fH) * m_kImageHealthCoord.w;
 	m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.x,t,m_kImageHealthCoord.z,h));
 
 	MyGUI::IntCoord crd = m_pImageHealth->getCoord();
 	
-	crd.top += (1-fH) * m_kImageHealthCoord.w + 0.5f;
+	crd.top = t;//(1-fH) * m_kImageHealthCoord.w + 0.5f;
 	crd.height = h;
 
 	m_pImageHealth->setCoord(crd);
