@@ -60,7 +60,9 @@ KVOID Kylin::CursorEx::SetPointer( CursorType eType )
 		MyGUI::PointerManager::getInstance().setPointer("ptr_Attack");
 
 		break;
-	case CT_AUTORUN:
+	case CT_PICKUP:
+		
+		MyGUI::PointerManager::getInstance().setPointer("ptr_Pickup");
 
 		break;
 	case CT_UNREACHABLE:
