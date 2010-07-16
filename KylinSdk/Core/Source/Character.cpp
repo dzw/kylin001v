@@ -104,10 +104,14 @@ KVOID Kylin::Character::EV_Damage( EventPtr spEV )
 	KINT nMinDamage = boost::get<int>(spEV->args[1]);
 	KINT nMaxDamage = boost::get<int>(spEV->args[2]);
 	KINT nLevel		= 1;
+	KINT nSumExp	= 0;
 
 	Kylin::Entity* pKiller = KylinRoot::GetSingletonPtr()->GetEntity(uKiller);
 	if (pKiller)
+	{
 		pKiller->GetPropertyRef().GetIntValue("$Level",nLevel);
+		pKiller->GetPropertyRef().GetIntValue("$SumExp",nSumExp);
+	}
 
 	DamageUnit kUnit(nLevel,nMinDamage,nMaxDamage,1);
 
@@ -118,6 +122,23 @@ KVOID Kylin::Character::EV_Damage( EventPtr spEV )
 	
 	if (kResult.mDIFF <= 0)
 	{
+		KINT nExp = 1;
+		m_kProperty.GetIntValue("$Exp",nExp);
+		nSumExp += nExp;
+		if (pKiller)
+		{
+			pKiller->GetPropertyRef().SetValue("$SumExp",nSumExp);
+
+			KINT nTmp = log10((KFLOAT)nSumExp) / log10(2.0f);
+			if (nTmp > nLevel)
+			{
+				pKiller->GetPropertyRef().SetValue("$Level",nTmp);
+				
+				// 升级
+				KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pKiller,"on_upgrade");
+			}
+		}
+		
 		// 执行对应的脚步函数
 		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_killed");
 

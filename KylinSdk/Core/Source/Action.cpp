@@ -11,6 +11,7 @@
 #include "ScriptVM.h"
 #include "FileUtils.h"
 #include "rOgreUtils.h"
+#include "AnimationProxy.h"
 
 
 Kylin::Action::Action( ActionDispatcher* pDispatcher )
@@ -237,6 +238,20 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 //-------------------------------------------------------------------
 Kylin::Factor* Kylin::Action::SpawnFactor( PropertySet& kFactorProp )
 {
+	//---------------------------------------------------------------
+	// 播放角色动画
+	KSTR sAnim;
+	if (m_kProperty.GetStrValue("$Animation",sAnim))
+	{
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
+		if (pEnt)
+		{
+			pEnt->GetAnimationProxy()->Play(sAnim);
+
+			m_kProperty.SetValue("$AnimLength",pEnt->GetAnimationProxy()->GetLength(sAnim));
+		}
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	// 生成因子实体
 	Factor* pFactor = BtStaticCast(Factor,KylinRoot::GetSingletonPtr()->SpawnEntity(kFactorProp));

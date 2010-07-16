@@ -36,6 +36,8 @@ namespace Kylin
 		// 删除并销毁该道具
 		KVOID	RemoveAndDestroyItem(KINT nIndex);
 		
+		KVOID	RemoveItem(ItemCell* pCell);
+
 		// 是否存在该编号的道具
 		KINT	HasItem(KUINT uID);
 
@@ -45,6 +47,9 @@ namespace Kylin
 		// 获得背包上限
 		KINT	GetSize() { return m_uUpperLimit; }
 		KVOID	SetSize(KINT uSize) { m_uUpperLimit = uSize; }
+		
+		// 
+		Character*	GetHostChar();
 
 	protected:
 		Character*		m_pHostChar;

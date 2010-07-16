@@ -152,9 +152,9 @@ RC_RESULT Kylin::BaseAI::Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 
 	Factor* pFactor = m_pHostChar->GetActionDispatcher()->Fire(uSkillId,uTarget);
 	
 	//---------------------------------------------------------------
-	KFLOAT fTimes = 0.3f;
-	if (pFactor->GetPropertyRef().GetFloatValue("$Times",fTimes))
-		m_fStayTime = fTimes * 2;
+	KFLOAT fTimes = 0.6f;
+	if (pFactor->GetPropertyRef().GetFloatValue("$AnimLength",fTimes))
+		m_fStayTime = fTimes * 1.2f;
 	
 	m_uTargetFoe = uTarget;
 
