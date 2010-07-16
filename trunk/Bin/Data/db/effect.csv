@@ -1,8 +1,8 @@
 ID,TYPE,TEMPLATE,TIMES,SCALE,EXPLAIN
 INT,INT,STRING,FLOAT,FLOAT,STRING
-0,0,flameSystem,,1,
 1,0,cw_danhuo_02,1,0.1,爆炸
 2,0,huoba01,-1,0.01,小火把
 3,0,huoba02,-1,0.03,火把
 4,0,baofu,0.1,0.05,开枪特效
 5,0,baofu,1,0.05,宠物出生特效
+6,0,baofu,4.5,0.03,道具掉落特效
