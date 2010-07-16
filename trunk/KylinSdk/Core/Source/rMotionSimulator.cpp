@@ -124,7 +124,9 @@ KVOID Kylin::PhyX::MotionSimulator::Erase( Node* pNode )
 
 KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFLOAT fElapsed )
 {
-	if (pDummy->m_kSpeed == KPoint3::ZERO && !pDummy->m_bIsInAir)
+	if ( pDummy->m_kPreSpeed != KPoint3::ZERO && 
+		 pDummy->m_kSpeed == KPoint3::ZERO && 
+		 !pDummy->m_bIsInAir )
 	{
 		pDummy->m_kPreSpeed = KPoint3::ZERO;
 		pDummy->Repose();
