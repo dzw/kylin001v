@@ -73,6 +73,9 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	Kylin::Entity * pNpc = KylinRoot::GetSingletonPtr()->SpawnCharactor(2,id_npc);
 	if (pNpc)
 	{
+		Character* pChar = BtDynamicCast(Character,pNpc);
+		SAFE_CALL(pChar,SetActionFactory(KNEW ClActionFactory(pChar->GetActionDispatcher())));
+
 		pNpc->SetTranslate(KPoint3(pMyself->GetTranslate().x -1 , 0 , pMyself->GetTranslate().z -1));
 	}
 	//-------------------------------------------------

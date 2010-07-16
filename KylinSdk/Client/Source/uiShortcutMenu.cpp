@@ -46,7 +46,6 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 	
 	//-----------------------------------------------------
 	// test code
-	SetWidgetHeightPct("image_health",0.8f);
 	
 	SetWidgetWidthPct("image_experience",0.6f);
 	
@@ -68,21 +67,18 @@ KVOID Kylin::ShortcutMenu::SetVisible( KBOOL bVisible )
 	
 }
 //-----------------------------------------------------------------------------
-KVOID Kylin::ShortcutMenu::SetWidgetHeightPct( KSTR sName, KFLOAT fH )
+KVOID Kylin::ShortcutMenu::SetHPWidthPct(KFLOAT fH )
 {	
-	if (sName == "image_health")
-	{
-		KINT h = m_kImageHealthCoord.w * fH;
-		KINT t = m_kImageHealthCoord.y + (1-fH) * m_kImageHealthCoord.w;
-		m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.x,t,m_kImageHealthCoord.z,h));
+	KINT h = m_kImageHealthCoord.w * fH;
+	KINT t = m_kImageHealthCoord.y + (1-fH) * m_kImageHealthCoord.w;
+	m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.x,t,m_kImageHealthCoord.z,h));
 
-		MyGUI::IntCoord crd = m_pImageHealth->getCoord();
-		
-		crd.top += (1-fH) * m_kImageHealthCoord.w + 0.5f;
-		crd.height = h;
+	MyGUI::IntCoord crd = m_pImageHealth->getCoord();
+	
+	crd.top += (1-fH) * m_kImageHealthCoord.w + 0.5f;
+	crd.height = h;
 
-		m_pImageHealth->setCoord(crd);
-	}
+	m_pImageHealth->setCoord(crd);
 }
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetWidgetWidthPct( KSTR sName, KFLOAT fW )

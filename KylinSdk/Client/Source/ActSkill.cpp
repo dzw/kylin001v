@@ -6,7 +6,6 @@
 #include "KylinRoot.h"
 #include "rOgreUtils.h"
 #include "Entity.h"
-#include "AnimationProxy.h"
 #include "RemoteEvents.h"
 #include "DataManager.h"
 
@@ -42,18 +41,6 @@ KVOID Kylin::ActSkill::Destroy()
 
 Kylin::Factor* Kylin::ActSkill::SpawnFactor()
 {
-	//-----------------------------------------------------
-	// ²¥·Å½ÇÉ«¶¯»­
-	KSTR sAnim;
-	if (m_kProperty.GetStrValue("$Animation",sAnim))
-	{
-		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
-		if (pEnt)
-		{
-			pEnt->GetAnimationProxy()->Play(sAnim);
-		}
-	}
-	
 	//-----------------------------------------------------
 	return Action::SpawnFactor();
 }

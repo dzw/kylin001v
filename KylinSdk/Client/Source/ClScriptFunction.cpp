@@ -48,7 +48,7 @@ namespace Script
 			
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));
 			
-			if (!chPos)
+			if (chPos)
 			{
 				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
 				pMenu->SetSkillInfo(pAct->GetIcon(),chPos[0],uActID);
@@ -120,7 +120,21 @@ namespace Script
 
 	extern void set_ui_player_hp( unsigned int uEntID )
 	{
+		Kylin::ClSceneLoader* pLoader = (Kylin::ClSceneLoader*)Kylin::KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+		if (pLoader)
+		{
+			Kylin::Entity* pEnt = pLoader->GetController()->GetHostChar();
+			if (pEnt)
+			{
+				KINT nHp = 0,nInitHP = 0;
+				pEnt->GetPropertyRef().GetIntValue("$HP",nHp);
+				pEnt->GetPropertyRef().GetIntValue("$InitHP",nInitHP);
 
+				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
+				Assert(pMenu);
+				pMenu->SetHPWidthPct((float)nHp / (float)nInitHP);
+			}
+		}
 	}
 
 	extern void post_gameresult( bool bFlag )

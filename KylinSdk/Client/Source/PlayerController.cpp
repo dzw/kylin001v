@@ -19,12 +19,12 @@
 #include "Action.h"
 #include "NpcObject.h"
 #include "gamedefine.h"
-#include "WeaponTrail.h"
+#include "ItemEntity.h"
 
 
 Kylin::PlayerController::PlayerController()
 : InputListener()
-, m_pHost(NULL)
+, m_pHostChar(NULL)
 , m_bMoveForward(true)
 , m_kKeyDirection(KPoint3::ZERO)
 , m_kMousePickPos(KPoint3::ZERO)
@@ -70,8 +70,8 @@ KVOID Kylin::PlayerController::SetTarget( Character* pHost )
 	assert(pHost);
 	if (!pHost) return;
 
-	m_pHost = pHost;
-	m_pCamera->SetTarget(m_pHost->GetSceneNode());
+	m_pHostChar = pHost;
+	m_pCamera->SetTarget(m_pHostChar->GetSceneNode());
 }
 
 KVOID Kylin::PlayerController::Tick( KFLOAT fElapsed )
@@ -95,7 +95,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		m_kGoalDirection.y = 0;
 		m_kGoalDirection.normalise();
 
-		Ogre::Quaternion toGoal = m_pHost->GetSceneNode()->getOrientation().zAxis().getRotationTo(m_kGoalDirection);
+		Ogre::Quaternion toGoal = m_pHostChar->GetSceneNode()->getOrientation().zAxis().getRotationTo(m_kGoalDirection);
 
 		// calculate how much the character has to turn to face goal direction
 		KFLOAT yawToGoal = toGoal.getYaw().valueDegrees();
@@ -106,14 +106,14 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		if (yawToGoal < 0) yawToGoal		= std::min<KFLOAT>(0, std::max<KFLOAT>(yawToGoal, yawAtSpeed)); 
 		else if (yawToGoal > 0) yawToGoal	= std::max<KFLOAT>(0, std::min<KFLOAT>(yawToGoal, yawAtSpeed));
 
-		m_pHost->GetSceneNode()->yaw(Ogre::Degree(yawToGoal));
+		m_pHostChar->GetSceneNode()->yaw(Ogre::Degree(yawToGoal));
 
 		// move in current body direction (not the goal direction)
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, 0, RUN_SPEED));
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, RUN_SPEED));
 	}
 	else if (m_kMousePickPos != KPoint3::ZERO)
 	{
-		KPoint3 kDir = m_kMousePickPos - m_pHost->GetTranslate();
+		KPoint3 kDir = m_kMousePickPos - m_pHostChar->GetTranslate();
 		kDir.normalise();
 		KFLOAT fOffset = fElapsed * RUN_SPEED;
 		m_fDistance -= fOffset;
@@ -122,7 +122,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 			m_kMousePickPos = KPoint3::ZERO;
 			if (m_kSelectAction.uActionGID != INVALID_ID)
 			{
-				SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,m_uTargetID));
+				SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,m_uTargetID));
 				m_kSelectAction.Reset();
 			}
 		}
@@ -132,7 +132,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 				m_pGuideEffect->SetVisible(false);
 
 			// move in current body direction (not the goal direction)
-			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, 0, RUN_SPEED));
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, RUN_SPEED));
 		}
 	}
 }
@@ -163,12 +163,18 @@ KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 			if (pEnt && !pEnt->getUserAny().isEmpty())
 			{
 				KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
-				if (m_pHost->GetID() != uID)
+				Character* pTar = BtDynamicCast(Character,KylinRoot::GetSingletonPtr()->GetEntity(uID));
+
+				if (pTar && KylinRoot::GetSingletonPtr()->CheckRelation(m_pHostChar,pTar) == KylinRoot::RELATION_ENEMY)
 				{
 					// 非友军改变鼠标指针
 					KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_ATTACK);
 				}
 			}
+		}
+		else if (OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE))
+		{
+			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_PICKUP);
 		}
 		else
 			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_NORMAL);
@@ -197,12 +203,12 @@ KVOID Kylin::PlayerController::OnKeyDown( KUINT uKey )
 		else if (uKey == OIS::KC_SPACE)
 		{
 			// jump if on ground
-			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHost,KPoint3(0, JUMP_ACCEL, 0));
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, JUMP_ACCEL, 0));
 		}
 
 		if (m_kKeyDirection.z != 0 || m_kKeyDirection.x != 0)
 		{
-			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_walk");
 			//-----------------------------------------------------------
 			m_kMousePickPos = KPoint3::ZERO;
 			m_pGuideEffect->SetVisible(false);
@@ -268,6 +274,16 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
 			FocusTarget(uTargetID);
 		}
+		else if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE) )
+		{
+			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+			Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(uTargetID);
+			if (BtIsKindOf(ItemEntity,pEnt))
+			{
+				ItemEntity* pItem = BtStaticCast(ItemEntity,pEnt);
+				pItem->BeCollected(m_pHostChar->GetID());
+			}
+		}
 	}
 }
 
@@ -291,7 +307,7 @@ KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 		
 		if (type == AT_IMM)
 		{
-			SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(uActID));
+			SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(uActID));
 		}
 		else if (type == AT_TAR)
 		{
@@ -311,17 +327,17 @@ KVOID Kylin::PlayerController::UseSkill( KUINT uActID )
 KVOID Kylin::PlayerController::FocusTarget( KUINT uTargetID )
 {
 	Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uTargetID);
-	if (pTarget && pTarget != m_pHost)
+	if (pTarget && pTarget != m_pHostChar)
 	{
 		// 使角色面向焦点对象
-		KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
-		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;				// Orientation from initial direction
+		KPoint3 kDir = pTarget->GetTranslate() - m_pHostChar->GetTranslate();		// B-A = A->B (see vector questions above)
+		KPoint3 kSrc = m_pHostChar->GetRotation() * KPoint3::UNIT_Z;				// Orientation from initial direction
 		kSrc.y = 0;																// Ignore pitch difference angle
 		kDir.y = 0;
 		kSrc.normalise();                                                           
 		{                                                                           
 			Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);                        
-			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+			m_pHostChar->GetSceneNode()->rotate(kQuat);                                                    
 		}
 		
 		// 在UI中显示焦点对象信息
@@ -347,7 +363,7 @@ KVOID Kylin::PlayerController::UpdateEffect( KFLOAT fElapsed )
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetID);
 		if (pEnt)
 		{
-			KFLOAT fDistance = pEnt->GetTranslate().squaredDistance(m_pHost->GetTranslate());
+			KFLOAT fDistance = pEnt->GetTranslate().squaredDistance(m_pHostChar->GetTranslate());
 			if (fDistance < CLICK_DISTANCE * CLICK_DISTANCE)
 			{
 				m_pFocusEffect->MoveTo(pEnt->GetTranslate());
@@ -387,16 +403,16 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 
 				if (m_kSelectAction.uActionType == AT_TAR)
 				{	// 若超出攻击距离则接近后攻击
-					KFLOAT fDistance = pTarget->GetTranslate().distance(m_pHost->GetTranslate());
-					KFLOAT fValidDis = pTarget->GetBoundingRadius() + m_pHost->GetBoundingRadius();
-					Action* pAct	= m_pHost->GetActionDispatcher()->GetActionPtr(m_kSelectAction.uActionGID);
+					KFLOAT fDistance = pTarget->GetTranslate().distance(m_pHostChar->GetTranslate());
+					KFLOAT fValidDis = pTarget->GetBoundingRadius() + m_pHostChar->GetBoundingRadius();
+					Action* pAct	= m_pHostChar->GetActionDispatcher()->GetActionPtr(m_kSelectAction.uActionGID);
 					assert(pAct);
 					if (pAct && pAct->GetRange() > 0)
 						fValidDis = pAct->GetRange() + pTarget->GetBoundingRadius();
 
 					if (fDistance > fValidDis)			
 					{
-						KPoint3 kDir = pTarget->GetTranslate() - m_pHost->GetTranslate();
+						KPoint3 kDir = pTarget->GetTranslate() - m_pHostChar->GetTranslate();
 						kDir.normalise();
 						
 						m_kMousePickPos = pTarget->GetTranslate() - kDir * fValidDis;
@@ -404,13 +420,13 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 					}
 					else
 					{
-						SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
+						SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,uID));
 						m_kSelectAction.Reset();
 					}
 				}
 				else if (m_kSelectAction.uActionType == AT_IMM)
 				{
-					SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID));
+					SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID));
 					m_kSelectAction.Reset();
 				}
 			}
@@ -428,27 +444,27 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 	//-------------------------------------------------------
 	if (KylinRoot::GetSingletonPtr()->HitTest(kRay,kHitPos))
 	{
-		KFLOAT fDistance = (kHitPos - m_pHost->GetTranslate()).length();
+		KFLOAT fDistance = (kHitPos - m_pHostChar->GetTranslate()).length();
 		// 超过可点击距离
 		if ( fDistance < CLICK_DISTANCE )
 		{
 				//////////////////////////////////////////////////////////////////////////
 		// 旋转到拾取的方向
-		KPoint3 kDir = kHitPos - m_pHost->GetTranslate();		// B-A = A->B (see vector questions above)
-		KPoint3 kSrc = m_pHost->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
+		KPoint3 kDir = kHitPos - m_pHostChar->GetTranslate();		// B-A = A->B (see vector questions above)
+		KPoint3 kSrc = m_pHostChar->GetRotation() * KPoint3::UNIT_Z;		// Orientation from initial direction
 		kSrc.y = 0;														// Ignore pitch difference angle
 		kDir.y = 0;
 		kSrc.normalise();                                                           
 		{                                                                           
 			Ogre::Quaternion kQuat = kSrc.getRotationTo(kDir);                        
-			m_pHost->GetSceneNode()->rotate(kQuat);                                                    
+			m_pHostChar->GetSceneNode()->rotate(kQuat);                                                    
 		}
 			
 			//-------------------------------------------------------
 			// 使用技能
 			if (m_kSelectAction.uActionType == AT_POS)
 			{
-				SAFE_CALL(m_pHost->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,kHitPos));
+				SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,kHitPos));
 				m_kSelectAction.Reset();
 				return ;
 			}
@@ -464,7 +480,7 @@ KVOID Kylin::PlayerController::SelectedTerrain( Ogre::Ray kRay )
 			m_pGuideEffect->SetVisible(true);
 
 			// 播放角色动画
-			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHost,"do_walk");
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_walk");
 		}
 	}
 }
@@ -502,3 +518,7 @@ KVOID Kylin::PlayerController::CancelCurrentAction()
 	}
 }
 
+Kylin::Character* Kylin::PlayerController::GetHostChar()
+{
+	return m_pHostChar;
+}

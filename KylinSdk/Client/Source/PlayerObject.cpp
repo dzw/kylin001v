@@ -78,6 +78,14 @@ namespace Kylin
 	KVOID PlayerObject::EV_Reborn( EventPtr spEV )
 	{
 		this->SetVisible(true);
+		
+		KINT nHp;
+		m_kProperty.GetIntValue("$InitHP",nHp);
+		m_kProperty.SetValue("$HP",nHp);
+
+		m_eLifeStatus = LS_ALIVE;
+
+		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_reborn");
 	}
 
 	KVOID PlayerObject::Dead()
