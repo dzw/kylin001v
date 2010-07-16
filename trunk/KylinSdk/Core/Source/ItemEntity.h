@@ -18,6 +18,8 @@ namespace Kylin
 
 	protected:
 		virtual KBOOL Init(const PropertySet& kProp);
-
+		virtual KVOID PostSpawn();
+		virtual KVOID PostDestroy();
+		virtual KVOID BindEffect(PropertySet kProp);
 	};
 }

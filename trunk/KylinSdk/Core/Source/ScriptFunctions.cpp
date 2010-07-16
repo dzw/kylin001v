@@ -32,9 +32,14 @@ namespace Script
 		SAFE_CALL(pEnt->GetAnimationProxy(),Play(sAnim,fTimes < 0));
 	}
 
-	extern void add_effect( unsigned int uEntID, unsigned int uEffectID)
+	extern void add_effect( unsigned int uEntID, unsigned int uEffectID )
 	{
-		int i = 0;
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::Character,pEnt))
+		{
+			
+		}
 	}
 
 	extern void add_global_effect( unsigned int uEffectID )

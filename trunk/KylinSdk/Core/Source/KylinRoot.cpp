@@ -180,12 +180,16 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
 
 	dbItem.QueryField("STR",dbField);
 	KINT nSTR = boost::any_cast<KINT>(dbField.m_aValue);
+	KINT nDef = log10((KFLOAT)nSTR);
 
 	dbItem.QueryField("SPEED",dbField);
 	KFLOAT fSpeed = boost::any_cast<KFLOAT>(dbField.m_aValue);
 	
 	dbItem.QueryField("CAMP",dbField);
 	KINT nCamp = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("EXP",dbField);
+	KINT nExp = boost::any_cast<KINT>(dbField.m_aValue);
 
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sModel))
@@ -214,9 +218,10 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
 	kProp.SetValue("$HP",nHP);
 	kProp.SetValue("$InitHP",nHP);
 	kProp.SetValue("$STR", nSTR);
+	kProp.SetValue("$DEF",nDef);
 	kProp.SetValue("$Collision",true);
 	kProp.SetValue("$Level", (KINT)1);
-	kProp.SetValue("$EXP",(KINT)0);
+	kProp.SetValue("$Exp",nExp);
 	kProp.SetValue("$Speed",fSpeed);
 	kProp.SetValue("$Camp",nCamp);
 
@@ -310,6 +315,9 @@ KUINT Kylin::KylinRoot::CheckRelation( Kylin::Character* pEnt1,Kylin::Character*
 	Assert(pEnt1);
 	Assert(pEnt2);
 	
+	if (!pEnt1 || !pEnt2)
+		return RELATION_FRIEND;
+
 	KINT nCamp1 = 0,nCamp2 = 0;
 	pEnt1->GetPropertyRef().GetIntValue("$Camp",nCamp1);
 	pEnt2->GetPropertyRef().GetIntValue("$Camp",nCamp2);
@@ -363,13 +371,31 @@ Kylin::Entity* Kylin::KylinRoot::SpawnItem( KUINT uGid,KUINT uCid )
 	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
 
 	PropertySet kProp;
+
+	// 设置特效属性
+	if (dbItem.QueryField("EFFECT",dbField))
+	{
+		KINT nEffectID = boost::any_cast<KINT>(dbField.m_aValue);	
+		KANY aRet;
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TEMPLATE",aRet) )
+		{
+			KSTR sEffect = boost::any_cast<KSTR>(aRet);	
+			kProp.SetValue("$SpawnEffect",sEffect);
+		}
+		if ( DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"SCALE",aRet) )
+		{
+			KFLOAT fScale = boost::any_cast<KFLOAT>(aRet);	
+			kProp.SetValue("$SpawnEffectScale",fScale);
+		}
+	}
+
 	kProp.SetValue("$CLASS_ID",(KUINT)uCid);
 	kProp.SetValue("$Mesh",sName);
 	kProp.SetValue("$GID",uGid);
-	kProp.SetValue("$TYPE",uType);
-	kProp.SetValue("$BELONG",(KUINT)nBelong);
-	kProp.SetValue("$ICON",sIcon);
-	kProp.SetValue("$EXPLAIN", sExplain);
+	kProp.SetValue("$Type",uType);
+	kProp.SetValue("$Belong",(KUINT)nBelong);
+	kProp.SetValue("$Icon",sIcon);
+	kProp.SetValue("$Explain", sExplain);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 	//////////////////////////////////////////////////////////////////////////

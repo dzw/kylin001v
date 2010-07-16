@@ -88,24 +88,40 @@ KVOID Kylin::Kitbag::ThrowItemByIndex( KINT nIndex )
 	{
 		ItemCell* pItem = m_kItemArray[nIndex];
 		
-		Entity* pEnt = KylinRoot::GetSingletonPtr()->SpawnItem(pItem->GetGID(),id_item);
-		if (pEnt)
-		{
-			pEnt->SetTranslate(m_pHostChar->GetTranslate());
-		}
+// 		Entity* pEnt = KylinRoot::GetSingletonPtr()->SpawnItem(pItem->GetGID(),id_item);
+// 		if (pEnt)
+// 		{
+// 			pEnt->SetTranslate(m_pHostChar->GetTranslate());
+// 		}
 	}
 }
 
 KVOID Kylin::Kitbag::ThrowItemByGID( KUINT uGid )
 {
-	KINT nIndex = HasItem(uGid);
-	AssertEx(nIndex >= 0,"无此道具");
-	if (nIndex >= 0)
+	Entity* pEnt = KylinRoot::GetSingletonPtr()->SpawnItem(uGid,id_item);
+	if (pEnt)
 	{
-		ThrowItemByIndex(nIndex);
+		pEnt->SetTranslate(m_pHostChar->GetTranslate());
 	}
 }
 
+KVOID Kylin::Kitbag::RemoveItem( ItemCell* pCell )
+{
+	for (KUINT i = 0; i < m_kItemArray.size(); i++)
+	{
+		if (m_kItemArray[i] == pCell)
+		{
+			SAFE_DEL(m_kItemArray[i]);
+			m_kItemArray.erase(m_kItemArray.begin() + i);
+			break;
+		}
+	}
+}
+
+Kylin::Character* Kylin::Kitbag::GetHostChar()
+{
+	return m_pHostChar;
+}	
 //////////////////////////////////////////////////////////////////////////
 KVOID Kylin::Kitbag::KitbagListener::OnUsed( KINT nIndex )
 {

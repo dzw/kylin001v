@@ -335,7 +335,6 @@ namespace Kylin
 	//TODO This is low efficiency right now and should not be used too often
 	KVOID EventManager::RemoveEvent(KUINT entityID, const EventTemplate* ev)
 	{
-		//syslog->debug("RemoveEvent(KUINT, const EventTemplate*) has very low performance, make sure you need to call this function\n");
 		//PROFILE("EventManager::RemoveEvent");
 		std::vector<EventAssignPtr>::iterator tempit;
 		for(tempit = m_tempEventQue.begin(); tempit != m_tempEventQue.end(); ++ tempit)
@@ -408,7 +407,7 @@ namespace Kylin
 		}
 		catch(boost::bad_get)
 		{
-			assert(!"event arguments error"); 
+			AssertEx(NULL,"event arguments error");
 			//syslog->debug("Event Arguments Error:%s\n", spEvt->m_pTemplate->GetName());
 			return false;
 		}
