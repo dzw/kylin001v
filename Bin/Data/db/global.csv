@@ -6,3 +6,4 @@ INT,STRING,STRING
 3,FACTOR_DB,Data\db\factor.csv
 4,CONSOLE_DB,Data\db\console.csv
 5,AVATAR_DB,Data\db\avatar.csv
+6,ITEM_DB,Data\db\item.csv
