@@ -100,6 +100,8 @@ Kylin::Avatar* Kylin::Character::GetAvatar()
 
 KVOID Kylin::Character::EV_Damage( EventPtr spEV )
 {
+	if ( IsDead() ) return;
+
 	KUINT uKiller	= boost::get<unsigned int>(spEV->args[0]);
 	KINT nMinDamage = boost::get<int>(spEV->args[1]);
 	KINT nMaxDamage = boost::get<int>(spEV->args[2]);
@@ -122,9 +124,10 @@ KVOID Kylin::Character::EV_Damage( EventPtr spEV )
 	
 	if (kResult.mDIFF <= 0)
 	{
-		KINT nExp = 1;
+		KINT nExp = 1, nL = 1;
 		m_kProperty.GetIntValue("$Exp",nExp);
-		nSumExp += nExp;
+		m_kProperty.GetIntValue("$Level",nL);
+		nSumExp += nExp*nL;
 		if (pKiller)
 		{
 			pKiller->GetPropertyRef().SetValue("$SumExp",nSumExp);

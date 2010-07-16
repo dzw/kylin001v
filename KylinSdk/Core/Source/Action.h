@@ -31,6 +31,8 @@ namespace Kylin
 		virtual Factor* SpawnFactor();
 		virtual Factor* SpawnFactor(PropertySet& kFactorProp);
 		virtual KVOID	RemoveFactor(KUINT uFactorID);
+		
+		PropertySet&	GetPropertyRef() { return m_kProperty; }
 
 		KUINT	GetGID();
 		

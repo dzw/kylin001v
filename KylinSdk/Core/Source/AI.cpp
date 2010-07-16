@@ -52,8 +52,8 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 	{
 	case AS_IDLE:
 		
-		bRet = Tick_Radar(fElapsed);
-		if (!bRet)
+		//bRet = Tick_Radar(fElapsed);
+		//if (!bRet)
 			bRet = Tick_Idle(fElapsed);
 		break;
 
@@ -67,6 +67,9 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 	case AS_USE_SKILL:
 
 		bRet = Tick_UseSkill(fElapsed);
+		if (!bRet)
+			bRet = Tick_Move(fElapsed);
+
 		break;
 
 	case AS_JUMP:
@@ -150,10 +153,10 @@ RC_RESULT Kylin::BaseAI::Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 
 	m_pHostChar->GetSceneNode()->rotate(kQuat);
 	
 	Factor* pFactor = m_pHostChar->GetActionDispatcher()->Fire(uSkillId,uTarget);
-	
 	//---------------------------------------------------------------
+	Action* pAction = m_pHostChar->GetActionDispatcher()->GetActionPtr(uSkillId);
 	KFLOAT fTimes = 0.6f;
-	if (pFactor->GetPropertyRef().GetFloatValue("$AnimLength",fTimes))
+	if (pAction->GetPropertyRef().GetFloatValue("$AnimLength",fTimes))
 		m_fStayTime = fTimes * 1.2f;
 	
 	m_uTargetFoe = uTarget;
@@ -260,6 +263,7 @@ KBOOL Kylin::BaseAI::Tick_UseSkill( KFLOAT fElapsed )
 			
 			m_fStayTime = m_pRandomGenerator->Random();
 			Enter_Move(m_kDestination.x,m_kDestination.z);
+			return false;
 		}
 	}
 
@@ -314,13 +318,14 @@ RC_RESULT Kylin::BaseAI::Enter_Patrol()
 }
 
 // test code
-const int	g_radar_time	= 0.3f;
+const float	g_radar_time	= 0.3f;
 const float g_adjust_angle	= 10.0f;
 KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 {
 	m_fScanTime += fElapsed;
 	if (m_fScanTime > g_radar_time)
 	{
+		m_fScanTime = .0f;
 		//-----------------------------------------------------------
 		// radar
 // 		KPoint3	kPos = m_pHostChar->GetTranslate();
@@ -359,11 +364,8 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 						if ( pTar && 
 							KylinRoot::GetSingletonPtr()->CheckRelation(pTar,m_pHostChar) == KylinRoot::RELATION_ENEMY )
 						{
-
-							//SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(pAction->GetGID(),uID));
-
 							//---------------------------------------
-							KPoint3 kDir = pTar->GetTranslate() - m_pHostChar->GetTranslate();		// B-A = A->B (see vector questions above)
+							KPoint3 kDir = pTar->GetTranslate() - m_pHostChar->GetTranslate();
 							kDir.y = 0;
 
 							Enter_UseSkill(pAction->GetGID(),uID,pTar->GetTranslate(),kDir);
@@ -374,8 +376,6 @@ KBOOL Kylin::BaseAI::Tick_Radar( KFLOAT fElapsed )
 				}
 			}
 		}
-
-		m_fScanTime = .0f;
 	}
 		
 	return false;
