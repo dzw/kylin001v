@@ -18,7 +18,7 @@ namespace Kylin
 
 		virtual KVOID SetVisible(KBOOL bVisible);
 		
-		KVOID SetWidgetHeightPct(KSTR sName, KFLOAT fH);
+		KVOID SetHPWidthPct(KFLOAT fH);
 		KVOID SetWidgetWidthPct(KSTR sName, KFLOAT fW);
 
 		KVOID SetSkillInfo(KSTR sIcon, KCHAR cP, KUINT uActionID);

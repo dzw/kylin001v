@@ -54,6 +54,8 @@ namespace Kylin
 		// …Ë÷√Ωπµ„
 		KVOID			FocusTarget(KUINT uTargetID);
 		KUINT			GetSelected() { return m_uTargetID; }
+		
+		Character*		GetHostChar();
 
 	public:
 		virtual KVOID	Tick(KFLOAT fElapsed);
@@ -78,7 +80,7 @@ namespace Kylin
 
 	protected:
 		
-		Character*		m_pHost;
+		Character*		m_pHostChar;
 
 		KPoint3			m_kKeyDirection;      // player's local intended direction based on WASD keys
 		KPoint3			m_kGoalDirection;     // actual intended direction in world-space
