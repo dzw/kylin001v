@@ -47,9 +47,6 @@ Kylin::Factor* Kylin::ActSkill::SpawnFactor()
 
 KVOID Kylin::ActSkill::OnTriggered( Factor* pFactor )
 {
-	// 还原原有动作
-	RevertHost();
-
 	// 只有以位置的技能是范围处理
 	KFLOAT fRadius = GetRange();
 	assert(fRadius);

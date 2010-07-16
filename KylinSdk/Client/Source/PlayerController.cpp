@@ -139,6 +139,9 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 
 KVOID Kylin::PlayerController::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
 {
+	if (m_pHostChar->IsDead())
+		return;
+
 	if (OgreRoot::GetSingletonPtr()->GetMouseState().buttonDown(OIS::MB_Right))
 	{
 		m_pCamera->UpdateCameraGoal(-0.5f * fX, -0.5f * fY, -0.0005f * fZ);
@@ -151,6 +154,9 @@ KVOID Kylin::PlayerController::OnMouseMove( KFLOAT fX, KFLOAT fY, KFLOAT fZ )
 KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 {
 	if (m_pCamera->GetMode() == GameCamera::CM_FREE)
+		return;
+
+	if (m_pHostChar->IsDead())
 		return;
 
 	Ogre::Ray kRay;
@@ -249,6 +255,9 @@ KVOID Kylin::PlayerController::OnLButtonDown( KINT nX, KINT nY )
 	if (m_pCamera->GetMode() == GameCamera::CM_FREE)
 		return;
 
+	if (m_pHostChar->IsDead())
+		return;
+
 	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
 	OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay);
@@ -263,6 +272,9 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 	if (m_pCamera->GetMode() == GameCamera::CM_FREE)
 		return;
 	
+	if (m_pHostChar->IsDead())
+		return;
+
 	//////////////////////////////////////////////////////////////////////////
 	Ogre::Ray kRay;
 	if (OgreRoot::GetSingletonPtr()->GetMouseRay(KPoint2(nX,nY),kRay))
@@ -361,7 +373,7 @@ KVOID Kylin::PlayerController::UpdateEffect( KFLOAT fElapsed )
 	if (m_uTargetID != INVALID_ID && m_pFocusEffect->IsVisible())
 	{
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_uTargetID);
-		if (pEnt)
+		if (pEnt && !m_pHostChar->IsDead())
 		{
 			KFLOAT fDistance = pEnt->GetTranslate().squaredDistance(m_pHostChar->GetTranslate());
 			if (fDistance < CLICK_DISTANCE * CLICK_DISTANCE)
