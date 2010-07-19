@@ -306,7 +306,8 @@ RC_RESULT Kylin::BaseAI::Enter_Patrol()
 	RC_RESULT kRet = RC_ERROR;
 	if (m_nPathwayIndex >= 0 && m_nPathwayIndex < m_kPathway.size())
 	{
-		kRet = Enter_Move(m_kPathway[m_nPathwayIndex].x,m_kPathway[m_nPathwayIndex].z);
+		kRet = Enter_Move( m_kPathway[m_kPathway.size() - 1 - m_nPathwayIndex].x,
+						   m_kPathway[m_kPathway.size() - 1 - m_nPathwayIndex].z );
 		m_nPathwayIndex++;
 	}
 	else if (m_nPathwayIndex == m_kPathway.size())
