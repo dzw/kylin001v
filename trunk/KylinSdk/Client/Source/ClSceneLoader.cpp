@@ -13,11 +13,13 @@
 #include "Scene.h"
 #include "uiCharInfoMenu.h"
 #include "StringUtils.h"
+#include "PathwayLoader.h"
 
 
 Kylin::ClSceneLoader::ClSceneLoader()
 : SceneLoader()
 , m_pController(NULL)
+, m_pPathwayLoader(NULL)
 {
 
 }
@@ -39,7 +41,7 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	}
 	
 	// 创建角色
-	Kylin::Entity * pMyself = KylinRoot::GetSingletonPtr()->SpawnCharactor(uGid,id_player);
+	Kylin::Entity * pMyself = KylinRoot::GetSingletonPtr()->SpawnCharactor(uGid);
 	if (pMyself)
 	{
 		Character* pChar = BtDynamicCast(Character,pMyself);
@@ -70,26 +72,31 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 	//////////////////////////////////////////////////////////////////////////
 	// test code, when mulit-player to set local player
 	// test spawn npc
-	Kylin::Entity * pNpc = KylinRoot::GetSingletonPtr()->SpawnCharactor(2,id_npc);
-	if (pNpc)
-	{
-		Character* pChar = BtDynamicCast(Character,pNpc);
-		SAFE_CALL(pChar,SetActionFactory(KNEW ClActionFactory(pChar->GetActionDispatcher())));
-
-		pNpc->SetTranslate(KPoint3(pMyself->GetTranslate().x -1 , 0 , pMyself->GetTranslate().z -1));
-	}
+// 	Kylin::Entity * pNpc = KylinRoot::GetSingletonPtr()->SpawnCharactor(2,id_npc);
+// 	if (pNpc)
+// 	{
+// 		Character* pChar = BtDynamicCast(Character,pNpc);
+// 		SAFE_CALL(pChar,SetActionFactory(KNEW ClActionFactory(pChar->GetActionDispatcher())));
+// 
+// 		pNpc->SetTranslate(KPoint3(pMyself->GetTranslate().x -1 , 0 , pMyself->GetTranslate().z -1));
+// 	}
 	//-------------------------------------------------
-	Kylin::Entity * pSpawner = KylinRoot::GetSingletonPtr()->SpawnCharactor(6,id_spawner);
-	if (pSpawner)
-	{
-		pSpawner->SetTranslate(KPoint3(1 , 0 , 1));
-	}
+// 	Kylin::Entity * pSpawner = KylinRoot::GetSingletonPtr()->SpawnCharactor(6,id_spawner);
+// 	if (pSpawner)
+// 	{
+// 		pSpawner->SetTranslate(KPoint3(1 , 0 , 1));
+// 	}
 
 	return true;
 }
 
 KVOID Kylin::ClSceneLoader::LoadLevel(KSTR sSceneName)
 {
+	//---------------------------------------------------------------
+	// 加载路径点信息
+	m_pPathwayLoader = KNEW PathwayLoader();
+	m_pPathwayLoader->Load(sSceneName.data());
+	//---------------------------------------------------------------
 	KSTR sName = StringUtils::replace(sSceneName,".xml","");
 
 	PropertySet kProp;
@@ -110,6 +117,7 @@ KVOID Kylin::ClSceneLoader::Tick( KFLOAT fElapsed )
 KVOID Kylin::ClSceneLoader::Unload( SceneHag* pHag )
 {
 	SAFE_DEL(m_pController);
+	SAFE_DEL(m_pPathwayLoader);
 
 	SceneLoader::Unload(pHag);
 }
@@ -117,4 +125,9 @@ KVOID Kylin::ClSceneLoader::Unload( SceneHag* pHag )
 Kylin::PlayerController* Kylin::ClSceneLoader::GetController()
 {	
 	return m_pController;
+}
+
+Kylin::PathwayLoader* Kylin::ClSceneLoader::GetPathwayLoader()
+{
+	return m_pPathwayLoader;
 }

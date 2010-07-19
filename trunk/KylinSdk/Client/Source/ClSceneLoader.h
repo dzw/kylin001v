@@ -4,6 +4,7 @@
 
 namespace Kylin
 {
+	class PathwayLoader;
 	class SceneHag;
 	class PlayerController;
 	class ClSceneLoader : public SceneLoader
@@ -19,9 +20,11 @@ namespace Kylin
 		virtual KVOID Tick(KFLOAT fElapsed);
 		
 		// test code
-		PlayerController* GetController();
+		PlayerController*	GetController();
+		PathwayLoader*		GetPathwayLoader();
 
 	protected:
 		PlayerController*	m_pController;
+		PathwayLoader*		m_pPathwayLoader;
 	};
 }

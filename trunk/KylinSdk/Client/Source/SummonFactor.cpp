@@ -141,7 +141,7 @@ namespace Kylin
 		{
 			KUINT uCharID = boost::any_cast<KINT>(aV);
 
-			Kylin::Entity* pNpc = KylinRoot::GetSingletonPtr()->SpawnCharactor(uCharID,id_npc);
+			Kylin::Entity* pNpc = KylinRoot::GetSingletonPtr()->SpawnCharactor(uCharID);
 			if (BtIsKindOf(NpcObject,pNpc))
 			{
 				NpcObject* pNpcObj = BtStaticCast(NpcObject,pNpc);
