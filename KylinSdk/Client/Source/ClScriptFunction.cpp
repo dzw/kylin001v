@@ -18,6 +18,11 @@
 #include "Scene.h"
 #include "PlayerController.h"
 #include "RemoteEvents.h"
+#include "ClActionFactory.h"
+#include "ClSceneLoader.h"
+#include "Pathwayloader.h"
+#include "Pathway.h"
+#include "NpcObject.h"
 
 
 namespace Script
@@ -159,6 +164,31 @@ namespace Script
 				));
 
 			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(0,spEV);
+		}
+	}
+
+	extern void set_default_action_factory( unsigned int uEntID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+		if (BtIsKindOf(Kylin::Character,pEnt))
+		{
+			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
+
+			SAFE_CALL(pChar,SetActionFactory(KNEW Kylin::ClActionFactory(pChar->GetActionDispatcher())));
+		}
+	}
+
+	extern void set_pathway( unsigned int uEntID, unsigned int uPathwayID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+		Kylin::ClSceneLoader* pLoader	= (Kylin::ClSceneLoader*)Kylin::KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+		Kylin::Pathway* pPathway		= pLoader->GetPathwayLoader()->GetPathway(uPathwayID);
+		assert(pPathway);
+
+		if (BtIsKindOf(Kylin::NpcObject,pEnt))
+		{
+			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
+			SAFE_CALL(pNpc->GetAIHandler(),SetPathway(pPathway));
 		}
 	}
 }

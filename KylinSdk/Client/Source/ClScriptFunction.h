@@ -13,6 +13,9 @@ namespace Script
 
 	// 设置默认左键技能
 	extern void set_default_action(unsigned int uActID);
+	
+	// 
+	extern void set_default_action_factory(unsigned int uEntID);
 
 	// 更新NPC 生命UI
 	extern void set_ui_monster_hp(unsigned int uEntID);
@@ -21,6 +24,9 @@ namespace Script
 	
 	// 通知游戏结果
 	extern void post_gameresult(bool bFlag);
+
+	// 为非玩家添加路径点
+	extern void set_pathway( unsigned int uEntID, unsigned int uPathwayID );
 
 	//tolua_end
 };

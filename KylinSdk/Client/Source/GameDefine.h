@@ -1,6 +1,6 @@
 #pragma once
 
-#define CLICK_DISTANCE	50			// 鼠标可点击的距离
+#define CLICK_DISTANCE	60			// 鼠标可点击的距离
 
 
 enum WORLD_TIME
