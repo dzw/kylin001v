@@ -302,6 +302,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\Pathway.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\RegisterClass.h"
 				>
 			</File>
