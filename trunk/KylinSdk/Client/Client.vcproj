@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\PathwayLoader.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\PlayerController.cpp"
 				>
 			</File>
@@ -258,6 +262,10 @@
 			</File>
 			<File
 				RelativePath=".\Source\LobbyScene.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\PathwayLoader.h"
 				>
 			</File>
 			<File
