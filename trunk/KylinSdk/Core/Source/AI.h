@@ -28,7 +28,7 @@ enum RC_RESULT
 class CRandomMersenne;
 namespace Kylin
 {
-	typedef std::vector<KPoint3> Pathway;
+	//typedef std::vector<KPoint3> Pathway;
 
 	class BaseAI
 	{
@@ -42,8 +42,8 @@ namespace Kylin
 		virtual KVOID Reset();
 
 	public:
-		KVOID		SetPathway(const Pathway& kPaths);
-		KVOID		AddPathwayPos(const KPoint3& kPos);
+		KVOID		SetPathway(Pathway* pPaths);
+		//KVOID		AddPathwayPos(const KPoint3& kPos);
 
 	public:
 		//-------------------------------------
@@ -78,7 +78,7 @@ namespace Kylin
 		KPoint3		m_kDestination;				// 目的地位置
 		KFLOAT		m_fDistance;				// 离目标点的距离
 
-		Pathway		m_kPathway;					// 路径
+		Pathway*	m_pPathway;					// 路径
 		KINT		m_nPathwayIndex;			// 当前路径点索引
 		
 		KFLOAT		m_fSpeed;					// 移动速度

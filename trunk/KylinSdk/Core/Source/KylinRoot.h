@@ -47,7 +47,7 @@ namespace Kylin
 		Entity *	SpawnEntity(PropertySet& rProp);
 		KVOID		DestroyEntity(KUINT uEntID);
 		// 创建角色
-		Entity*		SpawnCharactor(KUINT uGid, KUINT uCid);
+		Entity*		SpawnCharactor(KUINT uGid);
 		// 创建道具
 		Entity*		SpawnItem(KUINT uGid,KUINT uCid);
 

@@ -22,9 +22,6 @@ namespace Script
 	// 换装
 	extern void exchange_avatar( unsigned int uEntID, unsigned int uAvatarID );
 	
-	// 为非玩家添加路径点
-	extern void add_pathway_pos( unsigned int uEntID, float x, float z );
-
 	// 搜索距离自己最近的敌人
 	extern void query_near_foeman( unsigned int uEntID, float r );
 

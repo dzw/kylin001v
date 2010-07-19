@@ -156,7 +156,7 @@ KVOID Kylin::KylinRoot::DestroyEntity( KUINT uEntID )
 }
 
 //////////////////////////////////////////////////////////////////////////
-Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
+Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid )
 {
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("CHAR_DB",sValue))
@@ -170,6 +170,11 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
 		return false;
 
 	DataItem::DataField dbField;
+
+	dbItem.QueryField("TYPE",dbField);
+	KSTR sCid  = boost::any_cast<KSTR>(dbField.m_aValue);
+	KUINT uCid = (KUINT)OgreRoot::GetSingletonPtr()->GetScriptVM()->GetGlobalNumber(sCid.data());
+
 	dbItem.QueryField("MESH",dbField);
 	KSTR sModel = boost::any_cast<KSTR>(dbField.m_aValue);
 // 	dbItem.QueryField("MATERIAL",dbField);
@@ -210,7 +215,7 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid, KUINT uCid )
 	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
 
 	PropertySet kProp;
-	kProp.SetValue("$CLASS_ID",(KUINT)uCid);
+	kProp.SetValue("$CLASS_ID",uCid);
 	kProp.SetValue("$Mesh",sName);
 	//kProp.SetValue("$Materials",sMaterials);
 	kProp.SetValue("$GID",uGid);

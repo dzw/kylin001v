@@ -19,6 +19,7 @@ namespace Kylin
 	class EventManager;
 	class EntityManager;
 	class WorldManager;
+	class Pathway;
 	class SceneHag;
 	class Scene;
 	class SceneLoader;

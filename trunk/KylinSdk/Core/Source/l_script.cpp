@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 07/16/10 17:20:20.
+** Generated automatically by tolua++-1.0.92 on 07/19/10 09:46:35.
 */
 
 #ifndef __cplusplus
@@ -201,38 +201,6 @@ static int tolua_script_exchange_avatar00(lua_State* tolua_S)
 #ifndef TOLUA_RELEASE
  tolua_lerror:
  tolua_error(tolua_S,"#ferror in function 'exchange_avatar'.",&tolua_err);
- return 0;
-#endif
-}
-#endif //#ifndef TOLUA_DISABLE
-
-/* function: add_pathway_pos */
-#ifndef TOLUA_DISABLE_tolua_script_add_pathway_pos00
-static int tolua_script_add_pathway_pos00(lua_State* tolua_S)
-{
-#ifndef TOLUA_RELEASE
- tolua_Error tolua_err;
- if (
-     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
-     !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
-     !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,4,&tolua_err)
- )
-  goto tolua_lerror;
- else
-#endif
- {
-  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
-  float x = ((float)  tolua_tonumber(tolua_S,2,0));
-  float z = ((float)  tolua_tonumber(tolua_S,3,0));
-  {
-   add_pathway_pos(uEntID,x,z);
-  }
- }
- return 0;
-#ifndef TOLUA_RELEASE
- tolua_lerror:
- tolua_error(tolua_S,"#ferror in function 'add_pathway_pos'.",&tolua_err);
  return 0;
 #endif
 }
@@ -509,7 +477,6 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_function(tolua_S,"add_effect",tolua_script_add_effect00);
   tolua_function(tolua_S,"add_global_effect",tolua_script_add_global_effect00);
   tolua_function(tolua_S,"exchange_avatar",tolua_script_exchange_avatar00);
-  tolua_function(tolua_S,"add_pathway_pos",tolua_script_add_pathway_pos00);
   tolua_function(tolua_S,"query_near_foeman",tolua_script_query_near_foeman00);
   tolua_function(tolua_S,"set_spawner",tolua_script_set_spawner00);
   tolua_function(tolua_S,"set_translate",tolua_script_set_translate00);
