@@ -17,6 +17,7 @@
 #include "rCollisionMonitor.h"
 #include "rOrientedBox.h"
 #include "profile.h"
+#include "Entity.h"
 
 
 #pragma warning(disable:4390)
@@ -523,13 +524,18 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 	else
 	{
 		// 初始化NPC
-		int n = name.find("$NPC_");
+		int n = name.find("$npc_");
 		if (n == 0)
 		{
 			KSTR sGid = name.substr(5,name.length());
 			KUINT uGID = atoi(sGid.data());
+
+			Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->SpawnCharactor(uGID);
+			AssertEx(pEnt,(sGid + " NPC ID 错误！").data());
+			if (!pEnt) return;
+
 			// spawn(NPC OBJ)
-			// pNode = pNpc->GetSceneNode();
+			pNode = pEnt->GetSceneNode();
 			bNpc = true;
 		}
 		else
@@ -571,6 +577,9 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 		pNode->setScale(parseVector3(pElement));
 		pNode->setInitialState();
 	}
+	
+	// 如果是NPC 设置完位置朝向缩放即可
+	if (bNpc) return;
 
 	// Process node (*)
 	pElement = XMLNode->first_node("node");
@@ -580,15 +589,12 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 		pElement = pElement->next_sibling("node");
 	}
 
-	if (!bNpc)
-	{	// 若是NPC 就不需要再创建entity
-		// Process entity (*)
-		pElement = XMLNode->first_node("entity");
-		while(pElement)
-		{
-			processEntity(pElement, pNode);
-			pElement = pElement->next_sibling("entity");
-		}
+	// Process entity (*)
+	pElement = XMLNode->first_node("entity");
+	while(pElement)
+	{
+		processEntity(pElement, pNode);
+		pElement = pElement->next_sibling("entity");
 	}
 
 	// Process light (*)
