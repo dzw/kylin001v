@@ -83,7 +83,7 @@ namespace Kylin
 			return;
 
 		//-----------------------------------------------------------------
-		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->SpawnCharactor(m_uSpawnID,id_npc);
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->SpawnCharactor(m_uSpawnID);
 		if (pEnt)
 		{
 			pEnt->SetTranslate(this->GetTranslate());

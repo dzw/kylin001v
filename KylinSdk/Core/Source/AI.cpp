@@ -10,6 +10,7 @@
 #include "Action.h"
 #include "Factor.h"
 #include "ActionDispatcher.h"
+#include "Pathway.h"
 
 
 #define _MAX_STAY_T_ 5
@@ -17,6 +18,7 @@
 
 Kylin::BaseAI::BaseAI( Character* pHost )
 : m_pHostChar(pHost)
+, m_pPathway(NULL)
 , m_pRandomGenerator(NULL)
 , m_eCurrState(AS_INVALID)
 , m_uTargetFoe(INVALID_ID)
@@ -41,7 +43,9 @@ KBOOL Kylin::BaseAI::Init()
 
 	m_fStayTime		= m_pRandomGenerator->IRandom(_MIN_STAY_T_,_MAX_STAY_T_);
 	m_eCurrState	= AS_IDLE;
-
+	
+	//---------------------------------------------------------------
+	
 	return true;
 }
 
@@ -215,7 +219,7 @@ KBOOL Kylin::BaseAI::Tick_Move( KFLOAT fElapsed )
 		// ÇÐ»»×´Ì¬
 		Enter_Idle();
 		//-----------------------------------------------------------
-		if (m_nPathwayIndex == m_kPathway.size())
+		if (m_nPathwayIndex == m_pPathway->Size())
 		{
 			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"on_endpoint");
 		}
@@ -291,26 +295,20 @@ KBOOL Kylin::BaseAI::Tick_Jump( KFLOAT fElapsed )
 	return true;
 }
 
-KVOID Kylin::BaseAI::SetPathway( const Pathway& kPaths )
+KVOID Kylin::BaseAI::SetPathway( Pathway* pPaths )
 {
-	m_kPathway = kPaths;
-}
-
-KVOID Kylin::BaseAI::AddPathwayPos( const KPoint3& kPos )
-{
-	m_kPathway.push_back(kPos);
+	m_pPathway = pPaths;
 }
 
 RC_RESULT Kylin::BaseAI::Enter_Patrol()
 {
 	RC_RESULT kRet = RC_ERROR;
-	if (m_nPathwayIndex >= 0 && m_nPathwayIndex < m_kPathway.size())
+	if (m_nPathwayIndex >= 0 && m_nPathwayIndex < m_pPathway->Size())
 	{
-		kRet = Enter_Move( m_kPathway[m_kPathway.size() - 1 - m_nPathwayIndex].x,
-						   m_kPathway[m_kPathway.size() - 1 - m_nPathwayIndex].z );
+		kRet = Enter_Move( m_pPathway->At(m_nPathwayIndex).x, m_pPathway->At(m_nPathwayIndex).z );
 		m_nPathwayIndex++;
 	}
-	else if (m_nPathwayIndex == m_kPathway.size())
+	else if (m_pPathway->IsTurnback() && m_nPathwayIndex == m_pPathway->Size())
 	{
 		m_nPathwayIndex = 0;
 	}

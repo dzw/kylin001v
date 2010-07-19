@@ -58,17 +58,6 @@ namespace Script
 		}
 	}
 
-	extern void add_pathway_pos( unsigned int uEntID, float x, float z )
-	{
-		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
-
-		if (BtIsKindOf(Kylin::NpcObject,pEnt))
-		{
-			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
-			SAFE_CALL(pNpc->GetAIHandler(),AddPathwayPos(KPoint3(x,0,z)));	
-		}
-	}
-
 	extern void query_near_foeman( unsigned int uEntID, float r )
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
