@@ -61,7 +61,8 @@ namespace Kylin
 			m_kProperty.GetUIntValue("$Belong",pItem->m_uBelong);
 
 			pItem->m_eType = (ITEM_TYPE)uType;
-
+			
+			m_kProperty.GetStrValue("$Mesh",pItem->m_sMesh);
 			m_kProperty.GetStrValue("$Icon",pItem->m_sIcon);
 			m_kProperty.GetStrValue("$Explain", pItem->m_sExplain);
 

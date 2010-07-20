@@ -3,7 +3,12 @@
 #include "ItemCell.h"
 #include "RegisterClass.h"
 #include "KylinRoot.h"
+#include "rOgreRoot.h"
 #include "Character.h"
+#include "DataItem.h"
+#include "DataLoader.h"
+#include "DataManager.h"
+#include "ScriptVM.h"
 
 
 Kylin::Kitbag::Kitbag(Character* pHost)
@@ -45,6 +50,44 @@ KBOOL Kylin::Kitbag::AddItem( ItemCell* pItem )
 			m_kItemArray.push_back(pItem);
 		}
 	}
+}
+
+KBOOL Kylin::Kitbag::AddItem( KUINT uGID )
+{
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("ITEM_DB",sValue))
+		return NULL;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的角色信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(uGID,dbItem))
+		return false;
+	
+	ItemCell* pItem	 = KNEW ItemCell(this);
+	//------------------------------------------------------------------
+	DataItem::DataField dbField;
+	dbItem.QueryField("MESH",dbField);
+	pItem->m_sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	dbItem.QueryField("TYPE",dbField);
+	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
+	pItem->m_eType = (ITEM_TYPE)(KUINT)OgreRoot::GetSingletonPtr()->GetScriptVM()->GetGlobalNumber(sType.data());
+
+	dbItem.QueryField("BELONG",dbField);
+	pItem->m_uBelong = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("ICON",dbField);
+	pItem->m_sIcon = boost::any_cast<KSTR>(dbField.m_aValue);
+
+	dbItem.QueryField("EXPLAIN",dbField);
+	pItem->m_sExplain = boost::any_cast<KSTR>(dbField.m_aValue);
+	
+	dbItem.QueryField("EFFECT",dbField);
+	pItem->m_uEffectID = boost::any_cast<KINT>(dbField.m_aValue);
+	//------------------------------------------------------------------
+	AddItem(pItem);	
 }
 
 KVOID Kylin::Kitbag::RemoveAndDestroyItem( KINT nIndex )
@@ -127,4 +170,9 @@ KVOID Kylin::Kitbag::KitbagListener::OnUsed( KINT nIndex )
 {
 	Assert(m_pHost);
 	SAFE_CALL(m_pHost,UseItem(nIndex));
+}
+
+Kylin::Kitbag* Kylin::Kitbag::KitbagListener::GetKitbag()
+{
+	return m_pHost;
 }

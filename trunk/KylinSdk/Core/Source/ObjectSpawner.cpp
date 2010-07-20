@@ -53,7 +53,6 @@ namespace Kylin
 	KVOID ObjectSpawner::DoSpawn()
 	{
 		Assert(m_uSpawnID != INVALID_ID);
-		Assert(m_nMaxCount > 0);
 		Assert(m_fSpawnInterval > 0);
 		Assert(m_fSpawnDelay > 0);
 

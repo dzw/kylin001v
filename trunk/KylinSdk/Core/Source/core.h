@@ -4,7 +4,8 @@
 #include "Engine.h"
 
 #define _WGravity			20.0f
-
+#define _PI					3.1415f
+#define _HALF_PI			_PI * 0.5f
 
 namespace Kylin
 {
@@ -42,7 +43,7 @@ namespace Kylin
 	
 	class Kitbag;
 	class ItemCell;
-
+	
 	class DamageSystem;
 
 	namespace PhyX

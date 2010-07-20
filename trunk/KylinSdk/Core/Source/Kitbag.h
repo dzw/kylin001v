@@ -17,6 +17,8 @@ namespace Kylin
 			}
 			
 			virtual KVOID OnUsed(KINT nIndex);
+			
+			Kitbag* GetKitbag();
 
 		protected:
 			Kitbag* m_pHost;
@@ -24,7 +26,8 @@ namespace Kylin
 
 		// 添加一个道具
 		KBOOL	AddItem(ItemCell* pItem);
-		
+		KBOOL	AddItem(KUINT uGID);
+
 		// 使用道具
 		KVOID	UseItem(KINT nIndex);
 		
@@ -50,6 +53,8 @@ namespace Kylin
 		
 		// 
 		Character*	GetHostChar();
+		
+		const KVEC<ItemCell*> GetItems() { return m_kItemArray; }
 
 	protected:
 		Character*		m_pHostChar;
