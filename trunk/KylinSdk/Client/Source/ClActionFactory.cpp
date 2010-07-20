@@ -6,6 +6,7 @@
 #include "property.h"
 #include "ActSkill.h"
 #include "SummonSkill.h"
+#include "FoodSkill.h"
 #include "DataItem.h"
 
 
@@ -71,6 +72,10 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 	if (sClass == "ActSkill")
 	{
 		pAct = KNEW ActSkill(m_pDispatcher);
+	}
+	else if (sClass == "FoodSkill")
+	{
+		pAct = KNEW FoodSkill(m_pDispatcher);
 	}
 	else if (sClass == "SummonSkill")
 	{

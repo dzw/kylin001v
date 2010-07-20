@@ -16,34 +16,6 @@ Kylin::ActSkill::ActSkill( ActionDispatcher* pDispatcher )
 
 }
 
-KBOOL Kylin::ActSkill::Init( const PropertySet& kProp )
-{
-	if (!Action::Init(kProp))
-		return false;
-
-
-	return true;
-}
-
-KVOID Kylin::ActSkill::Tick( KFLOAT fElapsed )
-{
-	Action::Tick(fElapsed);
-
-
-}
-
-KVOID Kylin::ActSkill::Destroy()
-{
-	
-	//////////////////////////////////////////////////////////////////////////
-	Action::Destroy();
-}
-
-Kylin::Factor* Kylin::ActSkill::SpawnFactor()
-{
-	//-----------------------------------------------------
-	return Action::SpawnFactor();
-}
 
 KVOID Kylin::ActSkill::OnTriggered( Factor* pFactor )
 {
@@ -71,14 +43,6 @@ KVOID Kylin::ActSkill::OnTriggered( Factor* pFactor )
 	}
 }
 
-KVOID Kylin::ActSkill::RevertHost()
-{
-	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
-	if (pEnt)
-	{
-		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
-	}
-}
 
 KVOID Kylin::ActSkill::HitTarget( KUINT uID )
 {
