@@ -439,6 +439,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\FoodSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\FoodSkill.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\NormalFactor.cpp"
 				>
 			</File>
