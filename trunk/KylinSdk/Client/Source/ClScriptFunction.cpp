@@ -10,6 +10,7 @@
 #include "uiShortcutMenu.h"
 #include "uiMonsterInfoMenu.h"
 #include "uiTaskTipsMenu.h"
+#include "uiKitbagMenu.h"
 #include "ActionDispatcher.h"
 #include "Action.h"
 #include "Avatar.h"
@@ -23,6 +24,7 @@
 #include "Pathwayloader.h"
 #include "Pathway.h"
 #include "NpcObject.h"
+#include "Kitbag.h"
 
 
 namespace Script
@@ -189,6 +191,21 @@ namespace Script
 		{
 			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
 			SAFE_CALL(pNpc->GetAIHandler(),SetPathway(pPathway));
+		}
+	}
+
+	extern void add_item( unsigned int uEntID, unsigned int uItemGID )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+
+		if (BtIsKindOf(Kylin::Character,pEnt))
+		{
+			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
+			pChar->GetKitbag()->AddItem(uItemGID);
+			//---------------------------------------------------
+			// ¸üÐÂ±³°üUI
+			Kylin::KitbagMenu* pMenu = GET_GUI_PTR(Kylin::KitbagMenu);
+			pMenu->Refresh();
 		}
 	}
 }

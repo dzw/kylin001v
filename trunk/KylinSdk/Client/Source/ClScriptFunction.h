@@ -27,6 +27,8 @@ namespace Script
 
 	// 为非玩家添加路径点
 	extern void set_pathway( unsigned int uEntID, unsigned int uPathwayID );
+	// 加入道具
+	extern void add_item(unsigned int uEntID, unsigned int uItemGID);
 
 	//tolua_end
 };
