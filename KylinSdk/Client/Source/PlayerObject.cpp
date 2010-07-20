@@ -13,6 +13,7 @@ namespace Kylin
 	{
 		{&ev_post_killed,			&EV_Killed},
 		{&ev_post_reborn,			&EV_Reborn},
+		{&ev_restore_hp,			&EV_RestoreHP},
 		{NULL, NULL}
 	};
 
@@ -94,5 +95,22 @@ namespace Kylin
 
 		// 重生事件
 		Reborn();
+	}
+
+	KVOID PlayerObject::EV_RestoreHP( EventPtr spEV )
+	{
+		KINT nReHp	= boost::get<int>(spEV->args[0]);
+
+		AssertEx(nReHp > 0,"恢复的生命值不允许是负数！");
+
+		KINT nHp,nInitHp;
+		m_kProperty.GetIntValue("$InitHP",nInitHp);
+		m_kProperty.GetIntValue("$HP",nHp);
+
+		nHp += nReHp;
+		if (nHp + nReHp > nInitHp)
+			nHp = nInitHp;
+		
+		m_kProperty.SetValue("$HP",nHp);
 	}
 }

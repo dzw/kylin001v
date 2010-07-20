@@ -4,15 +4,13 @@
 
 namespace Kylin
 {
-	class ActSkill : public Action
+	class FoodSkill : public Action
 	{
 	public:
-		ActSkill(ActionDispatcher* pDispatcher);
+		FoodSkill(ActionDispatcher* pDispatcher);
 
 	protected:
 		virtual KVOID OnTriggered(Factor* pFactor);
 
-	protected:
-		virtual KVOID HitTarget(KUINT uID);
 	};
 }

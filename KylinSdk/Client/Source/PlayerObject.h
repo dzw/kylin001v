@@ -32,6 +32,7 @@ namespace Kylin
 	protected:
 		KVOID	EV_Killed(EventPtr spEV);
 		KVOID	EV_Reborn(EventPtr spEV);
+		KVOID	EV_RestoreHP(EventPtr spEV);
 
 	protected:
 		// ∏¥ªÓ ±º‰
