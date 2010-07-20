@@ -28,9 +28,9 @@ namespace Kylin
 		StorageType		GetStorageType();
 		KUINT			GetGID(){ return m_uGID; }
 
-	protected:
-		friend class Kitbag;
-		friend class ItemEntity;
+//	protected:
+//		friend class Kitbag;
+//		friend class ItemEntity;
 		
 		Kitbag*		m_pKitbag;
 
@@ -45,6 +45,9 @@ namespace Kylin
 		
 		// 所属ID
 		KUINT		m_uBelong;
+		
+		// 特效ID
+		KUINT		m_uEffectID;
 
 		// 道具类型
 		ITEM_TYPE	m_eType;
@@ -55,6 +58,9 @@ namespace Kylin
 		// UI图标
 		KSTR		m_sIcon;
 		
+		// 模型
+		KSTR		m_sMesh;
+
 		// 说明
 		KSTR		m_sExplain;
 	};

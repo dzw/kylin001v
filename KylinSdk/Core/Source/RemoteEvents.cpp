@@ -31,5 +31,5 @@ EventTemplate ev_do_spawn				("ev_do_spawn");
 EventTemplate ev_on_timer				("ev_on_timer");
 EventTemplate ev_do_quit				("ev_do_quit");
 EventTemplate ev_sync_gameresult		("ev_sync_gameresult");
-
+EventTemplate ev_restore_hp				("ev_restore_hp");
 
