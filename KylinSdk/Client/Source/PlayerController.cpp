@@ -14,6 +14,7 @@
 #include "ScriptVM.h"
 #include "EffectDecal.h"
 #include "uiCursorEx.h"
+#include "uiKitbagMenu.h"
 #include "uiMonsterInfoMenu.h"
 #include "DataManager.h"
 #include "Action.h"
@@ -67,11 +68,15 @@ Kylin::PlayerController::~PlayerController()
 
 KVOID Kylin::PlayerController::SetTarget( Character* pHost )
 {	
-	assert(pHost);
+	Assert(pHost);
 	if (!pHost) return;
 
 	m_pHostChar = pHost;
 	m_pCamera->SetTarget(m_pHostChar->GetSceneNode());
+	
+	// 注册背包监听接口
+	KitbagMenu* pMenu = GET_GUI_PTR(KitbagMenu);
+	pMenu->RegKitbagListener(KNEW Kitbag::KitbagListener(m_pHostChar->GetKitbag()));
 }
 
 KVOID Kylin::PlayerController::Tick( KFLOAT fElapsed )
@@ -294,6 +299,10 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 			{
 				ItemEntity* pItem = BtStaticCast(ItemEntity,pEnt);
 				pItem->BeCollected(m_pHostChar->GetID());
+				//---------------------------------------------------
+				// 更新背包UI
+				KitbagMenu* pMenu = GET_GUI_PTR(KitbagMenu);
+				pMenu->Refresh();
 			}
 		}
 	}
