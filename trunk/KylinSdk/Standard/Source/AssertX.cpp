@@ -8,6 +8,7 @@
 #include "stdpch.h"
 #include "Assertx.h"
 #include <time.h>
+#include "Utility.h"
 #ifdef __LINUX__
 #include <execinfo.h>
 #endif
@@ -28,9 +29,9 @@ VOID __show__( const CHAR* szTemp )
 // 	fclose(f) ;
 // #endif
 
-#if defined(__WINDOWS__)
+#if defined(WIN32)
 	static MyLock lock ;
-	if( g_Command_Assert!=1 )
+	//if( g_Command_Assert!=1 )
 	{
 		lock.Lock() ;
 		INT iRet = ::MessageBoxA( NULL, szTemp, "“Ï≥£", MB_OK ) ;
@@ -49,7 +50,7 @@ VOID __show__( const CHAR* szTemp )
 
 VOID __messagebox__(const CHAR*msg )
 {
-#if defined(__WINDOWS__)
+#if defined(WIN32)
 	::MessageBoxA( NULL, msg, "–≈œ¢", MB_OK ) ;
 #elif defined(__LINUX__)
 #endif

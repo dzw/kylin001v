@@ -24,10 +24,10 @@
 ///目录是否存在的检查：
 inline KBOOL CheckFolderExist(KSTR strPath)
 {
-	WIN32_FIND_DATA  wfd;
+	LPWIN32_FIND_DATAA  wfd;
 	KBOOL rValue = false;
-	HANDLE hFind = FindFirstFile(strPath.c_str(), &wfd);
-	if ((hFind != INVALID_HANDLE_VALUE) && (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+	HANDLE hFind = FindFirstFileA(strPath.c_str(), wfd);
+	if ((hFind != INVALID_HANDLE_VALUE) && (wfd->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 	{
 		rValue = true;   
 	}
@@ -45,17 +45,17 @@ inline KINT GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
 	MINIDUMP_EXCEPTION_INFORMATION ExpParam;
 
 	GetLocalTime( &stLocalTime );
-	GetCurrentDirectory(MAX_PATH,szFileName);
+	GetCurrentDirectoryA(MAX_PATH,szFileName);
 	
 	strcat(szFileName,"/dump");
 	
 	if(!CheckFolderExist(szFileName))
-		CreateDirectory( szFileName, NULL );
+		CreateDirectoryA( szFileName, NULL );
 
-	StringCchPrintf( szFileName, MAX_PATH, "%s/%04d%02d%02d-%02d%02d%02d.dmp", 
+	StringCchPrintfA( szFileName, MAX_PATH, "%s/%04d%02d%02d-%02d%02d%02d.dmp", 
 		szFileName,stLocalTime.wYear, stLocalTime.wMonth, stLocalTime.wDay, 
 		stLocalTime.wHour, stLocalTime.wMinute, stLocalTime.wSecond);
-	hDumpFile = CreateFile(szFileName, GENERIC_READ|GENERIC_WRITE, 
+	hDumpFile = CreateFileA(szFileName, GENERIC_READ|GENERIC_WRITE, 
 		FILE_SHARE_WRITE|FILE_SHARE_READ, 0, CREATE_ALWAYS, 0, 0);
 
 	ExpParam.ThreadId = GetCurrentThreadId();
@@ -68,11 +68,24 @@ inline KINT GenerateDump(EXCEPTION_POINTERS* pExceptionPointers)
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
+//共享锁
+#if defined(WIN32)
+class MyLock
+{
+	CRITICAL_SECTION m_Lock ;
+public :
+	MyLock( ){ InitializeCriticalSection(&m_Lock); } ;
+	~MyLock( ){ DeleteCriticalSection(&m_Lock); } ;
+	VOID	Lock( ){ EnterCriticalSection(&m_Lock); } ;
+	VOID	Unlock( ){ LeaveCriticalSection(&m_Lock); } ;
+};
+#endif
+
 namespace Kylin
 {
 	/** Converts KFLOAT in uint32 format to a a half in uint16 format
 	*/
-	static inline Ogre::uint16 floatToHalfI(Ogre::uint32 i)
+	static inline unsigned short floatToHalfI(unsigned int i)
 	{
 		register KINT s =  (i >> 16) & 0x00008000;
 		register KINT e = ((i >> 23) & 0x000000ff) - (127 - 15);
@@ -114,7 +127,7 @@ namespace Kylin
 	/** Converts a half in uint16 format to a KFLOAT
 	in uint32 format
 	*/
-	static inline Ogre::uint32 halfToFloatI(Ogre::uint16 y)
+	static inline unsigned int halfToFloatI(unsigned short y)
 	{
 		register KINT s = (y >> 15) & 0x00000001;
 		register KINT e = (y >> 10) & 0x0000001f;
@@ -160,17 +173,17 @@ namespace Kylin
 	* Convert a float16 (NV_half_float) to a float32
 	* Courtesy of OpenEXR
 	*/
-	static inline KFLOAT halfToFloat(Ogre::uint16 y)
+	static inline KFLOAT halfToFloat(unsigned short y)
 	{
-		Ogre::uint32 r = halfToFloatI(y);
+		unsigned int r = halfToFloatI(y);
 		return *reinterpret_cast<KFLOAT*>(&r);
 	}
 
 	/** Convert a float32 to a float16 (NV_half_float)
 	Courtesy of OpenEXR
 	*/
-	static inline Ogre::uint16 floatToHalf(KFLOAT i)
+	static inline unsigned short floatToHalf(KFLOAT i)
 	{
-		return floatToHalfI(*reinterpret_cast<Ogre::uint32*>(&i));
+		return floatToHalfI(*reinterpret_cast<unsigned int*>(&i));
 	}
 }
