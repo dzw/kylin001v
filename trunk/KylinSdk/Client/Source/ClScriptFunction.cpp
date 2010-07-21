@@ -73,7 +73,7 @@ namespace Script
 			Kylin::Node* pNode		= pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
 
 			// 绑定刀光
-			pChar->GetAvatar()->BindWeaponTrail(strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
+			//pChar->GetAvatar()->BindWeaponTrail(strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
 
 			// 加载武器附加技能
 			KANY aRet;
