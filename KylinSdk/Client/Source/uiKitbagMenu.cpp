@@ -142,6 +142,7 @@ KVOID Kylin::KitbagMenu::NotifyClick_Item( MyGUI::WidgetPtr _sender, int _left, 
 	if (nIndex != -1)
 	{ 
 		SAFE_CALL(m_pKitbagListener,OnUsed(nIndex)); 
+		Refresh();
 	}
 }
 
