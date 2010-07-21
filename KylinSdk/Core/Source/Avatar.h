@@ -29,7 +29,7 @@ namespace Kylin
 		virtual KVOID Exchange(Ogre::Entity* pHost, AvatarPart eType, KSTR sMat);
 	
 		// 
-		KVOID		BindWeaponTrail(AvatarPart ePart = AP_RWEAPON);
+		KVOID		BindWeaponTrail(AvatarPart ePart = AP_RWEAPON, KINT nWidth = 2);
 		KVOID		SetWeaponTrailVisible(KBOOL bFlag);
 	
 		virtual KVOID Update(KFLOAT fElapsed);
@@ -38,10 +38,10 @@ namespace Kylin
 		Node*	m_pLWeapon;
 		Node*	m_pRWeapon;
 
-		WeaponTrail*	m_pLWeaponTrail;
+		//WeaponTrail*	m_pLWeaponTrail;		// 只有右手武器， 无左手武器
 		WeaponTrail*	m_pRWeaponTrail;
 
-		KUINT	m_uLWeapon;
+		//KUINT	m_uLWeapon;
 		KUINT	m_uRWeapon;
 		KUINT	m_uChest;
 		KUINT	m_uHelmet;

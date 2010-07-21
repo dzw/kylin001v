@@ -12,7 +12,7 @@
 
 
 Kylin::Kitbag::Kitbag(Character* pHost)
-: m_uUpperLimit(1)
+: m_uUpperLimit(21)
 , m_pHostChar(pHost)
 {
 
