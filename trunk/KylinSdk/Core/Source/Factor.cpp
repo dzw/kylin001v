@@ -5,6 +5,8 @@
 #include "KylinRoot.h"
 #include "Action.h"
 #include "EffectManager.h"
+#include "Character.h"
+#include "Avatar.h"
 
 
 namespace Kylin
@@ -54,6 +56,19 @@ KBOOL Kylin::Factor::Init( const PropertySet& kProp )
 
 KVOID Kylin::Factor::PostDestroy()
 {
+	//------------------------------------------------------------------
+	// 恢复武器特效
+	KBOOL bTrail = false;
+	m_kProperty.GetBoolValue("$WeaponTrail",bTrail);
+
+	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_spHostAct->GetHostWorldID());
+	if (bTrail && BtIsKindOf(Character,pEnt))
+	{
+		Character* pChar = BtStaticCast(Character,pEnt);
+		pChar->GetAvatar()->SetWeaponTrailVisible(false);
+	}
+	//------------------------------------------------------------------
+
 	// 恢复特效
 	KSTR sEffect;
 	if (m_kProperty.GetStrValue("$DestroyEffect",sEffect))
@@ -89,6 +104,19 @@ KVOID Kylin::Factor::PostSpawn()
 	KSTR sEffect;
 	if (m_kProperty.GetStrValue("$SpawnEffect",sEffect))
 		ActivateEffect(sEffect,true);
+
+	//------------------------------------------------------------------
+	// 设置武器特效
+	KBOOL bTrail = false;
+	m_kProperty.GetBoolValue("$WeaponTrail",bTrail);
+
+	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_spHostAct->GetHostWorldID());
+	if (bTrail && BtIsKindOf(Character,pEnt))
+	{
+		Character* pChar = BtStaticCast(Character,pEnt);
+		pChar->GetAvatar()->SetWeaponTrailVisible(true);
+	}
+	//------------------------------------------------------------------
 }
 
 KVOID Kylin::Factor::BindEffect( PropertySet kProp )

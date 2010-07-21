@@ -163,6 +163,13 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 		kFactorProp.SetValue("$CLASS_ID",uClassid);
 	}
 
+	// 获得武器特效标记
+	if (dbItem.QueryField("WEAPON_TRAIL",dbField))
+	{
+		KBOOL bTrail = boost::any_cast<KBOOL>(dbField.m_aValue);	
+		kFactorProp.SetValue("$WeaponTrail",bTrail);
+	}
+	
 	// 获得碰撞信息
 	if (dbItem.QueryField("COLLIDE",dbField))
 	{

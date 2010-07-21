@@ -15,7 +15,7 @@ Kylin::Avatar::Avatar(Character* pChar)
 : m_pHost(pChar)
 , m_pLWeapon(NULL)
 , m_pRWeapon(NULL)
-, m_pLWeaponTrail(NULL)
+//, m_pLWeaponTrail(NULL)
 , m_pRWeaponTrail(NULL)
 {
 
@@ -23,11 +23,11 @@ Kylin::Avatar::Avatar(Character* pChar)
 
 Kylin::Avatar::~Avatar()
 {
-	SAFE_DEL(m_pLWeaponTrail);
+//	SAFE_DEL(m_pLWeaponTrail);
 	SAFE_DEL(m_pRWeaponTrail);
 
 	DetachWeapon(AP_RWEAPON);
-	DetachWeapon(AP_LWEAPON);
+//	DetachWeapon(AP_LWEAPON);
 }
 
 KVOID Kylin::Avatar::Exchange( KUINT uGID )
@@ -62,14 +62,18 @@ KVOID Kylin::Avatar::Exchange( KUINT uGID )
 		eType = AP_GLOVES;
 	else if (sType == "boots")
 		eType = AP_BOOTS;
+	else if (sType == "weapon")
+		eType = AP_RWEAPON;
 	else
 	{
 		AssertEx(NULL,"装备类型错误！");
 		return;
 	}
 
-	Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
-
+	if (eType != AP_RWEAPON)
+		Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
+	else
+		AttachWeapon(uGID,eType);
 }
 
 KVOID Kylin::Avatar::Exchange( Ogre::Entity* pHost, AvatarPart eType, KSTR sMat )
@@ -134,8 +138,10 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 
 	dbItem.QueryField("MESH",dbField);
 	KSTR sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
-	dbItem.QueryField("MATERIAL",dbField);
-	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+// 	dbItem.QueryField("MATERIAL",dbField);
+// 	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+	dbItem.QueryField("TRAIL",dbField);
+	KINT nTrail = boost::any_cast<KINT>(dbField.m_aValue);
 
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sMesh))
@@ -165,10 +171,16 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 		m_pRWeapon = pWeapon;
 		m_pHost->AttachMesh(pWeapon->GetEntityPtr(),"tag_righthand");
 	}
-	else
+// 	else
+// 	{
+// 		m_pLWeapon = pWeapon;
+// 		m_pHost->AttachMesh(pWeapon->GetEntityPtr(),"tag_lefthand");
+// 	}
+	
+	if (nTrail > 0)
 	{
-		m_pLWeapon = pWeapon;
-		m_pHost->AttachMesh(pWeapon->GetEntityPtr(),"tag_lefthand");
+		// 绑定刀光
+		BindWeaponTrail(ePart,nTrail);
 	}
 
 	return pWeapon;
@@ -184,14 +196,14 @@ KVOID Kylin::Avatar::DetachWeapon( AvatarPart ePart )
 			SAFE_DEL(m_pRWeapon);
 		}
 	}
-	else
-	{
-		if (m_pLWeapon)
-		{
-			m_pHost->DetachMesh(m_pLWeapon->GetEntityPtr());
-			SAFE_DEL(m_pLWeapon);
-		}
-	}
+// 	else
+// 	{
+// 		if (m_pLWeapon)
+// 		{
+// 			m_pHost->DetachMesh(m_pLWeapon->GetEntityPtr());
+// 			SAFE_DEL(m_pLWeapon);
+// 		}
+// 	}
 }
 
 Kylin::Node* Kylin::Avatar::GetRWeaponNode()
@@ -199,8 +211,9 @@ Kylin::Node* Kylin::Avatar::GetRWeaponNode()
 	return m_pRWeapon;
 }
 
-KVOID Kylin::Avatar::BindWeaponTrail( AvatarPart ePart )
+KVOID Kylin::Avatar::BindWeaponTrail( AvatarPart ePart, KINT nWidth )
 {
+	Assert(nWidth > 0);
 	if (ePart == AP_RWEAPON)
 	{		
 		SAFE_DEL(m_pRWeaponTrail);
@@ -209,30 +222,30 @@ KVOID Kylin::Avatar::BindWeaponTrail( AvatarPart ePart )
 		m_pRWeaponTrail = KNEW WeaponTrail(sName,OgreRoot::GetSingletonPtr()->GetSceneManager());
 
 		m_pRWeaponTrail->setWeaponEntity(m_pRWeapon->GetEntityPtr());
-		m_pRWeaponTrail->setWidth(2);
+		m_pRWeaponTrail->setWidth(nWidth);
 		m_pRWeaponTrail->setActive(false);
 	}
-	else if (ePart == AP_LWEAPON)
-	{
-		SAFE_DEL(m_pLWeaponTrail);
-
-		KSTR sName = m_pLWeapon->GetEntityPtr()->getName() + "__trail_";
-		m_pLWeaponTrail = KNEW WeaponTrail(sName,OgreRoot::GetSingletonPtr()->GetSceneManager());
-
-		m_pLWeaponTrail->setWeaponEntity(m_pLWeapon->GetEntityPtr());
-		m_pLWeaponTrail->setWidth(2);
-		m_pLWeaponTrail->setActive(false);
-	}
+// 	else if (ePart == AP_LWEAPON)
+// 	{
+// 		SAFE_DEL(m_pLWeaponTrail);
+// 
+// 		KSTR sName = m_pLWeapon->GetEntityPtr()->getName() + "__trail_";
+// 		m_pLWeaponTrail = KNEW WeaponTrail(sName,OgreRoot::GetSingletonPtr()->GetSceneManager());
+// 
+// 		m_pLWeaponTrail->setWeaponEntity(m_pLWeapon->GetEntityPtr());
+// 		m_pLWeaponTrail->setWidth(nWidth);
+// 		m_pLWeaponTrail->setActive(false);
+// 	}
 }
 
 KVOID Kylin::Avatar::SetWeaponTrailVisible( KBOOL bFlag )
 {
 	SAFE_CALL(m_pRWeaponTrail,setActive(bFlag));
-	SAFE_CALL(m_pLWeaponTrail,setActive(bFlag));
+//	SAFE_CALL(m_pLWeaponTrail,setActive(bFlag));
 }
 
 KVOID Kylin::Avatar::Update( KFLOAT fElapsed )
 {
 	SAFE_CALL(m_pRWeaponTrail,onUpdate(fElapsed));
-	SAFE_CALL(m_pLWeaponTrail,onUpdate(fElapsed));
+//	SAFE_CALL(m_pLWeaponTrail,onUpdate(fElapsed));
 }

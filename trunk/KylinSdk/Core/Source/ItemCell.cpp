@@ -3,6 +3,7 @@
 #include "Kitbag.h"
 #include "Character.h"
 #include "ActionDispatcher.h"
+#include "Avatar.h"
 
 
 Kylin::ItemCell::ItemCell(Kitbag* pKitbag)
@@ -29,6 +30,7 @@ KVOID Kylin::ItemCell::UseTheItem()
 	else if (m_eType == IT_AVATAR)
 	{
 		// »»×°
+		m_pKitbag->GetHostChar()->GetAvatar()->Exchange(m_uBelong);
 	}
 
 	m_nCount--;

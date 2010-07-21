@@ -101,6 +101,9 @@ Kylin::Factor* Kylin::ActionDispatcher::Fire( KUINT uGID/*,const KPoint3& kPos*/
 {
 	Factor* pFactor = NULL;
 	Action* pAct	= GetActionPtr(uGID);
+	if (!pAct)
+		pAct = SpawnAction(uGID);
+
 	if (pAct)
 	{
 		pFactor = pAct->SpawnFactor();
