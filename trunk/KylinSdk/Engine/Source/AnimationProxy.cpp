@@ -178,9 +178,12 @@ KVOID Kylin::AnimationProxy::SetTarget( Ogre::Entity * pEnt )
 
 KFLOAT Kylin::AnimationProxy::GetLength( KCSTR& sAnim )
 {
-	Ogre::AnimationState *pSource = m_pEntity->getAnimationState( sAnim );
-	if (pSource)
-		return pSource->getLength();
+	if (HasAnimation( sAnim ))
+	{
+		Ogre::AnimationState *pSource = m_pEntity->getAnimationState( sAnim );
+		if (pSource)
+			return pSource->getLength();		
+	}
 
 	return .0f;
 }
