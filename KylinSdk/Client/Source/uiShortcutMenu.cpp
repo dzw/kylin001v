@@ -164,4 +164,14 @@ KVOID Kylin::ShortcutMenu::NotifyClick_Skill( MyGUI::WidgetPtr _sender, int _lef
 		}
 	}
 }
+
+KVOID Kylin::ShortcutMenu::Render( KFLOAT fElapsed )
+{
+	UpdateCooldown(fElapsed);
+}
+
+KVOID Kylin::ShortcutMenu::UpdateCooldown( KFLOAT fElapsed )
+{
+	
+}
 //-----------------------------------------------------------------------------

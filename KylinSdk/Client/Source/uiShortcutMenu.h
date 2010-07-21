@@ -13,7 +13,7 @@ namespace Kylin
 		ShortcutMenu();
 
 		virtual KBOOL Initialize();
-		virtual KVOID Render(KFLOAT fElapsed){}
+		virtual KVOID Render(KFLOAT fElapsed);
 		virtual KVOID Destroy();
 
 		virtual KVOID SetVisible(KBOOL bVisible);
@@ -25,6 +25,8 @@ namespace Kylin
 		
 	public:
 		KVOID NotifyClick_Skill(MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id);
+		
+		KVOID UpdateCooldown(KFLOAT fElapsed);
 
 	protected:
 		ATTRIBUTE_FIELD_WIDGET_NAME(ShortcutMenu, m_pImageBack, "_Main");

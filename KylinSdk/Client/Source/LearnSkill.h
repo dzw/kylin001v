@@ -2,16 +2,15 @@
 
 #include "action.h"
 
-// 补充、恢复性机能
+// 学习型技能
 namespace Kylin
 {
-	class FoodSkill : public Action
+	class LearnSkill : public Action
 	{
 	public:
-		FoodSkill(ActionDispatcher* pDispatcher);
+		LearnSkill(ActionDispatcher* pDispatcher);
 
 	protected:
 		virtual KVOID OnTriggered(Factor* pFactor);
-
 	};
 }
