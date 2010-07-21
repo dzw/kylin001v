@@ -47,6 +47,58 @@ namespace Kylin
 			/** Is this oriented box intersecting the given one?
 			 */
 			bool intersects( const OrientedBox& obb ) const;
+			
+			bool RaySlabIntersect(float start, float dir, float min, float max, float& tfirst, float& tlast)
+			{
+				if (fabs(dir) < 1.0E-8)
+				{
+					return (start < max && start > min);
+				}
+
+				float tmin = (min - start) / dir;
+				float tmax = (max - start) / dir;
+				if (tmin > tmax) std::swap(tmin, tmax);
+
+				if (tmax < tfirst || tmin > tlast)
+					return false;
+
+				if (tmin > tfirst) tfirst = tmin;
+				if (tmax < tlast)  tlast  = tmax;
+				return true;
+			}
+
+			// Box : [P, H[3], E] (H[...] normalised).
+			// t   : Intersection parameter.
+			bool RayOBBoxIntersect(Ogre::Ray ray, float& t)
+			{
+				float tfirst = 0.0f, tlast = 1.0f;
+
+				if (!RaySlabIntersect( ray.getOrigin() * rot.GetColumn(0), 
+									   ray.getDirection() * rot.GetColumn(0), 
+									   center * rot.GetColumn(0) - extents.x, 
+									   center * rot.GetColumn(0) + extents.x, tfirst, tlast)
+									 ) 
+									 return false;
+
+				if (!RaySlabIntersect( ray.getOrigin() * rot.GetColumn(1), 
+									   ray.getDirection() * rot.GetColumn(1), 
+									   center * rot.GetColumn(1) - extents.y, 
+									   center * rot.GetColumn(1) + extents.y, 
+									   tfirst, tlast)
+									 ) 
+									 return false;
+
+				if (!RaySlabIntersect( ray.getOrigin() * rot.GetColumn(2), 
+									   ray.getDirection() * rot.GetColumn(2), 
+									   center * rot.GetColumn(2) - extents.z, 
+									   center * rot.GetColumn(2) + extents.z, 
+									   tfirst, tlast)
+									 ) 
+									 return false;
+
+				t = tfirst;
+				return true;
+			}
 
 			/** Is this oriented box intersecting the given sphere?
 			 */
