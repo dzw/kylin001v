@@ -14,6 +14,7 @@ namespace Kylin
 		{&ev_post_killed,			&EV_Killed},
 		{&ev_post_reborn,			&EV_Reborn},
 		{&ev_restore_hp,			&EV_RestoreHP},
+		{&ev_learn_skill,			&EV_LearnSkill},
 		{NULL, NULL}
 	};
 
@@ -113,4 +114,10 @@ namespace Kylin
 		
 		m_kProperty.SetValue("$HP",nHp);
 	}
+
+	KVOID	PlayerObject::EV_LearnSkill(EventPtr spEV)
+	{
+
+	}
+
 }
