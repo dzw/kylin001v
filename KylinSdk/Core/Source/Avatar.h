@@ -20,19 +20,25 @@ namespace Kylin
 			AP_BOOTS,
 		};
 		
+		// π“‘ÿŒ‰∆˜
 		virtual Node* AttachWeapon(KUINT uGID, AvatarPart ePart = AP_RWEAPON);
+		// –∂‘ÿŒ‰∆˜
 		virtual KVOID DetachWeapon(AvatarPart ePart);
 
 		Node*	GetRWeaponNode();
-
-		virtual KVOID Exchange(KUINT uGID);
-		virtual KVOID Exchange(Ogre::Entity* pHost, AvatarPart eType, KSTR sMat);
+		
+		// ªª◊∞
+		virtual KBOOL Exchange(KUINT uGID);
+		virtual KBOOL Exchange(Ogre::Entity* pHost, AvatarPart eType, KSTR sMat);
 	
-		// 
+		// ∞Û∂®µ∂π‚
 		KVOID		BindWeaponTrail(AvatarPart ePart = AP_RWEAPON, KINT nWidth = 2);
 		KVOID		SetWeaponTrailVisible(KBOOL bFlag);
 	
 		virtual KVOID Update(KFLOAT fElapsed);
+
+		// À¢–¬ Ù–‘
+		virtual KVOID RefreshProp(KUINT uID);
 
 	protected:
 		Node*	m_pLWeapon;

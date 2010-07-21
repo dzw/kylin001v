@@ -30,18 +30,18 @@ Kylin::Avatar::~Avatar()
 //	DetachWeapon(AP_LWEAPON);
 }
 
-KVOID Kylin::Avatar::Exchange( KUINT uGID )
+KBOOL Kylin::Avatar::Exchange( KUINT uGID )
 {
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
-		return;
+		return false;
 
 	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
 
 	// 查询对应的Avatar信息
 	DataItem dbItem;
 	if (!pLoader->GetDBPtr()->Query(uGID,dbItem))
-		return;
+		return false;
 
 	DataItem::DataField dbField;
 	dbItem.QueryField("TYPE",dbField);
@@ -67,16 +67,16 @@ KVOID Kylin::Avatar::Exchange( KUINT uGID )
 	else
 	{
 		AssertEx(NULL,"装备类型错误！");
-		return;
+		return false;
 	}
 
 	if (eType != AP_RWEAPON)
-		Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
+		return Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
 	else
-		AttachWeapon(uGID,eType);
+		return AttachWeapon(uGID,eType);
 }
 
-KVOID Kylin::Avatar::Exchange( Ogre::Entity* pHost, AvatarPart eType, KSTR sMat )
+KBOOL Kylin::Avatar::Exchange( Ogre::Entity* pHost, AvatarPart eType, KSTR sMat )
 {
 	Ogre::SubEntity* pSub = NULL;
 	for(int i = 0 ; i < pHost->getNumSubEntities(); i++)
@@ -108,10 +108,13 @@ FLAG_T:
 	{
 		Ogre::MaterialPtr matEnt = Ogre::MaterialManager::getSingletonPtr()->getByName(sMat);
 		pSub->setMaterial(matEnt);
+		return true;
 	}
 
 FLAG_F:
 	AssertEx(NULL,"装备类型错误或此模型不可以换装！");
+
+	return false;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -131,10 +134,10 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 		return NULL;
 
 	DataItem::DataField dbField;
-	dbItem.QueryField("TYPE",dbField);
-	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
-	if (sType != "weapon")
-		return NULL;
+// 	dbItem.QueryField("TYPE",dbField);
+// 	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
+// 	if (sType != "weapon")
+// 		return NULL;
 
 	dbItem.QueryField("MESH",dbField);
 	KSTR sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
@@ -248,4 +251,34 @@ KVOID Kylin::Avatar::Update( KFLOAT fElapsed )
 {
 	SAFE_CALL(m_pRWeaponTrail,onUpdate(fElapsed));
 //	SAFE_CALL(m_pLWeaponTrail,onUpdate(fElapsed));
+}
+
+KVOID Kylin::Avatar::RefreshProp(KUINT uID)
+{
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
+		return ;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的Avatar信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(uID,dbItem))
+		return ;
+
+	DataItem::DataField dbField;
+
+	dbItem.QueryField("ATK",dbField);
+	KINT nAtk = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("STR",dbField);
+	KINT fStr = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("DEF",dbField);
+	KINT fDef = boost::any_cast<KINT>(dbField.m_aValue);
+
+	dbItem.QueryField("HP",dbField);
+	KINT fDef = boost::any_cast<KINT>(dbField.m_aValue);
+	
+	
 }
