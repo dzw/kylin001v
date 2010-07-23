@@ -1,6 +1,6 @@
 /*
 ** Lua binding: clscript
-** Generated automatically by tolua++-1.0.92 on 07/20/10 10:09:20.
+** Generated automatically by tolua++-1.0.92 on 07/22/10 18:43:04.
 */
 
 #ifndef __cplusplus
@@ -63,7 +63,7 @@ static int tolua_clscript_to_learn_skill00(lua_State* tolua_S)
  if (
      !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
      !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
-     !tolua_isstring(tolua_S,3,0,&tolua_err) ||
+     !tolua_isboolean(tolua_S,3,1,&tolua_err) ||
      !tolua_isnoobj(tolua_S,4,&tolua_err)
  )
   goto tolua_lerror;
@@ -72,9 +72,9 @@ static int tolua_clscript_to_learn_skill00(lua_State* tolua_S)
  {
   unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
   unsigned int uActID = ((unsigned int)  tolua_tonumber(tolua_S,2,0));
-  char* chPos = ((char*)  tolua_tostring(tolua_S,3,0));
+  bool toUi = ((bool)  tolua_toboolean(tolua_S,3,false));
   {
-   to_learn_skill(uEntID,uActID,chPos);
+   to_learn_skill(uEntID,uActID,toUi);
   }
  }
  return 0;
@@ -318,6 +318,34 @@ static int tolua_clscript_add_item00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: addin_minimap */
+#ifndef TOLUA_DISABLE_tolua_clscript_addin_minimap00
+static int tolua_clscript_addin_minimap00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   addin_minimap(uEntID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'addin_minimap'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
 {
@@ -335,11 +363,13 @@ TOLUA_API int tolua_clscript_open (lua_State* tolua_S)
   tolua_function(tolua_S,"post_gameresult",tolua_clscript_post_gameresult00);
   tolua_function(tolua_S,"set_pathway",tolua_clscript_set_pathway00);
   tolua_function(tolua_S,"add_item",tolua_clscript_add_item00);
+  tolua_function(tolua_S,"addin_minimap",tolua_clscript_addin_minimap00);
   tolua_constant(tolua_S,"id_cl_entity",id_cl_entity);
   tolua_constant(tolua_S,"id_bullet_factor",id_bullet_factor);
   tolua_constant(tolua_S,"id_summon_factor",id_summon_factor);
   tolua_constant(tolua_S,"id_chain_factor",id_chain_factor);
   tolua_constant(tolua_S,"id_normal_factor",id_normal_factor);
+  tolua_constant(tolua_S,"id_collapsar_factor",id_collapsar_factor);
   tolua_constant(tolua_S,"id_player",id_player);
  tolua_endmodule(tolua_S);
  return 1;
