@@ -1,11 +1,13 @@
 #include "engpch.h"
 #include "AnimationProxy.h"
+#include "ClockingCallback.h"
 
 
 Kylin::AnimationProxy::AnimationProxy( Ogre::Entity* pHost )
 : m_pEntity(pHost)
 , m_pSource(NULL)
 , m_pTarget(NULL)
+, m_pClocking(NULL)
 {
 	SetTarget(pHost);
 }
@@ -14,6 +16,7 @@ Kylin::AnimationProxy::AnimationProxy()
 : m_pEntity(NULL)
 , m_pSource(NULL)
 , m_pTarget(NULL)
+, m_pClocking(NULL)
 {
 
 }
@@ -136,6 +139,7 @@ KVOID Kylin::AnimationProxy::Update( KFLOAT fElapsed )
 		{
 			// ¶¯»­½áÊø
 			PlayNext();
+			SAFE_CALL(m_pClocking,EndTime(CLASS_TO(AnimationProxy),m_pSource->getAnimationName(),m_kUserData));
 		}
 
 		m_pSource->addTime(fElapsed);
@@ -230,4 +234,9 @@ KVOID Kylin::AnimationProxy::PlayNext()
 KVOID Kylin::AnimationProxy::ClearQueue()
 {
 	m_kWaitingQueue.clear();
+}
+
+KVOID Kylin::AnimationProxy::SetCallbackObj( ClockingCallback* pObj )
+{
+	m_pClocking = pObj;
 }

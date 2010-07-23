@@ -37,11 +37,19 @@ namespace Kylin
 		KVOID PlayNext();
 		// 清空队列
 		KVOID ClearQueue();
+		
+		// 设置回调对象
+		virtual KVOID SetCallbackObj(ClockingCallback* pObj);
+		// 设置用户数据
+		virtual KVOID SetUserData(KANY aData) { m_kUserData = aData; } 
 
 	protected:
 		Ogre::Entity *			m_pEntity;
 		Ogre::AnimationState *	m_pSource;
 		Ogre::AnimationState *	m_pTarget;
+
+		ClockingCallback*		m_pClocking;	// 定时回调
+		KANY					m_kUserData;
 
 		BlendingTransition		m_eTransition;
 
