@@ -9,6 +9,7 @@
 #include "uiConsole.h"
 #include "uiMonsterInfoMenu.h"
 #include "uiTaskTipsMenu.h"
+#include "uiMiniMapMenu.h"
 #include "CameraControl.h"
 #include "UserCommandHandler.h"
 
@@ -54,6 +55,9 @@ KVOID Kylin::ClGame::Destroy()
 
 KVOID Kylin::ClGame::UiLoader()
 {
+	MiniMapMenu* pMiniMap = KNEW MiniMapMenu();
+	pMiniMap->Initialize();
+
 	ShortcutMenu* pShortcut = KNEW ShortcutMenu();
 	pShortcut->Initialize();
 
@@ -73,6 +77,8 @@ KVOID Kylin::ClGame::UiLoader()
 	pOption->Initialize();	
 
 	//////////////////////////////////////////////////////////////////////////
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pMiniMap);
+
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pShortcut);
 	
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pMonsterInfo);

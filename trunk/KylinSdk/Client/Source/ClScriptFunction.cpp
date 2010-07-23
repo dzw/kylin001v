@@ -11,6 +11,7 @@
 #include "uiMonsterInfoMenu.h"
 #include "uiTaskTipsMenu.h"
 #include "uiKitbagMenu.h"
+#include "uiMiniMapMenu.h"
 #include "ActionDispatcher.h"
 #include "Action.h"
 #include "Avatar.h"
@@ -44,22 +45,22 @@ namespace Script
 		}
 	}
 
-	extern void to_learn_skill( unsigned int uEntID ,unsigned int uActID,char* chPos)
+	extern void to_learn_skill( unsigned int uEntID ,unsigned int uActID,bool toUi)
 	{
-		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+		Kylin::Entity* pEnt			= Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
+		Kylin::ShortcutMenu* pMenu	= GET_GUI_PTR(Kylin::ShortcutMenu);
 
-		if (BtIsKindOf(Kylin::Character,pEnt))
+		if (BtIsKindOf(Kylin::Character,pEnt) && pMenu->HasSpare() > 0)
 		{
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 			Kylin::Action* pAct		= pChar->GetActionDispatcher()->SpawnAction(uActID);
 			
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));
 			
-			if (chPos)
-			{
-				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
-				pMenu->SetSkillInfo(pAct->GetIcon(),chPos[0],uActID);
-			}
+			//---------------------------------------------------------------
+			if (toUi)
+				pMenu->SetSkillInfo(pAct->GetIcon(),pAct->GetCooldawn(),uActID,false,"",pAct->GetExplain());
+			//---------------------------------------------------------------
 		}
 	}
 
@@ -71,9 +72,6 @@ namespace Script
 		{
 			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 			Kylin::Node* pNode		= pChar->GetAvatar()->AttachWeapon(uWeaponID, strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
-
-			// 绑定刀光
-			//pChar->GetAvatar()->BindWeaponTrail(strcmp(sNode,"L") ? Kylin::Avatar::AP_RWEAPON : Kylin::Avatar::AP_LWEAPON);
 
 			// 加载武器附加技能
 			KANY aRet;
@@ -87,7 +85,7 @@ namespace Script
 				{	SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode())); }
 				//---------------------------------------------------------------
 				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
-				pMenu->SetSkillInfo(pAct->GetIcon(),'l',uActID);
+				pMenu->SetSkillInfo(pAct->GetIcon(),pAct->GetCooldawn(),uActID,true,"",pAct->GetExplain());
 				//---------------------------------------------------------------
 			}
 		}
@@ -207,5 +205,12 @@ namespace Script
 			Kylin::KitbagMenu* pMenu = GET_GUI_PTR(Kylin::KitbagMenu);
 			pMenu->Refresh();
 		}
+	}
+
+	extern void addin_minimap( unsigned int uEntID )
+	{
+		Kylin::MiniMapMenu* pMenu = GET_GUI_PTR(Kylin::MiniMapMenu);
+		Assert(pMenu);
+		pMenu->SetBoss(uEntID);
 	}
 }

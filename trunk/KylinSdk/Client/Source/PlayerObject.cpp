@@ -3,6 +3,11 @@
 #include "ClRegisterClass.h"
 #include "RemoteEvents.h"
 #include "KylinRoot.h"
+#include "uiMiniMapMenu.h"
+#include "rOgreRoot.h"
+#include "ActionDispatcher.h"
+#include "Action.h"
+#include "ClScriptFunction.h"
 
 
 namespace Kylin
@@ -41,7 +46,10 @@ namespace Kylin
 	KVOID PlayerObject::PostSpawn()
 	{
 		Character::PostSpawn();
-
+		
+		// ¸üÐÂUI
+		MiniMapMenu* pMenu = GET_GUI_PTR(MiniMapMenu);
+		pMenu->SetMyself(this->GetID());
 	}
 
 	KVOID PlayerObject::PostDestroy()
@@ -117,7 +125,9 @@ namespace Kylin
 
 	KVOID	PlayerObject::EV_LearnSkill(EventPtr spEV)
 	{
-
+		KINT nSkill	= boost::get<int>(spEV->args[0]);
+		
+		Script::to_learn_skill(this->GetID(),nSkill,true);	
 	}
 
 }

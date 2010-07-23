@@ -6,7 +6,7 @@
 #include "RemoteEvents.h"
 
 
-Kylin::LearnSkill::FoodSkill( ActionDispatcher* pDispatcher )
+Kylin::LearnSkill::LearnSkill( ActionDispatcher* pDispatcher )
 : Action(pDispatcher)
 {
 

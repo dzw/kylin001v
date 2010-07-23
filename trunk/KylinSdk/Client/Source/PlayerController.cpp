@@ -122,7 +122,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		kDir.normalise();
 		KFLOAT fOffset = fElapsed * RUN_SPEED;
 		m_fDistance -= fOffset;
-		if (m_fDistance < KZERO)
+		if (m_fDistance < -KZERO)
 		{				
 			m_kMousePickPos = KPoint3::ZERO;
 			if (m_kSelectAction.uActionGID != INVALID_ID)
@@ -130,10 +130,12 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 				SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,m_uTargetID));
 				m_kSelectAction.Reset();
 			}
+
+			//KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_idle");
 		}
 		else 
 		{
-			if (m_fDistance < 3 && m_pGuideEffect->IsVisible())
+			if (m_fDistance < 1 && m_pGuideEffect->IsVisible())
 				m_pGuideEffect->SetVisible(false);
 
 			// move in current body direction (not the goal direction)
@@ -169,7 +171,13 @@ KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 	{
 		Ogre::Entity* pEnt = NULL;
 		KPoint3 kHit;
-		if ( OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
+		
+		// 一般倒落的道具模型很小所以优先判断
+		if (OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE))
+		{
+			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_PICKUP);
+		}
+		else if ( OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
 		{
 			if (pEnt && !pEnt->getUserAny().isEmpty())
 			{
@@ -182,10 +190,6 @@ KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 					KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_ATTACK);
 				}
 			}
-		}
-		else if (OgreUtils::PickEntityBoundBox(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE))
-		{
-			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_PICKUP);
 		}
 		else
 			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_NORMAL);
@@ -286,13 +290,12 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 	{
 		KPoint3 kHit;
 		Ogre::Entity* pEnt = NULL;
-		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
+
+		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE) )
 		{
-			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
-			FocusTarget(uTargetID);
-		}
-		else if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE) )
-		{
+			if (!pEnt || pEnt->getUserAny().isEmpty()) 
+				return;
+
 			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
 			Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(uTargetID);
 			if (BtIsKindOf(ItemEntity,pEnt))
@@ -304,6 +307,16 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 				KitbagMenu* pMenu = GET_GUI_PTR(KitbagMenu);
 				pMenu->Refresh();
 			}
+
+			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_NORMAL);
+		}
+		else if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
+		{
+			if (!pEnt || pEnt->getUserAny().isEmpty()) 
+				return;
+			
+			KUINT uTargetID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
+			FocusTarget(uTargetID);
 		}
 	}
 }
@@ -406,12 +419,13 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 	Ogre::Entity* pEnt = NULL;
 	KPoint3 kHitPos; 
 	if ( OgreUtils::PickEntity(kRay,&pEnt,kHitPos,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
-	{
-		if (pEnt)
+	{	
+		if (pEnt && !pEnt->getUserAny().isEmpty())
 		{
 			KUINT uID = Ogre::any_cast<KUINT>(pEnt->getUserAny());
-			Kylin::Entity* pTarget = KylinRoot::GetSingletonPtr()->GetEntity(uID);
-			if (pTarget)
+			Character* pTarget = BtDynamicCast(Character,KylinRoot::GetSingletonPtr()->GetEntity(uID));
+
+			if (pTarget && KylinRoot::GetSingletonPtr()->CheckRelation(m_pHostChar,pTarget) == KylinRoot::RELATION_ENEMY)
 			{
 				// 设置焦点在选中对象上
 				FocusTarget(uID);
@@ -438,6 +452,8 @@ KBOOL Kylin::PlayerController::SelectedEntity( Ogre::Ray kRay )
 						
 						m_kMousePickPos = pTarget->GetTranslate() - kDir * fValidDis;
 						m_fDistance		= fDistance - fValidDis;
+
+						KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_walk");
 					}
 					else
 					{

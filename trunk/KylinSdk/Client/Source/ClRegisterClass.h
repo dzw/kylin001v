@@ -12,6 +12,7 @@ enum ClClassID
 	id_summon_factor,
 	id_chain_factor,
 	id_normal_factor,
+	id_collapsar_factor,
 
 	id_player,
 };

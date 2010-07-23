@@ -7,7 +7,7 @@ namespace Script
 
 	extern void ui_reg_char_info(unsigned int uEntID);
 	// 玩家学习技能
-	extern void to_learn_skill(unsigned int uEntID,unsigned int uActID,char* chPos);
+	extern void to_learn_skill(unsigned int uEntID,unsigned int uActID,bool toUi=false);
 	// 绑定武器
 	extern void to_bind_weapon( unsigned int uEntID, unsigned int uWeaponID, const char* sNode );
 
@@ -29,6 +29,9 @@ namespace Script
 	extern void set_pathway( unsigned int uEntID, unsigned int uPathwayID );
 	// 加入道具
 	extern void add_item(unsigned int uEntID, unsigned int uItemGID);
+	
+	// 注册到小地图
+	extern void addin_minimap(unsigned int uEntID);
 
 	//tolua_end
 };
