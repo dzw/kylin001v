@@ -123,7 +123,8 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		KFLOAT fOffset = fElapsed * RUN_SPEED;
 		m_fDistance -= fOffset;
 		if (m_fDistance < -KZERO)
-		{				
+		{	
+			// 移动到鼠标点击的位置
 			m_kMousePickPos = KPoint3::ZERO;
 			if (m_kSelectAction.uActionGID != INVALID_ID)
 			{
@@ -290,7 +291,8 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 	{
 		KPoint3 kHit;
 		Ogre::Entity* pEnt = NULL;
-
+		
+		// 判断是否选择上道具
 		if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_ITEM_MASK,CLICK_DISTANCE) )
 		{
 			if (!pEnt || pEnt->getUserAny().isEmpty()) 
@@ -311,7 +313,8 @@ KVOID Kylin::PlayerController::OnRButtonDown( KINT nX, KINT nY )
 			KylinRoot::GetSingletonPtr()->SetMousePointer(CursorEx::CT_NORMAL);
 		}
 		else if ( OgreUtils::PickEntity(kRay,&pEnt,kHit,KylinRoot::KR_NPC_MASK,CLICK_DISTANCE) )
-		{
+		{	
+			// 选中NPC
 			if (!pEnt || pEnt->getUserAny().isEmpty()) 
 				return;
 			
@@ -407,7 +410,7 @@ KVOID Kylin::PlayerController::UpdateEffect( KFLOAT fElapsed )
 		
 		//-----------------------------------------------------------------
 		m_pFocusEffect->SetVisible(false);
-		// set ui
+		// 更新选中对象的UI，超出一定范围或该对象不存在隐藏UI
 		MonsterInfoMenu* pMenu = GET_GUI_PTR(MonsterInfoMenu);
 		pMenu->SetVisible(false);
 		m_uTargetID = INVALID_ID;

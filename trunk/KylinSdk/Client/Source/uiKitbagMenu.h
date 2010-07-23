@@ -8,6 +8,8 @@
 
 namespace Kylin
 {
+	class TipsMenu;
+
 	ATTRIBUTE_CLASS_LAYOUT(KitbagMenu, "kitbag.layout");
 	class KitbagMenu : public GuiBase
 					 , public InputListener
@@ -28,7 +30,8 @@ namespace Kylin
 		
 	public:
 		KVOID NotifyClick_Item(MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id);
-	
+		KVOID NotifyToolTip(MyGUI::WidgetPtr _sender, const MyGUI::ToolTipInfo & _info);
+
 	protected:
 		virtual KVOID OnKeyDown(KUINT uKey);
 		
@@ -68,5 +71,7 @@ namespace Kylin
 		
 	private:
 		Kitbag::KitbagListener*		m_pKitbagListener;
+
+		TipsMenu*					m_pItemTips;
 	};
 }
