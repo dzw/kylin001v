@@ -259,7 +259,7 @@ KVOID Kylin::ShortcutMenu::NotifyToolTip( MyGUI::WidgetPtr _sender, const MyGUI:
 			if (!m_kActions[uKey].sContent.empty())
 			{
 				m_pActionTips->SetTitle(m_kActions[uKey].sTitle);
-				m_pActionTips->SetTitle(m_kActions[uKey].sContent);
+				m_pActionTips->SetContent(m_kActions[uKey].sContent);
 				m_pActionTips->Show(_info.point);
 			}
 		}

@@ -1,6 +1,7 @@
 #include "cltpch.h"
 #include "uiKitbagMenu.h"
 #include "ItemCell.h"
+#include "uiTipsMenu.h"
 
 
 Kylin::KitbagMenu::KitbagMenu()
@@ -8,6 +9,9 @@ Kylin::KitbagMenu::KitbagMenu()
 , m_pKitbagListener(NULL)
 {
 	initialiseByAttributes(this);
+
+	m_pItemTips = KNEW TipsMenu();
+	m_pItemTips->Hide();
 }
 
 KBOOL Kylin::KitbagMenu::Initialize()
@@ -38,6 +42,7 @@ KBOOL Kylin::KitbagMenu::Initialize()
 KVOID Kylin::KitbagMenu::Destroy()
 {
 	SAFE_DEL(m_pKitbagListener);
+	SAFE_DEL(m_pItemTips);
 }
 
 KVOID Kylin::KitbagMenu::SetVisible( KBOOL bVisible )
@@ -167,4 +172,35 @@ KVOID Kylin::KitbagMenu::Clear()
 	m_pItem_1_5->setVisible(false);
 	m_pItem_1_6->setVisible(false);
 	m_pItem_1_7->setVisible(false);
+}
+
+KVOID Kylin::KitbagMenu::NotifyToolTip( MyGUI::WidgetPtr _sender, const MyGUI::ToolTipInfo & _info )
+{
+	KINT nIndex = -1;
+	if ( _sender == m_pItem_1_1)
+		nIndex = 0;
+	else if ( _sender == m_pItem_1_2)
+		nIndex = 1;
+	else if ( _sender == m_pItem_1_3)
+		nIndex = 2;
+	else if ( _sender == m_pItem_1_4)
+		nIndex = 3;
+	else if ( _sender == m_pItem_1_5)
+		nIndex = 4;
+	else if ( _sender == m_pItem_1_6)
+		nIndex = 5;
+	else if ( _sender == m_pItem_1_7)
+		nIndex = 6;
+
+	if (nIndex != -1)
+	{ 
+		KVEC<ItemCell*> kItems = m_pKitbagListener->GetKitbag()->GetItems();
+
+		if (!kItems[nIndex]->m_sExplain.empty())
+		{
+			m_pItemTips->SetTitle("µÀ¾ß");
+			m_pItemTips->SetContent(kItems[nIndex]->m_sExplain);
+			m_pItemTips->Show(_info.point);
+		}
+	}
 }
