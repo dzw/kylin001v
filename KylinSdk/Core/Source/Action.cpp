@@ -109,6 +109,13 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 	if (!m_kProperty.GetUIntValue("$FactorID",uFactorGId))
 		return NULL;
 	
+	// 无因子技能
+	if (uFactorGId == INVALID_ID)
+	{
+		OnTriggered(NULL);
+		return NULL;
+	}
+
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("FACTOR_DB",sValue))
 		return NULL;
@@ -254,6 +261,7 @@ Kylin::Factor* Kylin::Action::SpawnFactor( PropertySet& kFactorProp )
 		if (pEnt)
 		{
 			pEnt->GetAnimationProxy()->Play(sAnim);
+			pEnt->GetAnimationProxy()->SetCallbackObj(this);
 
 			m_kProperty.SetValue("$AnimLength",pEnt->GetAnimationProxy()->GetLength(sAnim));
 		}
@@ -338,5 +346,20 @@ KFLOAT Kylin::Action::GetCooldawn()
 	m_kProperty.GetFloatValue("$Cooldawn",fValue);
 
 	return fValue;
+}
+
+KVOID Kylin::Action::EndTime( KCSTR& sClass,KCSTR& sName, KANY aUserData )
+{
+	KSTR sAnim;
+	if (m_kProperty.GetStrValue("$Animation",sAnim))
+	{
+		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
+		if (pEnt && sName == sAnim)
+		{
+			pEnt->GetAnimationProxy()->SetCallbackObj(NULL);
+
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
+		}
+	}
 }
 //-------------------------------------------------------------------

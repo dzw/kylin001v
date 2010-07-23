@@ -23,6 +23,12 @@ namespace Kylin
 				COT_STATIC	= 1,
 				COT_DYNAMIC = 2,
 			};
+			
+			enum CllsnShape
+			{
+				CS_BOX,
+				CS_PLANE,
+			};
 
 			//////////////////////////////////////////////////////////////////////////
 			class CollisionPair
@@ -110,6 +116,7 @@ namespace Kylin
 				}
 
 				OrientedBox				mOBB;
+				KSTR					mName;
 				/// Pointer to a Wire Bounding Box for this Node
 				Ogre::WireBoundingBox*	mWireBoundingBox;
 			};
@@ -130,7 +137,13 @@ namespace Kylin
 			virtual KBOOL QuerySceneCllsnBox(KPoint3 kPos);
 			
 			// 添加场景碰撞盒
-			virtual KVOID AddSceneCllsnBox(const OrientedBox& kBox);
+			virtual KVOID AddSceneCllsnBox(KCSTR& sName,const OrientedBox& kBox);
+			
+			// 查询场景碰撞面
+			virtual KBOOL QuerySceneCllsnPlane(KPoint3& kPos, KFLOAT fR);
+
+			// 添加场景碰撞面
+			virtual KVOID AddSceneCllsnPlane(KCSTR& sName,const OrientedBox& kBox);
 			//-----------------------------------------------------------------
 			
 		protected:
@@ -139,9 +152,11 @@ namespace Kylin
 		protected:
 			typedef KMAP<Node*, CollisionData*> CllsnObjMap;
 			typedef KVEC<CollisionBox>			CllsnSceneVec;
-
+			typedef KVEC<CollisionBox>			CllsnPlaneVec;
+			
 			CllsnObjMap		m_kObjsMap;
 			CllsnSceneVec	m_kSceneVec;
+			CllsnPlaneVec	m_kFloorVec;
 		};
 	}
 }
