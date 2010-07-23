@@ -185,7 +185,9 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid )
 
 	dbItem.QueryField("STR",dbField);
 	KINT nSTR = boost::any_cast<KINT>(dbField.m_aValue);
-	KINT nDef = log10((KFLOAT)nSTR);
+	KINT nDef = 0;
+	if (nSTR > 0)
+		nDef = log10((KFLOAT)nSTR);
 
 	dbItem.QueryField("SPEED",dbField);
 	KFLOAT fSpeed = boost::any_cast<KFLOAT>(dbField.m_aValue);
@@ -404,4 +406,6 @@ Kylin::Entity* Kylin::KylinRoot::SpawnItem( KUINT uGid,KUINT uCid )
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
 	//////////////////////////////////////////////////////////////////////////
+
+	return pEnt;
 }

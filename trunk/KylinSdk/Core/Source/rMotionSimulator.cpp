@@ -44,11 +44,11 @@ KVOID Kylin::PhyX::MotionDummy::Repose()
 {
 	//////////////////////////////////////////////////////////////////////////
 	// test code
-	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pHost->GetWorldID());
-	if ( pEnt )
-	{
-		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
-	}
+// 	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pHost->GetWorldID());
+// 	if ( pEnt )
+// 	{
+// 		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
+// 	}
 }
 
 Kylin::PhyX::MotionSimulator::MotionSimulator()
@@ -155,16 +155,16 @@ KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFL
 		pDummy->m_kSpeed = KPoint3::ZERO;
 		pDummy->m_pHost->SetTranslate(kOldPos);
 	}
-
+	
 	KFLOAT	fInAirHeight = kCurrPos.y;
-	//---------------------------------------------------------------
-	// 获得地面高度
-	kCurrPos.y = 50000.0f;
-	if (KylinRoot::GetSingletonPtr()->HitTest(kCurrPos,KPoint3(KPoint3::NEGATIVE_UNIT_Y),kCurrPos))
+	if (!PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->QuerySceneCllsnPlane(kCurrPos,r))
 	{
-		//kCurrPos.y += r - KHALF;
+		//---------------------------------------------------------------
+		// 获得地面高度
+		kCurrPos.y = 50000.0f;
+		KylinRoot::GetSingletonPtr()->HitTest(kCurrPos,KPoint3(KPoint3::NEGATIVE_UNIT_Y),kCurrPos);
 	}
-
+	
 	// 跳跃下落状态
 	if (pDummy->m_kSpeed.y < 0)
 	{

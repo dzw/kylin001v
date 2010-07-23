@@ -278,7 +278,7 @@ KVOID Kylin::Avatar::RefreshProp(KUINT uID)
 	KINT fDef = boost::any_cast<KINT>(dbField.m_aValue);
 
 	dbItem.QueryField("HP",dbField);
-	KINT fDef = boost::any_cast<KINT>(dbField.m_aValue);
+	KINT fHP = boost::any_cast<KINT>(dbField.m_aValue);
 	
 	
 }

@@ -23,6 +23,7 @@ extern EventTemplate ev_post_touchdown;			// 触地消息
 extern EventTemplate ev_post_throw_item;		// 掉落道具
 
 // 执行
+extern EventTemplate ev_learn_skill;
 extern EventTemplate ev_restore_hp;
 extern EventTemplate ev_do_spawn;				
 extern EventTemplate ev_on_timer;

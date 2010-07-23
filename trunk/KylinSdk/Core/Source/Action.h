@@ -2,6 +2,7 @@
 
 #include "Property.h"
 #include "RegisterClass.h"
+#include "ClockingCallback.h"
 
 //tolua_begin
 // 技能使用方式
@@ -15,7 +16,7 @@ enum ActionType
 
 namespace Kylin
 {
-	class Action
+	class Action : public ClockingCallback
 	{
 	public:
 		Action(ActionDispatcher* pDispatcher);
@@ -52,7 +53,8 @@ namespace Kylin
 
 	protected:
 		virtual KVOID	OnTriggered(Factor* pFactor);
-		
+		virtual KVOID	EndTime(KCSTR& sClass,KCSTR& sName, KANY aUserData);
+
 	protected:
 		friend class ActionDispatcher;
 		friend class Factor;

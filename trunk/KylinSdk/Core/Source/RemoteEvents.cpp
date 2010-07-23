@@ -32,4 +32,4 @@ EventTemplate ev_on_timer				("ev_on_timer");
 EventTemplate ev_do_quit				("ev_do_quit");
 EventTemplate ev_sync_gameresult		("ev_sync_gameresult");
 EventTemplate ev_restore_hp				("ev_restore_hp");
-
+EventTemplate ev_learn_skill			("ev_learn_skill");

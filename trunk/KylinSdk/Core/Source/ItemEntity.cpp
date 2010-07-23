@@ -9,7 +9,7 @@
 #include "EffectManager.h"
 
 
-#define _ITEM_DESTROY_TIME_		5.0f
+#define _ITEM_DESTROY_TIME_		15.0f
 
 namespace Kylin
 {

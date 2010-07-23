@@ -27,6 +27,7 @@ KVOID Kylin::PhyX::CollisionMonitor::Destroy()
 
 	m_kObjsMap.clear();
 	m_kSceneVec.clear();
+	m_kFloorVec.clear();
 }
 
 Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Commit( Node* pHost,KBOOL bCollider,KUINT uSelf,KUINT uMate )
@@ -52,12 +53,12 @@ Kylin::PhyX::CollisionMonitor::CollisionData* Kylin::PhyX::CollisionMonitor::Com
 	return pData;
 }
 
-KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFLOAT fRadius )
+KBOOL Kylin::PhyX::CollisionMonitor::QueryScene( KPoint3 kPos, KPoint3 kDir, KFLOAT fRadius)
 {
 	if (QuerySceneCllsnBox(kPos))
 		return false;
 
-	KPoint3 kSrc(kPos.x,kPos.y + fRadius,kPos.z);	
+	KPoint3 kSrc(kPos.x,kPos.y + 1.5f*fRadius,kPos.z);	
 	Ogre::Ray kRay(kSrc,kDir);
 	
 	// 检测该射线是否与地面相交
@@ -125,14 +126,15 @@ KBOOL Kylin::PhyX::CollisionMonitor::QuerySceneCllsnBox( KPoint3 kPos )
 			}
 		}
 	}
-
+	
 	return false;
 }
 
-KVOID Kylin::PhyX::CollisionMonitor::AddSceneCllsnBox( const OrientedBox& kBox )
+KVOID Kylin::PhyX::CollisionMonitor::AddSceneCllsnBox(KCSTR& sName, const OrientedBox& kBox )
 {
 	CollisionBox box;
 	box.mOBB = kBox;
+	box.mName = sName;
 	m_kSceneVec.push_back(box);
 }
 
@@ -149,6 +151,34 @@ KVOID Kylin::PhyX::CollisionMonitor::Erase( Node* pHost )
 			break;
 		}
 	}
+}
+
+KVOID Kylin::PhyX::CollisionMonitor::AddSceneCllsnPlane(KCSTR& sName, const OrientedBox& kBox )
+{
+	CollisionBox box;
+	box.mOBB = kBox;
+	box.mName = sName;
+	m_kFloorVec.push_back(box);
+}
+
+KBOOL Kylin::PhyX::CollisionMonitor::QuerySceneCllsnPlane( KPoint3& kPos , KFLOAT fR)
+{
+	KFLOAT fDis = .0f;
+	for (KUINT i = 0; i < m_kFloorVec.size(); i++)
+	{
+		if ( m_kFloorVec[i].mOBB.getCenter().squaredDistance(kPos) <= 
+			m_kFloorVec[i].mOBB.getSquaredRadius() )
+		{
+			if ( m_kFloorVec[i].mOBB.contains(kPos) )
+			{
+				kPos.y = m_kFloorVec[i].mOBB.center.y + m_kFloorVec[i].mOBB.extents.y;
+
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 //////////////////////////////////////////////////////////////////////////
 KVOID Kylin::PhyX::CollisionMonitor::CollisionGroup::AddCollider( CollisionData* pData )
