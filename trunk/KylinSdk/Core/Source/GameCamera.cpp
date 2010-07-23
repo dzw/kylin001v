@@ -187,7 +187,9 @@ KVOID Kylin::GameCamera::SetMode( GameCameraMode eMod )
 
 Ogre::Ray Kylin::GameCamera::GetCameraToTargetRay()
 {
-	KPoint3 kDir = m_pTargetNode->getPosition()-m_pCamera->getPosition();
+	KPoint3 kSrc = m_pTargetNode->getPosition();
+	kSrc += 1.0f;
+	KPoint3 kDir =kSrc-m_pCamera->getPosition();
 	kDir.normalise();
 	Ogre::Ray kRay = Ogre::Ray(m_pCamera->getPosition(),kDir);
 	

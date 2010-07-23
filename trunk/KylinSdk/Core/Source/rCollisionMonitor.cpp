@@ -117,8 +117,8 @@ KBOOL Kylin::PhyX::CollisionMonitor::QuerySceneCllsnBox( KPoint3 kPos )
 {
  	for (KUINT i = 0; i < m_kSceneVec.size(); i++)
 	{
-		if ( m_kSceneVec[i].mOBB.getCenter().squaredDistance(kPos) <= 
-			 m_kSceneVec[i].mOBB.getSquaredRadius() )
+// 		if ( m_kSceneVec[i].mOBB.getCenter().squaredDistance(kPos) <= 
+// 			 m_kSceneVec[i].mOBB.getSquaredRadius() * 2 )
 		{
 			if ( m_kSceneVec[i].mOBB.contains(kPos) )
 			{
@@ -166,8 +166,8 @@ KBOOL Kylin::PhyX::CollisionMonitor::QuerySceneCllsnPlane( KPoint3& kPos , KFLOA
 	KFLOAT fDis = .0f;
 	for (KUINT i = 0; i < m_kFloorVec.size(); i++)
 	{
-		if ( m_kFloorVec[i].mOBB.getCenter().squaredDistance(kPos) <= 
-			m_kFloorVec[i].mOBB.getSquaredRadius() )
+// 		if ( m_kFloorVec[i].mOBB.getCenter().squaredDistance(kPos) <= 
+// 			m_kFloorVec[i].mOBB.getSquaredRadius() * 2 )
 		{
 			if ( m_kFloorVec[i].mOBB.contains(kPos) )
 			{
