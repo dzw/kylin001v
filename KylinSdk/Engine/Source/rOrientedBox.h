@@ -16,9 +16,17 @@ namespace Kylin
 			{
 			}
 
+		
 			/// "Complete" constructor
 			OrientedBox(const Ogre::Vector3& c, const Ogre::Vector3& ex, const Ogre::Matrix3& axes  ):center(c),extents(ex),rot(axes)
 			{
+// 				axis[0] = rot.GetColumn(0);
+// 				axis[1] = rot.GetColumn(1);
+// 				axis[2] = rot.GetColumn(2);
+// 
+// 				axis[0] *= extents.x;
+// 				axis[1] *= extents.y;
+// 				axis[2] *= extents.z;
 			}
 
 			/// Gets the volume of this OBB
@@ -48,119 +56,6 @@ namespace Kylin
 			 */
 			bool intersects( const OrientedBox& obb ) const;
 			
-			bool RaySlabIntersect(float start, float dir, float min, float max, float& tfirst, float& tlast)
-			{
-				if (fabs(dir) < 1.0E-8)
-				{
-					return (start < max && start > min);
-				}
-
-				float tmin = (min - start) / dir;
-				float tmax = (max - start) / dir;
-				if (tmin > tmax) std::swap(tmin, tmax);
-
-				if (tmax < tfirst || tmin > tlast)
-					return false;
-
-				if (tmin > tfirst) tfirst = tmin;
-				if (tmax < tlast)  tlast  = tmax;
-				return true;
-			}
-
-			// Box : [P, H[3], E] (H[...] normalised).
-			// t   : Intersection parameter.
-			bool RayOBBoxIntersect(Ogre::Ray ray, float& t)
-			{
-				float tfirst = 0.0f, tlast = 1.0f;
-
-				if (!RaySlabIntersect( ray.getOrigin() * rot.GetColumn(0), 
-									   ray.getDirection() * rot.GetColumn(0), 
-									   center * rot.GetColumn(0) - extents.x, 
-									   center * rot.GetColumn(0) + extents.x, tfirst, tlast)
-									 ) 
-									 return false;
-
-				if (!RaySlabIntersect( ray.getOrigin() * rot.GetColumn(1), 
-									   ray.getDirection() * rot.GetColumn(1), 
-									   center * rot.GetColumn(1) - extents.y, 
-									   center * rot.GetColumn(1) + extents.y, 
-									   tfirst, tlast)
-									 ) 
-									 return false;
-
-				if (!RaySlabIntersect( ray.getOrigin() * rot.GetColumn(2), 
-									   ray.getDirection() * rot.GetColumn(2), 
-									   center * rot.GetColumn(2) - extents.z, 
-									   center * rot.GetColumn(2) + extents.z, 
-									   tfirst, tlast)
-									 ) 
-									 return false;
-
-				t = tfirst;
-				return true;
-			}
-
-			/** Is this oriented box intersecting the given sphere?
-			 */
-//			bool intersects( const sphere& s )
-//			{
-				//  Modified from Magic-Software http://www.magic-software.com
-// 				Ogre::Vector3 kCDiff = s.p - center;
-// 
-// 				Ogre::Real fAx = Ogre::Math::Abs(kCDiff.dotProduct(rot.GetColumn(0)) );
-// 				Ogre::Real fAy = Ogre::Math::Abs(kCDiff.dotProduct(rot.GetColumn(1)) );
-// 				Ogre::Real fAz = Ogre::Math::Abs(kCDiff.dotProduct(rot.GetColumn(2)) );
-// 				Ogre::Real fDx = fAx - extents.x;
-// 				Ogre::Real fDy = fAy - extents.y;
-// 				Ogre::Real fDz = fAz - extents.z;
-// 
-// 				if ( fAx <= extents[0] )
-// 				{
-// 					if ( fAy <= extents[1] )
-// 					{
-// 						if ( fAz <= extents[2] )
-// 							// sphere center inside box
-// 							return true;
-// 						else
-// 							// potential sphere-face intersection with face z
-// 							return fDz <= s.r;
-// 					}
-// 					else
-// 					{
-// 						if ( fAz <= extents[2] )
-// 							// potential sphere-face intersection with face y
-// 							return fDy <= s.r;
-// 						else
-// 							// potential sphere-edge intersection with edge formed
-// 							// by faces y and z							
-// 							return fDy*fDy + fDz*fDz <= (s.r*s.r);
-// 					}
-// 				}
-// 				else
-// 				{
-// 					if ( fAy <= extents[1] )
-// 					{
-// 						if ( fAz <= extents[2] )
-// 							// potential sphere-face intersection with face x
-// 							return fDx <= s.r;
-// 						else
-// 							// potential sphere-edge intersection with edge formed
-// 							// by faces x and z
-// 							return fDx*fDx + fDz*fDz <= (s.r*s.r);
-// 					}
-// 					else
-// 					{
-// 						if ( fAz <= extents[2] )
-// 							// potential sphere-edge intersection with edge formed
-// 							// by faces x and y
-// 							return fDx*fDx + fDy*fDy <= (s.r*s.r);
-// 						else
-// 							// potential sphere-vertex intersection at corner formed
-// 							// by faces x,y,z
-// 							return fDx*fDx + fDy*fDy + fDz*fDz <= (s.r*s.r);
-// 					}
-// 				}
-//			}
 			
 			const Ogre::Real	 getSquaredRadius()
 			{
@@ -186,7 +81,7 @@ namespace Kylin
 
 
 		public:
-
+			
 			/// Center of this box
 			Ogre::Vector3 center;
 
@@ -201,5 +96,5 @@ namespace Kylin
 		/// Just for ease of use, let OrientedBox be an OBB. :P
 		typedef OrientedBox OBB;	
 
-} // namespace OgreOpcode
+}
 
