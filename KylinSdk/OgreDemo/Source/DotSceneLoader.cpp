@@ -657,7 +657,8 @@ KVOID DotSceneLoader::processEntity(rapidxml::xml_node<>* XMLNode, Ogre::SceneNo
 	bool castShadows = getAttribBool(XMLNode, "castShadows", true);
 	
 	// º”‘ÿ≈ˆ◊≤
-	if (name.find("collision_box") == 0)
+	int index = name.find("collision_");
+	if (index == 0)
 	{	
 		processCollision(XMLNode,pParent);
 		return;
@@ -1088,14 +1089,24 @@ void DotSceneLoader::processCollision( rapidxml::xml_node<>* XMLNode, Ogre::Scen
 
 		pEntity->getParentSceneNode()->_updateBounds();
 		Ogre::AxisAlignedBox box = pEntity->getWorldBoundingBox();
-		KPoint3 kCenter = box.getCenter(); 
+		KPoint3 kCenter = pEntity->getParentSceneNode()->getPosition();
 		box = pEntity->getBoundingBox();
-		KPoint3 kSize = box.getSize() * pEntity->getParentSceneNode()->getScale();
+		KPoint3 kSize = box.getHalfSize() * pEntity->getParentSceneNode()->getScale();
 		Ogre::Matrix3 kMat;
 		pEntity->getParentSceneNode()->getOrientation().ToRotationMatrix(kMat);
-		
-		// collisionmanager add collisionbox
-		PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->AddSceneCllsnBox(OrientedBox(kCenter,kSize,kMat));
+
+		int index = name.find("collision_box");
+		if (index == 0)
+		{
+			// collisionmanager add collisionbox
+			PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->AddSceneCllsnBox(name,OrientedBox(kCenter,kSize,kMat));
+		}
+		else 
+		{
+			index = name.find("collision_plane");
+			if (index == 0)
+				PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->AddSceneCllsnPlane(name,OrientedBox(kCenter,kSize,kMat));
+		}
 		//////////////////////////////////////////////////////////////////////////
 
 		pParent->removeAndDestroyAllChildren();
