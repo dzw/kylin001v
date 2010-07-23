@@ -347,6 +347,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\uiMiniMapMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiMiniMapMenu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\uiMonsterInfoMenu.cpp"
 				>
 			</File>
@@ -402,6 +410,14 @@
 				RelativePath=".\Source\uiTipMenu.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\uiTipsMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiTipsMenu.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Skill"
@@ -439,11 +455,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\CollapsarFactor.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\CollapsarFactor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\FoodSkill.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\FoodSkill.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LearnSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\LearnSkill.h"
 				>
 			</File>
 			<File
