@@ -9,6 +9,7 @@
 #include "rCollisionMonitor.h"
 #include "ScriptVM.h"
 #include "RemoteEvents.h"
+#include "ScriptFunctions.h"
 
 
 KVOID Kylin::PhyX::MotionDummy::Touchdown()
@@ -43,12 +44,7 @@ KBOOL Kylin::PhyX::MotionDummy::IsImmobile()
 KVOID Kylin::PhyX::MotionDummy::Repose()
 {
 	//////////////////////////////////////////////////////////////////////////
-	// test code
-// 	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pHost->GetWorldID());
-// 	if ( pEnt )
-// 	{
-// 		KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
-// 	}
+	Script::to_stop(m_pHost->GetWorldID());
 }
 
 Kylin::PhyX::MotionSimulator::MotionSimulator()

@@ -39,7 +39,10 @@ namespace Kylin
 	{
 		Character::Tick(fElapsed);
 		
-		SAFE_CALL(m_pAIHandler,Tick(fElapsed));
+		if (!IsDead())
+		{
+			SAFE_CALL(m_pAIHandler,Tick(fElapsed));
+		}
 	}
 
 	KVOID NpcObject::PostSpawn()

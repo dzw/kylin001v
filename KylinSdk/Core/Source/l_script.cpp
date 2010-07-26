@@ -1,6 +1,6 @@
 /*
 ** Lua binding: script
-** Generated automatically by tolua++-1.0.92 on 07/19/10 09:46:35.
+** Generated automatically by tolua++-1.0.92 on 07/26/10 16:08:27.
 */
 
 #ifndef __cplusplus
@@ -127,7 +127,8 @@ static int tolua_script_add_effect00(lua_State* tolua_S)
  if (
      !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
      !tolua_isnumber(tolua_S,2,0,&tolua_err) ||
-     !tolua_isnoobj(tolua_S,3,&tolua_err)
+     !tolua_isnumber(tolua_S,3,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,4,&tolua_err)
  )
   goto tolua_lerror;
  else
@@ -135,8 +136,9 @@ static int tolua_script_add_effect00(lua_State* tolua_S)
  {
   unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
   unsigned int uEffectID = ((unsigned int)  tolua_tonumber(tolua_S,2,0));
+  float fTimes = ((float)  tolua_tonumber(tolua_S,3,0));
   {
-   add_effect(uEntID,uEffectID);
+   add_effect(uEntID,uEffectID,fTimes);
   }
  }
  return 0;
@@ -456,6 +458,34 @@ static int tolua_script_throw_item00(lua_State* tolua_S)
 }
 #endif //#ifndef TOLUA_DISABLE
 
+/* function: to_stop */
+#ifndef TOLUA_DISABLE_tolua_script_to_stop00
+static int tolua_script_to_stop00(lua_State* tolua_S)
+{
+#ifndef TOLUA_RELEASE
+ tolua_Error tolua_err;
+ if (
+     !tolua_isnumber(tolua_S,1,0,&tolua_err) ||
+     !tolua_isnoobj(tolua_S,2,&tolua_err)
+ )
+  goto tolua_lerror;
+ else
+#endif
+ {
+  unsigned int uEntID = ((unsigned int)  tolua_tonumber(tolua_S,1,0));
+  {
+   to_stop(uEntID);
+  }
+ }
+ return 0;
+#ifndef TOLUA_RELEASE
+ tolua_lerror:
+ tolua_error(tolua_S,"#ferror in function 'to_stop'.",&tolua_err);
+ return 0;
+#endif
+}
+#endif //#ifndef TOLUA_DISABLE
+
 /* Open function */
 TOLUA_API int tolua_script_open (lua_State* tolua_S)
 {
@@ -485,6 +515,7 @@ TOLUA_API int tolua_script_open (lua_State* tolua_S)
   tolua_function(tolua_S,"kill_character",tolua_script_kill_character00);
   tolua_function(tolua_S,"destroy_entity",tolua_script_destroy_entity00);
   tolua_function(tolua_S,"throw_item",tolua_script_throw_item00);
+  tolua_function(tolua_S,"to_stop",tolua_script_to_stop00);
   tolua_constant(tolua_S,"AT_IMM",AT_IMM);
   tolua_constant(tolua_S,"AT_POS",AT_POS);
   tolua_constant(tolua_S,"AT_TAR",AT_TAR);
