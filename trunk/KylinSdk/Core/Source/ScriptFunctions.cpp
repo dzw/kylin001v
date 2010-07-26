@@ -13,6 +13,9 @@
 #include "ObjectSpawner.h"
 #include "RemoteEvents.h"
 #include "Level.h"
+#include "DataManager.h"
+#include "DataItem.h"
+#include "EffectManager.h"
 
 
 namespace Script
@@ -32,13 +35,34 @@ namespace Script
 		SAFE_CALL(pEnt->GetAnimationProxy(),Play(sAnim,fTimes < 0));
 	}
 
-	extern void add_effect( unsigned int uEntID, unsigned int uEffectID )
+	extern void add_effect( unsigned int uEntID, unsigned int uEffectID , float fTimes)
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 
 		if (BtIsKindOf(Kylin::Character,pEnt))
 		{
+			KSTR sEffect;
+			KFLOAT fScale = 1.0f;
+
+			Kylin::DataItem::DataField dbField;
+			KINT nEffectID = boost::any_cast<KINT>(dbField.m_aValue);	
+			KANY aRet;
+			if ( Kylin::DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TEMPLATE",aRet) )
+			{
+				sEffect = boost::any_cast<KSTR>(aRet);	
+			}
+			if ( Kylin::DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"SCALE",aRet) )
+			{
+				fScale = boost::any_cast<KFLOAT>(aRet);	
+			}
 			
+			KSTR sNewName = sEffect + "_scp_";
+			sNewName += Ogre::StringConverter::toString(uEntID);
+
+			Kylin::EffectObject* pObj = Kylin::EffectManager::GetSingletonPtr()->Generate(sNewName,sEffect,fTimes,Kylin::ET_PARTICLE);
+			pObj->SetAutoRemove(true);
+			pObj->Attach(pEnt->GetSceneNode(),fScale);
+			pObj->Activate(true);
 		}
 	}
 
@@ -185,6 +209,16 @@ namespace Script
 				));
 
 			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(uEntID,spEV);
+		}
+	}
+
+	extern void to_stop( unsigned int uEntID )
+	{
+		Kylin::Character* pEnt = BtDynamicCast(Kylin::Character,Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID));
+		if ( pEnt )
+		{
+			pEnt->OnStop();
+			//KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
 		}
 	}
 }

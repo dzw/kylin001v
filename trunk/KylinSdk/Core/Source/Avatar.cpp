@@ -134,15 +134,10 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 		return NULL;
 
 	DataItem::DataField dbField;
-// 	dbItem.QueryField("TYPE",dbField);
-// 	KSTR sType = boost::any_cast<KSTR>(dbField.m_aValue);
-// 	if (sType != "weapon")
-// 		return NULL;
 
 	dbItem.QueryField("MESH",dbField);
 	KSTR sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
-// 	dbItem.QueryField("MATERIAL",dbField);
-// 	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+
 	dbItem.QueryField("TRAIL",dbField);
 	KINT nTrail = boost::any_cast<KINT>(dbField.m_aValue);
 
@@ -157,9 +152,7 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 
 	PropertySet kProp;
 	kProp.SetValue("$Mesh",sName);
-	//kProp.SetValue("$Materials",sMaterials);
 	kProp.SetValue("$GID",uGID);
-	//kProp.SetValue("$Shadows",true);
 
 	Node* pWeapon = KNEW Node();
 

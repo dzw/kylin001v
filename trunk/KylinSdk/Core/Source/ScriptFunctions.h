@@ -15,7 +15,7 @@ namespace Script
 	extern void add_anim_queue( unsigned int uEntID, const char* sAnim );
 
 	// 对Entity加入特效
-	extern void add_effect( unsigned int uEntID, unsigned int uEffectID );
+	extern void add_effect( unsigned int uEntID, unsigned int uEffectID , float fTimes);
 	// 加入全局特效
 	extern void add_global_effect( unsigned int uEffectID );
 	
@@ -44,6 +44,9 @@ namespace Script
 	
 	// 抛出道具
 	extern void throw_item(unsigned int uEntID, unsigned int uItem, float fTimeDelay);
+	
+	// 从运动到静止
+	extern void to_stop(unsigned int uEntID);
 
 //tolua_end
 };

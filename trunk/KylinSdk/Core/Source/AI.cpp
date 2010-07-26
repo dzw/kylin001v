@@ -56,8 +56,11 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 	{
 	case AS_IDLE:
 		
-		//bRet = Tick_Radar(fElapsed);
-		//if (!bRet)
+		bRet = false;
+		if (!m_pPathway)
+			bRet = Tick_Radar(fElapsed);
+
+		if (!bRet)
 			bRet = Tick_Idle(fElapsed);
 		break;
 
@@ -194,7 +197,7 @@ RC_RESULT Kylin::BaseAI::Enter_Jump( KVOID )
 
 KBOOL Kylin::BaseAI::Tick_Idle( KFLOAT fElapsed )
 {
-	if (m_fStayTime > 0)
+	if (m_fStayTime > 0 && m_pPathway)
 	{
 		m_fStayTime-=fElapsed;
 		if (m_fStayTime < 0)
@@ -266,7 +269,11 @@ KBOOL Kylin::BaseAI::Tick_UseSkill( KFLOAT fElapsed )
 			}
 			
 			m_fStayTime = m_pRandomGenerator->Random();
-			Enter_Move(m_kDestination.x,m_kDestination.z);
+			if (m_pPathway)
+				Enter_Move(m_kDestination.x,m_kDestination.z);
+			else
+				Enter_Idle();
+
 			return false;
 		}
 	}

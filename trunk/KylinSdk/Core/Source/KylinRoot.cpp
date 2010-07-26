@@ -177,8 +177,9 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid )
 
 	dbItem.QueryField("MESH",dbField);
 	KSTR sModel = boost::any_cast<KSTR>(dbField.m_aValue);
-// 	dbItem.QueryField("MATERIAL",dbField);
-// 	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+
+ 	dbItem.QueryField("NAME",dbField);
+ 	KSTR sName = boost::any_cast<KSTR>(dbField.m_aValue);
 
 	dbItem.QueryField("HP",dbField);
 	KINT nHP = boost::any_cast<KINT>(dbField.m_aValue);
@@ -205,7 +206,7 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid )
 	OgreUtils::DynamicLoadMesh(sModel);
 	
 	//---------------------------------------------------------------
-	//
+	// 执行脚步文件
 	KSTR sScript = "./Data/script/charactor/char_";
 	sScript += Ogre::StringConverter::toString(uGid);
 	sScript += ".lua";
@@ -214,12 +215,12 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid )
 		OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFile(sScript.data());
 	}
 	//////////////////////////////////////////////////////////////////////////
-	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
+	KSTR sMeshName = FileUtils::GetFileNameWithSuffix(sModel);
 
 	PropertySet kProp;
 	kProp.SetValue("$CLASS_ID",uCid);
-	kProp.SetValue("$Mesh",sName);
-	//kProp.SetValue("$Materials",sMaterials);
+	kProp.SetValue("$Mesh",sMeshName);
+
 	kProp.SetValue("$GID",uGid);
 	kProp.SetValue("$Shadows",true);
 	kProp.SetValue("$HP",nHP);
@@ -233,6 +234,7 @@ Kylin::Entity* Kylin::KylinRoot::SpawnCharactor( KUINT uGid )
 	kProp.SetValue("$Camp",nCamp);
 
 	Entity * pEnt = KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);
+	SAFE_CALL(pEnt,SetName(sName));
 	//////////////////////////////////////////////////////////////////////////
 
 	return pEnt;

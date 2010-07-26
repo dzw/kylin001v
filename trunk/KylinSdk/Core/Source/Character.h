@@ -33,11 +33,14 @@ namespace Kylin
 	protected:
 		KVOID	EV_Damage(EventPtr spEV);
 		KVOID	EV_ThrowItem(EventPtr spEV);
+	
+	public:
+		virtual KVOID OnStop(){}
 
 	protected:
 		virtual KVOID OnEntityCllsn(Entity* pCollidee,const KPoint3& rNormal);
 		virtual KBOOL OnShouldCllsn(Entity* pCollidee);
-		
+
 		virtual KBOOL Init(const PropertySet& kProp);
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID PostSpawn();
