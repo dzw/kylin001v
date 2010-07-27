@@ -25,6 +25,7 @@ namespace Kylin
 			: m_sName(sName)
 			, m_pClocking(NULL)
 			, m_uType(ET_NONE)
+			, m_bAutoRemove(false)
 		{}
 		virtual ~EffectObject(){}
 
@@ -51,11 +52,16 @@ namespace Kylin
 		virtual KVOID SetCallbackObj(ClockingCallback* pObj);
 		// 设置用户数据
 		virtual KVOID SetUserData(KANY aData) { m_kUserData = aData; } 
+		// 
+		virtual KVOID SetAutoRemove(KBOOL bFlag) { m_bAutoRemove = bFlag; } 
+		//
+		virtual KVOID SetPosition(const KPoint3& pt){}
 
 	protected:
 		KSTR				m_sName;		// 特效名称
 		KUINT				m_uType;		// 特效类型
-
+		
+		KBOOL				m_bAutoRemove;	// 自动删除
 		ClockingCallback*	m_pClocking;	// 定时回调
 		KANY				m_kUserData;
 	};
@@ -82,6 +88,8 @@ namespace Kylin
 		// 是否可见
 		virtual KBOOL IsVisible();
 		
+		virtual KVOID SetPosition(const KPoint3& pt);
+
 	protected:
 		//ParticleUniverse::ParticleSystem*	m_pParticleSystemEx;	// 扩展粒子特效句柄
 		Ogre::ParticleSystem*		m_pParticleHandle;		// 
@@ -89,6 +97,7 @@ namespace Kylin
 
 		KSTR	m_sTemplate;								// 特效模板
 		KFLOAT	m_fLifeTime;								// 存在时间， <= 0 为无限时
+		
 	};
 	
 	//////////////////////////////////////////////////////////////////////////
