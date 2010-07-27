@@ -51,11 +51,23 @@ namespace Kylin
 #else
 		m_pRoot = OGRE_NEW Ogre::Root();
 #endif
+
 		//////////////////////////////////////////////////////////////////////////
 		if(m_pRoot->restoreConfig() || m_pRoot->showConfigDialog())
 		{
 			m_pWindow = m_pRoot->initialise(true, pTitle);
 			
+			//-------------------------------------------------------
+			// ¼ÓÔØÍ¼±ê
+			HWND hwnd;
+			m_pWindow->getCustomAttribute("WINDOW", (void*)&hwnd);
+			HINSTANCE hinstance;
+			hinstance = GetModuleHandle(NULL);
+			HICON icon = LoadIconA(hinstance, pIcon);
+			SendMessage(hwnd, WM_SETICON, ICON_BIG, LPARAM(icon));
+			SendMessage(hwnd, WM_SETICON, ICON_SMALL, LPARAM(icon));
+			//-------------------------------------------------------
+
 			if (!LoadResources())
 				return false;
 
@@ -67,7 +79,7 @@ namespace Kylin
 
 			//////////////////////////////////////////////////////////////////////////
 			CreateWidgets();
-
+			
 			return true;
 		}
 		
@@ -148,8 +160,6 @@ namespace Kylin
 		Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
 		if (pCam)
 		{
-			pCam->setNearClipDistance(0.1f);
-			
 			OgreRoot::GetSingletonPtr()->CreateViewports(pCam);
 		}
 		// splash

@@ -83,6 +83,9 @@ namespace Kylin
 		KVOID							RegOptListener(InputListener* pl);
 		// 卸载监听
 		KVOID							UnregOptListener(InputListener* pl);
+		
+		// 设置图标
+		KVOID							SetWindowIcon(KCCHAR* pIcon);
 
 	protected:
 		// 鼠标射线和场景交集

@@ -227,6 +227,9 @@ KVOID Kylin::EffectParticle::Render( KFLOAT fElapsed )
 		if (m_fLifeTime <= .0f)
 		{
 			SAFE_CALL(m_pClocking,EndTime(CLASS_TO(EffectParticle),m_sTemplate,m_kUserData));
+
+			if (m_bAutoRemove && EffectManager::Initialized())
+				EffectManager::GetSingletonPtr()->DestroyEffect(m_sName);
 		}
 	}
 }
@@ -236,6 +239,10 @@ KBOOL Kylin::EffectParticle::IsVisible()
 	return m_pParticleHandle->getVisible();
 }
 
+KVOID Kylin::EffectParticle::SetPosition( const KPoint3& pt )
+{
+	SAFE_CALL(m_pRoot,setPosition(pt));
+}
 //////////////////////////////////////////////////////////////////////////
 
 Kylin::EffectCompositor::EffectCompositor( KSTR sName )

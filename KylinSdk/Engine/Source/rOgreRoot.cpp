@@ -36,6 +36,15 @@ Ogre::Camera* Kylin::OgreRoot::CreateCamera( KCCHAR* pName )
 		pCam = g_theApp->m_pSceneMgr->createCamera(pName);
 	else
 		pCam = g_theApp->m_pSceneMgr->getCamera(pName);
+	
+	if (pCam)
+	{
+		pCam->setNearClipDistance(0.1f);
+		pCam->setFarClipDistance(VISIBLE_DISTANCE*1.5f);
+		pCam->setFOVy(Ogre::Radian(1.0f));
+		pCam->setAutoAspectRatio(true);
+		pCam->setQueryFlags(0);
+	}
 
 	return pCam;
 }
@@ -250,4 +259,17 @@ KVOID Kylin::OgreRoot::DestroyQuery()
 Kylin::InputManager* Kylin::OgreRoot::GetInputManager()
 {
 	return g_theApp->m_pInputMgr;
+}
+
+KVOID Kylin::OgreRoot::SetWindowIcon( KCCHAR* pIcon )
+{
+//#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+	HWND hwnd = GetWindowHandle();
+	
+	HINSTANCE hinstance;
+	hinstance = GetModuleHandle(NULL);
+	//HICON icon = LoadIcon(hinstance, MAKEINTRESOURCE(uIcon));
+	HICON icon = LoadIconA(hinstance, pIcon);
+	SendMessage(hwnd, WM_SETICON, ICON_BIG, LPARAM(icon));
+	SendMessage(hwnd, WM_SETICON, ICON_SMALL, LPARAM(icon));
 }
