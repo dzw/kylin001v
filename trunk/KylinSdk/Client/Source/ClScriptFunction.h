@@ -32,6 +32,21 @@ namespace Script
 	
 	// 注册到小地图
 	extern void addin_minimap(unsigned int uEntID);
+	
+	// 累加成功条件
+	extern void add_success_factor();
+
+	// 累加失败条件
+	extern void add_failure_factor();
+	
+	// 获得成功条件
+	extern void set_success_factors(int nCount);
+
+	// 获得失败条件
+	extern void set_failure_factors(int nCount);
+	
+	// 设置任务说明
+	extern void set_task_explain(const char* pExplain);
 
 	//tolua_end
 };

@@ -32,6 +32,14 @@ KBOOL Kylin::KitbagMenu::Initialize()
 	m_pItem_1_5->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
 	m_pItem_1_6->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
 	m_pItem_1_7->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+
+	m_pItem_1_1->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_1_2->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_1_3->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_1_4->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_1_5->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_1_6->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_1_7->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
 	//---------------------------------------------------------------
 
 	SetVisible(false);

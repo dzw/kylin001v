@@ -17,11 +17,16 @@ namespace Kylin
 		virtual KVOID Destroy();
 
 		virtual KVOID SetVisible(KBOOL bVisible);
+	
+		KVOID	SetContent(KCSTR& sContent);
+		KVOID	SetResult(KCSTR& sresult);
 
 	protected:
 		ATTRIBUTE_FIELD_WIDGET_NAME(TaskTipsMenu, m_pTextTitle, "txt_title");
 		MyGUI::StaticText* m_pTextTitle;
 		ATTRIBUTE_FIELD_WIDGET_NAME(TaskTipsMenu, m_pTextContent, "txt_content");
 		MyGUI::StaticText* m_pTextContent;
+		ATTRIBUTE_FIELD_WIDGET_NAME(TaskTipsMenu, m_pTextResult, "txt_result");
+		MyGUI::StaticText* m_pTextResult;
 	};
 }

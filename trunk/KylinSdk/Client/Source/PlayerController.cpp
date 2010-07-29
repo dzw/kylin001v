@@ -131,8 +131,10 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 				SAFE_CALL(m_pHostChar->GetActionDispatcher(),Fire(m_kSelectAction.uActionGID,m_uTargetID));
 				m_kSelectAction.Reset();
 			}
-
-			//KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_idle");
+			else
+			{
+				KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_idle");
+			}
 		}
 		else 
 		{
@@ -199,18 +201,31 @@ KVOID Kylin::PlayerController::OnMouseMove(KINT nX, KINT nY)
 
 KVOID Kylin::PlayerController::OnKeyUp( KUINT uKey )
 {
+	if (m_pHostChar->IsDead())
+		return;
+
 	// keep track of the player's intended direction
 	if (uKey == OIS::KC_W && m_kKeyDirection.z == -1) m_kKeyDirection.z = 0;
 	else if (uKey == OIS::KC_A && m_kKeyDirection.x == -1) m_kKeyDirection.x = 0;
 	else if (uKey == OIS::KC_S && m_kKeyDirection.z == 1) m_kKeyDirection.z = 0;
 	else if (uKey == OIS::KC_D && m_kKeyDirection.x == 1) m_kKeyDirection.x = 0;
 
+	if (uKey == OIS::KC_W || uKey == OIS::KC_A || uKey == OIS::KC_S || uKey == OIS::KC_D)
+	{	// 当抬起按键后停止
+		if (m_kKeyDirection.z == 0 && m_kKeyDirection.x == 0)
+		{
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(m_pHostChar,"do_idle");
+		}
+	}
 }
 
 KVOID Kylin::PlayerController::OnKeyDown( KUINT uKey )
 {
 	if (m_pCamera->GetMode() != GameCamera::CM_FREE)
 	{
+		if (m_pHostChar->IsDead())
+			return;
+
 		// keep track of the player's intended direction
 		if (uKey == OIS::KC_W) m_kKeyDirection.z = -1;
 		else if (uKey == OIS::KC_A) m_kKeyDirection.x = -1;
@@ -382,6 +397,7 @@ KVOID Kylin::PlayerController::FocusTarget( KUINT uTargetID )
 		{
 			MonsterInfoMenu* pMenu = GET_GUI_PTR(MonsterInfoMenu);
 			pMenu->SetVisible(true);
+			pMenu->SetTitle(pTarget->GetName());
 			// set anima ... 
 		}
 

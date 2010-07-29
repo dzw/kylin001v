@@ -28,7 +28,7 @@ namespace Kylin
 		Showgirl(KUINT uGid);
 		
 		KVOID Spawn();
-		KBOOL Initialize();
+		KBOOL Initialize(AnimQueue que);
 		KVOID Tick(KFLOAT fElapsed);
 		
 		enum ShowFlag

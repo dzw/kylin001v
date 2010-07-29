@@ -6,6 +6,7 @@
 #include "rOgreRoot.h"
 #include "Entity.h"
 #include "Character.h"
+#include "Level.h"
 #include "uiCharInfoMenu.h"
 #include "uiShortcutMenu.h"
 #include "uiMonsterInfoMenu.h"
@@ -26,6 +27,7 @@
 #include "Pathway.h"
 #include "NpcObject.h"
 #include "Kitbag.h"
+#include "ClLobby.h"
 
 
 namespace Script
@@ -144,26 +146,26 @@ namespace Script
 
 	extern void post_gameresult( bool bFlag )
 	{
-		if (bFlag)
-		{
-			// 游戏胜利，可以进入下一关
-			Kylin::TaskTipsMenu* pMenu = GET_GUI_PTR(Kylin::TaskTipsMenu);
-			pMenu->SetVisible(true);
+		Kylin::TaskTipsMenu* pMenu = GET_GUI_PTR(Kylin::TaskTipsMenu);
+		pMenu->SetVisible(true);
+		pMenu->SetResult(bFlag?"成功":"失败");
 
-		}
-		else
+		if (!bFlag)
 		{
+
+			Kylin::KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW Kylin::ClLobby());
+
 			// 游戏失败，十秒后自动退出游戏
-			EventPtr spEV(
-				KNEW Event(
-				&ev_do_quit, 
-				Event::ev_timing, 
-				10, 
-				0, 
-				NULL
-				));
-
-			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(0,spEV);
+// 			EventPtr spEV(
+// 				KNEW Event(
+// 				&ev_do_quit, 
+// 				Event::ev_timing, 
+// 				10, 
+// 				0, 
+// 				NULL
+// 				));
+// 
+// 			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(0,spEV);
 		}
 	}
 
@@ -183,9 +185,9 @@ namespace Script
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 		Kylin::ClSceneLoader* pLoader	= (Kylin::ClSceneLoader*)Kylin::KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
 		Kylin::Pathway* pPathway		= pLoader->GetPathwayLoader()->GetPathway(uPathwayID);
-		assert(pPathway);
+		Assert(pPathway);
 
-		if (BtIsKindOf(Kylin::NpcObject,pEnt))
+		if (pPathway && BtIsKindOf(Kylin::NpcObject,pEnt))
 		{
 			Kylin::NpcObject* pNpc = BtStaticCast(Kylin::NpcObject,pEnt);
 			SAFE_CALL(pNpc->GetAIHandler(),SetPathway(pPathway));
@@ -212,5 +214,68 @@ namespace Script
 		Kylin::MiniMapMenu* pMenu = GET_GUI_PTR(Kylin::MiniMapMenu);
 		Assert(pMenu);
 		pMenu->SetBoss(uEntID);
+	}
+
+	extern void add_success_factor()
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(0);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->AddSuccessFactor();
+		}
+	}
+
+	extern void add_failure_factor()
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(0);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->AddFailureFactor();
+		}
+	}
+
+	extern void set_success_factors(int nCount)
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(0);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->SetSuccessFactors(nCount);
+		}
+	}
+
+	extern void set_failure_factors(int nCount)
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(0);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->SetFailureFactors(nCount);
+		}
+	}
+
+	extern void set_task_explain( const char* pExplain )
+	{
+		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(0);
+
+		if (BtIsKindOf(Kylin::Level,pEnt))
+		{
+			Kylin::Level* pLevel = BtStaticCast(Kylin::Level,pEnt);
+
+			pLevel->SetTaskExplain(pExplain);
+
+			Kylin::TaskTipsMenu* pMenu = GET_GUI_PTR(Kylin::TaskTipsMenu);
+			pMenu->SetContent(pExplain);
+		}
 	}
 }

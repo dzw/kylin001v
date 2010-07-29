@@ -3,6 +3,7 @@
 #include "DataItem.h"
 #include "DataManager.h"
 #include "FileUtils.h"
+#include "rOgreUtils.h"
 #include "AnimationProxy.h"
 #include "KylinRoot.h"
 #include "GameStatus.h"
@@ -18,7 +19,7 @@ Kylin::Showgirl::Showgirl(KUINT uGid)
 
 }
 
-KBOOL Kylin::Showgirl::Initialize()
+KBOOL Kylin::Showgirl::Initialize(AnimQueue que)
 {
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("CHAR_DB",sValue))
@@ -34,32 +35,16 @@ KBOOL Kylin::Showgirl::Initialize()
 	DataItem::DataField dbField;
 	dbItem.QueryField("MESH",dbField);
 	KSTR sModel = boost::any_cast<KSTR>(dbField.m_aValue);
-	dbItem.QueryField("MATERIAL",dbField);
-	KSTR sMaterials = boost::any_cast<KSTR>(dbField.m_aValue);
+
 	// 注： 路径前不可有 "\"
 	if (!FileUtils::IsFileExist(sModel))
 		return false;
 
-	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
-	KSTR sDir  = FileUtils::GetRelativePath(sModel);
-	if (!Ogre::ResourceGroupManager::getSingletonPtr()->resourceExists("General",sName))
-		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(sDir,"FileSystem","General");
-	
-	//////////////////////////////////////////////////////////////////////////
-	// addResourceLocation 此方法材质脚步无法解析需要手动加载
- 	KSTR sMat = FileUtils::GetFileName(sModel);
- 	sMat += ".material";
- 	if (!Ogre::MaterialManager::getSingletonPtr()->resourceExists(sMat))
-	{
-		sMat = sDir + sMat;
-		std::ifstream fs(sMat.data());
-		Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fs, false));
-		Ogre::MaterialManager::getSingletonPtr()->parseScript(stream,"General");
-	}
-	//////////////////////////////////////////////////////////////////////////
+	OgreUtils::DynamicLoadMesh(sModel);
+ 	KSTR sName = FileUtils::GetFileNameWithSuffix(sModel);
 
+	//////////////////////////////////////////////////////////////////////////
 	kSet.SetValue("$Mesh",sName);
-	kSet.SetValue("$Materials",sMaterials);
 
 	if (!Load(kSet))
 		return false;
@@ -67,6 +52,7 @@ KBOOL Kylin::Showgirl::Initialize()
 	//-----------------------------------------------------
 	Spawn();
 	//-----------------------------------------------------
+	m_kAnimQueue = que;
 
 	return true;
 }
@@ -83,7 +69,7 @@ KVOID Kylin::Showgirl::Tick( KFLOAT fElapsed )
 
 KVOID Kylin::Showgirl::Spawn()
 {
-	//m_eShowFlag = SF_PREPARE_;
+	m_eShowFlag = SF_PREPARE_;
 
 	//-----------------------------------------------------
 	// 设置玩家GID
@@ -98,12 +84,16 @@ KVOID Kylin::Showgirl::OnPrepare(KFLOAT fElapsed)
 	m_eShowFlag = SF_SHOWING_;
 	m_uCurAnimIndex = 0;
 	m_fTempTime = .0f;
-
-	GetAnimationProxy()->Play(m_kAnimQueue[m_uCurAnimIndex].mAnim,m_kAnimQueue[m_uCurAnimIndex].mLoopFlag);
+	
+	if (m_uCurAnimIndex < m_kAnimQueue.size())
+		GetAnimationProxy()->Play(m_kAnimQueue[m_uCurAnimIndex].mAnim,m_kAnimQueue[m_uCurAnimIndex].mLoopFlag);
 }
 
 KVOID Kylin::Showgirl::OnShowing(KFLOAT fElapsed)
 {
+	if (m_uCurAnimIndex >= m_kAnimQueue.size())
+		return;
+
 	if (m_kAnimQueue[m_uCurAnimIndex].mLoopFlag)
 	{
 		if (m_fTempTime < m_kAnimQueue[m_uCurAnimIndex].mTime)
