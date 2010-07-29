@@ -1,6 +1,6 @@
 #include "cltpch.h"
 #include "uiMonsterInfoMenu.h"
-
+#include "StringUtils.h"
 #include "KylinRoot.h"
 
 
@@ -66,6 +66,6 @@ KVOID Kylin::MonsterInfoMenu::SetHPWidthPct( KFLOAT fW )
 
 KVOID Kylin::MonsterInfoMenu::SetTitle( KCSTR sTitle )
 {
-	m_pTextName->setCaption(sTitle.data());
+	m_pTextName->setCaption(StringUtils::s2ws(sTitle.data()));
 	
 }

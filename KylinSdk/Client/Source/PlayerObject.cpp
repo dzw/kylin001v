@@ -89,6 +89,21 @@ namespace Kylin
 	{
 		this->SetVisible(true);
 		
+		//-----------------------------------------------------------------
+		// 设置出生点
+		KANY var;
+		if (m_kProperty.GetValue("$BirthPosition",var))
+		{
+			KPoint3 kPos = boost::any_cast<KPoint3>(var);
+			this->SetTranslate(kPos);
+		}
+		if (m_kProperty.GetValue("$BirthRotation",var))
+		{
+			KQuaternion kQua = boost::any_cast<KQuaternion>(var);
+			this->SetRotation(kQua);
+		}
+		//-----------------------------------------------------------------
+		// 重置生命
 		KINT nHp;
 		m_kProperty.GetIntValue("$InitHP",nHp);
 		m_kProperty.SetValue("$HP",nHp);
@@ -129,5 +144,4 @@ namespace Kylin
 		
 		Script::to_learn_skill(this->GetID(),nSkill,true);	
 	}
-
 }

@@ -85,7 +85,7 @@ KVOID Kylin::SelectMenu::NotifyNotifyItem(wraps::BaseLayout * _sender, const MyG
 			Kylin::ClLobby* pLobby = static_cast<ClLobby*>(KylinRoot::GetSingletonPtr()->GetCurrentGameStatus());
 			if (pLobby)
 			{
-				pLobby->GetLobbyScene()->SpawnActor(_info.index);
+				pLobby->GetLobbyScene()->SpawnActor(1);
 			}
 		}
 	}

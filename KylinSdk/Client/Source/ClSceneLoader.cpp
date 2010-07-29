@@ -53,13 +53,16 @@ KBOOL Kylin::ClSceneLoader::LoadPlayer()
 		if (kProp.GetValue("$BirthPosition",var))
 		{
 			KPoint3 kPos = boost::any_cast<KPoint3>(var);
-			pChar->SetTranslate(kPos);
-			//SAFE_CALL(pChar,SetTranslateToTerrain(kPos));
+			SAFE_CALL(pChar,SetTranslate(kPos));
+
+			SAFE_CALL(pChar,GetPropertyRef().SetValue("$BirthPosition",kPos));
 		}
 		if (kProp.GetValue("$BirthRotation",var))
 		{
 			KQuaternion kQua = boost::any_cast<KQuaternion>(var);
 			SAFE_CALL(pChar,SetRotation(kQua));
+
+			SAFE_CALL(pChar,GetPropertyRef().SetValue("$BirthRotation",kQua));
 		}
 		
 		//-------------------------------------------------
