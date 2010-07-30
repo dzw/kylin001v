@@ -220,6 +220,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\rRenderable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ScriptVM.cpp"
 				>
 			</File>
@@ -294,11 +298,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\renderablemanager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\rOgreRoot.h"
 				>
 			</File>
 			<File
 				RelativePath=".\Source\rOgreUtils.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\rRenderable.h"
 				>
 			</File>
 			<File
@@ -327,6 +343,14 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\engres.rc"
+				>
+			</File>
+			<File
+				RelativePath=".\OgreApp.ico"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="ui"
