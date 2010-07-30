@@ -86,7 +86,7 @@ namespace Kylin
 				}
 				else if (kCmd[0] == "profile")
 				{
-					CProfiling::GetSingletonPtr()->Profiling();
+					//CProfiling::GetSingletonPtr()->Profiling();
 				}
 			}
 		}

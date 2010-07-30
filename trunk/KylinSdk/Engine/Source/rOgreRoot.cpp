@@ -5,6 +5,7 @@
 #include "InputManager.h"
 #include "CameraControl.h"
 #include "uiConsole.h"
+#include "RenderableManager.h"
 
 
 extern Kylin::AppFrame* g_theApp;
@@ -272,4 +273,9 @@ KVOID Kylin::OgreRoot::SetWindowIcon( KCCHAR* pIcon )
 	HICON icon = LoadIconA(hinstance, pIcon);
 	SendMessage(hwnd, WM_SETICON, ICON_BIG, LPARAM(icon));
 	SendMessage(hwnd, WM_SETICON, ICON_SMALL, LPARAM(icon));
+}
+
+Kylin::RenderableManager* Kylin::OgreRoot::GetRenderableManager()
+{
+	return g_theApp->m_pRenderableMgr;
 }

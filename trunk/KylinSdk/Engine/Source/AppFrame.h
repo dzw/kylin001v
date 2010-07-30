@@ -30,10 +30,12 @@ namespace Kylin
 		virtual KVOID	OnIdle(KFLOAT fElapsed);
 		virtual KVOID	OnExit();
 		virtual KVOID	OnSize(KUINT nWidth, KUINT nHeight){}	
-		virtual KVOID	OnStartTick();
+		virtual KVOID	StartTick();
 
 	private:
+		virtual KBOOL frameStarted(const Ogre::FrameEvent& evt);
 		virtual KBOOL frameRenderingQueued(const Ogre::FrameEvent& evt);
+		virtual KBOOL frameEnded(const Ogre::FrameEvent& evt);
 
 		virtual void windowResized(Ogre::RenderWindow* rw);
 		virtual void windowClosed(Ogre::RenderWindow* rw);
@@ -49,7 +51,8 @@ namespace Kylin
 		InputManager*		m_pInputMgr;
 		CameraControl*		m_pCameraCtrl;
 		ScriptVM*			m_pScriptVM;
-	
+		RenderableManager*	m_pRenderableMgr;
+
 		KBOOL m_bShutDown;
 		KBOOL m_bPaused;
 		KBOOL m_bStartTick;

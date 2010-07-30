@@ -54,6 +54,8 @@ namespace Kylin
 		// 获得场景管理指针
 		Ogre::SceneManager*				GetSceneManager();
 		//
+		RenderableManager*				GetRenderableManager();
+		//
 		Ogre::RenderWindow*				GetMainWindow();
 		// 获得鼠标射线
 		KBOOL							GetMouseRay(KPoint2 vOrg, Ogre::Ray &kRay);
