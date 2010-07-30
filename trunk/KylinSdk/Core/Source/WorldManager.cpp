@@ -106,6 +106,5 @@ Kylin::Scene* Kylin::WorldManager::GetActiveScene( KVOID )
 
 KVOID Kylin::WorldManager::Tick( KFLOAT fElapsed )
 {
-	if (m_pActiveScene)
-		m_pActiveScene->Tick(fElapsed);
+	SAFE_CALL(m_pActiveScene,Tick(fElapsed));
 }

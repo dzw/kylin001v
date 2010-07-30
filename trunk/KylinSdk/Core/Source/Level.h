@@ -28,6 +28,21 @@ namespace Kylin
 // 		virtual KVOID	SetVictoryFactors(KINT nCount);
 // 		virtual KVOID	AddVictoryFactor();
 
+		// 累加成功条件
+		KVOID AddSuccessFactor();
+
+		// 累加失败条件
+		KVOID AddFailureFactor();
+
+		// 获得成功条件
+		KVOID SetSuccessFactors(KINT nCount) { m_nSuccessFactors = nCount; }
+
+		// 获得失败条件
+		KVOID SetFailureFactors(KINT nCount) { m_nFailureFactors = nCount; }
+	
+		// 
+		KVOID SetTaskExplain(KCSTR& sExplain) { m_sExplain = sExplain; }
+
 	protected:
 		KVOID			EV_OnTimer(EventPtr spEV);
 		KVOID			EV_DoQuit(EventPtr spEV);
@@ -35,7 +50,10 @@ namespace Kylin
 	protected:
 		KBOOL	m_bTimerEnable;
 		KFLOAT	m_fTimeStep;
-//		KINT	m_nVictoryFactors;
+		
+		KSTR	m_sExplain;
+		KINT	m_nSuccessFactors;
+		KINT	m_nFailureFactors;
 	};
 };
 

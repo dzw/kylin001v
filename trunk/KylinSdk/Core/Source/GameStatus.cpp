@@ -36,4 +36,3 @@ KVOID Kylin::GSGame::Destroy()
 	SAFE_CALL(m_pWorldManager,Destroy());
 	SAFE_DEL(m_pWorldManager);
 }
-

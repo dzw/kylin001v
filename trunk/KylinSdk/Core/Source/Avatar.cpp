@@ -70,10 +70,16 @@ KBOOL Kylin::Avatar::Exchange( KUINT uGID )
 		return false;
 	}
 
+	KBOOL bRet = false;
 	if (eType != AP_RWEAPON)
-		return Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
+		bRet = Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
 	else
-		return AttachWeapon(uGID,eType);
+		bRet = AttachWeapon(uGID,eType);
+	
+	if (bRet)
+		RefreshProp(uGID);
+
+	return bRet;
 }
 
 KBOOL Kylin::Avatar::Exchange( Ogre::Entity* pHost, AvatarPart eType, KSTR sMat )
@@ -138,6 +144,9 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 	dbItem.QueryField("MESH",dbField);
 	KSTR sMesh = boost::any_cast<KSTR>(dbField.m_aValue);
 
+	dbItem.QueryField("MATERIAL",dbField);
+	KSTR sMaterial = boost::any_cast<KSTR>(dbField.m_aValue);
+
 	dbItem.QueryField("TRAIL",dbField);
 	KINT nTrail = boost::any_cast<KINT>(dbField.m_aValue);
 
@@ -153,6 +162,7 @@ Kylin::Node* Kylin::Avatar::AttachWeapon( KUINT uGID, AvatarPart ePart /*= AP_RW
 	PropertySet kProp;
 	kProp.SetValue("$Mesh",sName);
 	kProp.SetValue("$GID",uGID);
+	kProp.SetValue("$Material",sMaterial);
 
 	Node* pWeapon = KNEW Node();
 
@@ -265,13 +275,33 @@ KVOID Kylin::Avatar::RefreshProp(KUINT uID)
 	KINT nAtk = boost::any_cast<KINT>(dbField.m_aValue);
 
 	dbItem.QueryField("STR",dbField);
-	KINT fStr = boost::any_cast<KINT>(dbField.m_aValue);
+	KINT nStr = boost::any_cast<KINT>(dbField.m_aValue);
 
 	dbItem.QueryField("DEF",dbField);
-	KINT fDef = boost::any_cast<KINT>(dbField.m_aValue);
+	KINT nDef = boost::any_cast<KINT>(dbField.m_aValue);
 
 	dbItem.QueryField("HP",dbField);
-	KINT fHP = boost::any_cast<KINT>(dbField.m_aValue);
+	KINT nHP = boost::any_cast<KINT>(dbField.m_aValue);
 	
-	
+	//---------------------------------------------------------------
+	KINT ncHP = 0;
+	m_pHost->GetPropertyRef().GetIntValue("$HP",ncHP);
+	ncHP += nHP;
+	m_pHost->GetPropertyRef().SetValue("$HP",ncHP);
+
+	KINT ncStr = 0;
+	m_pHost->GetPropertyRef().GetIntValue("$STR",ncStr);
+	ncStr += nStr;
+	m_pHost->GetPropertyRef().SetValue("$STR",ncStr);
+
+	KINT ncDef = 0;
+	if (nStr > 0)
+		ncDef = log10((KFLOAT)ncStr) / log10(2.0f);
+
+	m_pHost->GetPropertyRef().SetValue("$DEF",ncDef);
+
+	KINT ncAtk = 0;
+	m_pHost->GetPropertyRef().GetIntValue("$ATK",ncAtk);
+	ncAtk += nAtk;
+	m_pHost->GetPropertyRef().SetValue("$ATK",ncAtk);
 }

@@ -321,6 +321,15 @@ KINT Kylin::Action::GetMaxDamage()
 	KINT nValue = 1;
 	m_kProperty.GetIntValue("$MaxDamage",nValue);
 
+	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
+	if (pEnt)
+	{
+		KINT nAtk = 0;
+		pEnt->GetPropertyRef().GetIntValue("$ATK",nAtk);
+
+		nValue += nAtk;
+	}
+
 	return nValue;
 }
 
@@ -328,6 +337,15 @@ KINT Kylin::Action::GetMinDamage()
 {
 	KINT nValue = 0;
 	m_kProperty.GetIntValue("$MinDamage",nValue);
+
+	Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
+	if (pEnt)
+	{
+		KINT nAtk = 0;
+		pEnt->GetPropertyRef().GetIntValue("$ATK",nAtk);
+
+		nValue += nAtk;
+	}
 
 	return nValue;
 }
