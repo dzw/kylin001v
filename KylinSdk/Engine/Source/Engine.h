@@ -48,7 +48,9 @@ namespace Kylin
 	class EffectParticle;
 	class EffectCompositor;
 	class EffectManager;
-	
+	class RenderableManager;
+	class Renderable;
+
 	class ClockingCallback;
 
 	extern AppFrame* g_theApp;

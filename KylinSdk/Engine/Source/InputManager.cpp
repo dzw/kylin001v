@@ -238,6 +238,14 @@ KVOID Kylin::InputManager::SetMousePosition(int _x, int _y)
 {
 	const OIS::MouseState &ms = m_pMouse->getMouseState();
 	
-	OIS::MouseEvent evt(NULL,ms);
-	mouseMoved(evt);
+	POINT  Pos;
+	Pos.x = _x;
+	Pos.y = _y;
+
+	::ClientToScreen(OgreRoot::GetSingletonPtr()->GetWindowHandle(), &Pos);
+	::SetCursorPos(Pos.x,Pos.y);
+
+// 	OIS::MouseEvent evt(NULL,ms);
+// 	
+// 	mouseMoved(evt);
 }

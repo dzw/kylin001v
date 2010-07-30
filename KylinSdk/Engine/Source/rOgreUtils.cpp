@@ -35,10 +35,11 @@ KVOID Kylin::OgreUtils::DynamicLoadMesh( KSTR sMesh )
 	sMat += ".material";
 	if (!Ogre::MaterialManager::getSingletonPtr()->resourceExists(sMat))
 	{
-		sMat = sDir + sMat;
-		std::ifstream fs(sMat.data());
+		KSTR sMatPath = sDir + sMat;
+		std::ifstream fs(sMatPath.data());
 		Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fs, false));
 		Ogre::MaterialManager::getSingletonPtr()->parseScript(stream,"General");
+		Ogre::MaterialManager::getSingletonPtr()->load(sMat,"General");
 	}
 	//-------------------------------------------------------------------------
 }

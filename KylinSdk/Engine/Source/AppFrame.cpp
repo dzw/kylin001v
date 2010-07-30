@@ -10,6 +10,8 @@
 #include "EffectManager.h"
 #include "uiLoadingProgress.h"
 #include "profile.h"
+#include "../resource.h"
+#include "RenderableManager.h"
 
 namespace Kylin
 {
@@ -23,6 +25,7 @@ namespace Kylin
 		, m_pInputMgr(NULL)
 		, m_pScriptVM(NULL)
 		, m_pCameraCtrl(NULL)
+		, m_pRenderableMgr(NULL)
 		, m_bShutDown(false)
 		, m_bPaused(false)
 		, m_bStartTick(true)
@@ -37,7 +40,8 @@ namespace Kylin
 		//Remove ourself as a Window listener
 		Ogre::WindowEventUtilities::removeWindowEventListener(m_pWindow, this);
 		windowClosed(m_pWindow);
-
+		
+		SAFE_DEL(m_pRenderableMgr);
 		SAFE_DEL(m_pRoot);
 	}
 
@@ -61,9 +65,10 @@ namespace Kylin
 			// ¼ÓÔØÍ¼±ê
 			HWND hwnd;
 			m_pWindow->getCustomAttribute("WINDOW", (void*)&hwnd);
-			HINSTANCE hinstance;
-			hinstance = GetModuleHandle(NULL);
+
+			HINSTANCE hinstance;			hinstance = GetModuleHandle(NULL);
 			HICON icon = LoadIconA(hinstance, pIcon);
+
 			SendMessage(hwnd, WM_SETICON, ICON_BIG, LPARAM(icon));
 			SendMessage(hwnd, WM_SETICON, ICON_SMALL, LPARAM(icon));
 			//-------------------------------------------------------
@@ -99,6 +104,8 @@ namespace Kylin
 
 	KVOID AppFrame::Destroy()
 	{
+		SAFE_DEL(m_pRenderableMgr);
+
 		if (EffectManager::Initialized())
 			KDEL EffectManager::GetSingletonPtr();
 
@@ -187,7 +194,9 @@ namespace Kylin
 		if (!EffectManager::Initialized())
 			KNEW EffectManager();
 		EffectManager::GetSingletonPtr()->Initialize();
-
+		//////////////////////////////////////////////////////////////////////////
+		if (!m_pRenderableMgr)
+			m_pRenderableMgr = KNEW RenderableManager();
 	}
 
 	KVOID AppFrame::OnExit()
@@ -196,6 +205,13 @@ namespace Kylin
 		m_bShutDown = true;
 	}
 	
+	KBOOL AppFrame::frameStarted( const Ogre::FrameEvent& evt )
+	{
+		SAFE_CALL(m_pRenderableMgr,OnRenderStarted(evt.timeSinceLastFrame));
+
+		return true;
+	}
+
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
 	{
 		PROFILE("frameRendering");
@@ -211,6 +227,13 @@ namespace Kylin
 		if (!m_bPaused)
 			OnIdle(evt.timeSinceLastFrame);
 		
+		return true;
+	}
+
+	KBOOL AppFrame::frameEnded( const Ogre::FrameEvent& evt )
+	{
+		SAFE_CALL(m_pRenderableMgr,OnRenderEnded(evt.timeSinceLastFrame));
+
 		return true;
 	}
 
@@ -233,7 +256,7 @@ namespace Kylin
 		PROFILE("OnIdle");
 
 		if (m_bStartTick)
-			OnStartTick();
+			StartTick();
 
 		SAFE_CALL(EffectManager::GetSingletonPtr(),Render(fElapsed));
 		
@@ -252,11 +275,13 @@ namespace Kylin
 		m_bPaused = false;
 	}
 
-	KVOID AppFrame::OnStartTick()
+	KVOID AppFrame::StartTick()
 	{
 		if (m_pGuiMgr->GetGuiBase("LoadingProgress"))
 			m_pGuiMgr->GetGuiBase("LoadingProgress")->SetVisible(false);
 		//-----------------------------------------------------------
 		m_bStartTick = false;
 	}
+
+
 }

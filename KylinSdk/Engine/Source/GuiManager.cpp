@@ -45,9 +45,9 @@ KBOOL Kylin::GuiManager::Create(Ogre::RenderWindow* pWindew, Ogre::SceneManager*
 	
 	MyGUI::Gui::getInstance().load("game_imageset.xml");
 	//////////////////////////////////////////////////////////////////////////
-	if (!CProfiling::Initialized())
-		KNEW CProfiling();
-	CProfiling::GetSingletonPtr()->Init();
+// 	if (!CProfiling::Initialized())
+// 		KNEW CProfiling();
+// 	CProfiling::GetSingletonPtr()->Init();
 
 	return true;
 }

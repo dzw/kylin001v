@@ -37,9 +37,16 @@ KBOOL Kylin::Node::Load( Kylin::PropertySet kProp )
 		m_pOgreEntity	= OgreRoot::GetSingletonPtr()->GetSceneManager()->createEntity(sMesh);
 		if (uID != -1)
 			m_pOgreEntity->setUserAny(Ogre::Any(uID));
-
-		// 设置模型贴图
-		OgreUtils::SetDefaultMaterial(m_pOgreEntity);
+			
+		if (kProp.GetStrValue("$Material",sMaterials) && !sMaterials.empty())
+		{
+			m_pOgreEntity->setMaterialName(sMaterials);
+		}
+		else
+		{
+			// 设置模型贴图
+			OgreUtils::SetDefaultMaterial(m_pOgreEntity);
+		}
 		
 		if (!m_pOgreNode || !m_pOgreEntity) return false;
 		// 挂接对象
@@ -153,6 +160,7 @@ KVOID Kylin::Node::Destroy()
 	//--------------------------------------------------------
 	SAFE_DEL(m_pAnimProxy);
 
+	//SAFE_CALL(m_pOgreNode,detachAllObjects());
 	SAFE_CALL(m_pOgreNode,removeAndDestroyAllChildren());
 	//--------------------------------------------------------
 	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
