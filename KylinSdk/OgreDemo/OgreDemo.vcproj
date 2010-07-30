@@ -247,23 +247,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\icon1.ico"
-				>
-			</File>
-			<File
 				RelativePath=".\OgreDemo.ico"
 				>
 			</File>
 			<File
 				RelativePath=".\OgreDemo.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\SampleLoadApp.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\small.ico"
 				>
 			</File>
 		</Filter>

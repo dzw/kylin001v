@@ -30,9 +30,7 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_OGREDEMO            ICON                    "OgreDemo.ico"
-IDI_SMALL               ICON                    "small.ico"
-IDI_ICON1               ICON                    "SampleLoadApp.ico"
+IDR_MAINFRAME           ICON                    "OgreDemo.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -74,7 +72,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
 CAPTION "关于"
 FONT 9, "宋体"
 BEGIN
-    ICON            IDI_OGREDEMO,IDC_MYICON,14,9,16,16
+    ICON            107,IDC_MYICON,14,9,16,16
     LTEXT           "OgreDemo 1.0 版",IDC_STATIC,49,10,119,8,SS_NOPREFIX
     LTEXT           "版权所有 (C) 2010",IDC_STATIC,49,20,119,8
     DEFPUSHBUTTON   "确定",IDOK,195,6,30,11,WS_GROUP
