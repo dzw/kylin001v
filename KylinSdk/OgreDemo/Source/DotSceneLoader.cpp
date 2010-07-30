@@ -18,6 +18,7 @@
 #include "rOrientedBox.h"
 #include "profile.h"
 #include "Entity.h"
+#include "ClScriptFunction.h"
 
 
 #pragma warning(disable:4390)
@@ -39,9 +40,7 @@ DotSceneLoader::DotSceneLoader()
 
 DotSceneLoader::~DotSceneLoader()
 {
-	//mSceneMgr->setSkyBox(false,"");
-	//mSceneMgr->setSkyDome(false,"");
-   
+ 
 }
 
 KVOID DotSceneLoader::parseDotScene(const Ogre::String &SceneName, const Ogre::String &groupName, Ogre::SceneManager *yourSceneMgr, Ogre::SceneNode *pAttachNode, const Ogre::String &sPrependNode)
@@ -106,16 +105,6 @@ KVOID DotSceneLoader::processScene(rapidxml::xml_node<>* XMLRoot)
 	pElement = XMLRoot->first_node("nodes");
 	if(pElement)
 		processNodes(pElement);
-
-	// Process externals (?)
-// 	pElement = XMLRoot->first_node("externals");
-// 	if(pElement)
-// 		processExternals(pElement);
-// 
-// 	// Process octree (?)
-// 	pElement = XMLRoot->first_node("octree");
-// 	if(pElement)
-// 		processOctree(pElement);
 
 	// Process light (?)
 	//pElement = XMLRoot->first_node("light");
@@ -524,16 +513,28 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 	else
 	{
 		// 初始化NPC
-		int n = name.find("$npc_");
+		int n = name.find("$npc");
 		if (n == 0)
 		{
-			KSTR sGid = name.substr(5,name.length());
+			KINT np = name.find("_p");
+			if (np < (KINT)0)
+				np = name.length();
+
+			KSTR sGid = name.substr(4,np-4);
 			KUINT uGID = atoi(sGid.data());
 
 			Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->SpawnCharactor(uGID);
 			AssertEx(pEnt,(sGid + " NPC ID 错误！").data());
 			if (!pEnt) return;
+			
+			if (np > (KINT)0 && np < name.length())
+			{	// 设置巡逻路径ID
+				KSTR sPathway = name.substr(np+2,name.length()-np-2);
+				KUINT uPathwayID = atoi(sPathway.data());
 
+				Script::set_pathway(pEnt->GetID(),uPathwayID);
+			}
+			
 			// spawn(NPC OBJ)
 			pNode = pEnt->GetSceneNode();
 			bNpc = true;
@@ -930,9 +931,14 @@ KVOID DotSceneLoader::Unload( Kylin::SceneHag* pHag )
 		if(mHydraxHandle->isCreated()) mHydraxHandle->remove();
 		SAFE_DEL(mHydraxHandle);
 	}
-
+	
 	Kylin::ClSceneLoader::Unload(pHag);
-
+	
+	if (mAttachNode)
+	{
+		mAttachNode->detachAllObjects();
+		mAttachNode->removeAndDestroyAllChildren();
+	}
 
 	OGRE_DELETE mTerrainGlobalOptions;
 	mTerrainGlobalOptions = NULL;
@@ -943,8 +949,6 @@ KVOID DotSceneLoader::Tick( KFLOAT fElapsed )
 	PROFILE("DotSceneLoader::Tick");
 
 	Kylin::ClSceneLoader::Tick(fElapsed);
-
-	UpdataHydrax(fElapsed);
 }
 
 //-------------------------------------------------------------------
@@ -993,9 +997,9 @@ KVOID DotSceneLoader::createWaterPlane( Ogre::SceneManager *scenemgr, Ogre::Came
 		// Base plane
 		Ogre::Plane(Ogre::Vector3(0,1,0), Ogre::Vector3(0,0,0)),
 		// Normal mode
-		Hydrax::MaterialManager::NM_RTT,// NM_VERTEX, NM_RTT  //顶点模式
+		Hydrax::MaterialManager::NM_VERTEX,// NM_VERTEX, NM_RTT  //顶点模式
 		// Projected grid options
-		Hydrax::Module::ProjectedGrid::Options(60));  //添加网格的数目 一排的数目数值越大 网格越多
+		Hydrax::Module::ProjectedGrid::Options(/*264 /*Generic one*/));  //添加网格的数目 一排的数目数值越大 网格越多
 
 	// Set our module
 	mHydraxHandle->setModule(static_cast<Hydrax::Module::Module*>(mHydraxModule));
@@ -1015,7 +1019,7 @@ KVOID DotSceneLoader::addDepthTechnique( const Ogre::String& matname )
 
 	if (mTerrainHandle)
 	{
-		Ogre::MaterialPtr pMat = mTerrainHandle->getMaterial();/*static_cast<Ogre::MaterialPtr>(Ogre::MaterialManager::getSingleton().getByName(matname));*/
+		Ogre::MaterialPtr pMat = mTerrainHandle->getMaterial();
 		for(unsigned int i = 0;i < pMat->getNumTechniques();i++)
 		{
 			if(pMat->getTechnique(i)->getSchemeName() == "HydraxDepth") return;
@@ -1065,8 +1069,6 @@ KVOID DotSceneLoader::UpdataHydrax( KFLOAT fElapsed )
 
 void DotSceneLoader::processCollision( rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent )
 {
-	
-
 	// Process attributes
 	Ogre::String name = getAttrib(XMLNode, "name");
 	Ogre::String id = getAttrib(XMLNode, "id");
@@ -1116,5 +1118,10 @@ void DotSceneLoader::processCollision( rapidxml::xml_node<>* XMLNode, Ogre::Scen
 	{
 		Ogre::LogManager::getSingleton().logMessage("[DotSceneLoader] Error loading an entity!");
 	}
+}
+
+KVOID DotSceneLoader::OnRenderStarted( KFLOAT fElapsed )
+{
+	UpdataHydrax(fElapsed);
 }
 //-------------------------------------------------------------------

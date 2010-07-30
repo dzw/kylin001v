@@ -15,6 +15,7 @@
 
 #include "ClSceneLoader.h"
 #include "Scene.h"
+#include "rRenderable.h"
 
 
 	// Forward declarations
@@ -38,7 +39,7 @@
 			: nodeName(node), propertyNm(propertyName), valueName(value), typeName(type) {}
 	};
 
-	class DotSceneLoader : public Kylin::ClSceneLoader
+	class DotSceneLoader : public Kylin::ClSceneLoader, public Kylin::Renderable
 	{
 	public:
         Ogre::TerrainGlobalOptions *mTerrainGlobalOptions;
@@ -52,6 +53,7 @@
 		void parseDotScene(const Ogre::String &SceneName, const Ogre::String &groupName, Ogre::SceneManager *yourSceneMgr, Ogre::SceneNode *pAttachNode = NULL, const Ogre::String &sPrependNode = "");
 		
 		virtual KVOID Tick(KFLOAT fElapsed);
+		virtual KVOID OnRenderStarted(KFLOAT fElapsed);
 
 	protected:
 		void processScene(rapidxml::xml_node<>* XMLRoot);
