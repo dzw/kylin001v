@@ -17,6 +17,7 @@ namespace Kylin
 		virtual KVOID			Run();
 		virtual KVOID			Entrance(KCHAR *argv) = 0;
 		virtual KVOID			OnIdle(KFLOAT fElapsed);
+		
 		virtual KVOID			Destroy();
 		virtual KVOID			SwitchStatus( GameStatus* pStatus );
 

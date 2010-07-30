@@ -14,6 +14,7 @@
 #include "rPhyXSystem.h"
 #include "StringUtils.h"
 #include "ScriptVM.h"
+#include "XmlStream.h"
 
 
 Kylin::SceneHag::SceneHag()
@@ -80,7 +81,29 @@ KVOID Kylin::Scene::SpawnScene()
 
 	KSTR sName = fInfo.archive->getName();
 	sName += "/" + m_kSceneHag.m_sSceneFile;
-	
+	//------------------------------------------------------------------
+	// 预加载资源
+// 	KSTR sRes = StringUtils::replace(sName,".xml",".res");
+// 	
+// 	XmlStream kXml(sRes.data());
+// 	if (!kXml.Open(XmlStream::Read))
+// 		return ;
+// 
+// 	//////////////////////////////////////////////////////////////////////////
+// 	// 加载所有场景配置
+// 	KSTR sDir;
+// 	KBOOL bScene = kXml.SetToFirstChild("dir");
+// 	while (bScene)
+// 	{
+// 		sDir = kXml.GetString("");
+// 		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(sDir,"FileSystem","General");
+// 
+// 		bScene = kXml.SetToNextChild("dir");
+// 	}
+// 
+// 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+// 
+// 	kXml.Close();
 	//------------------------------------------------------------------
 	// 执行lua文件
 	KSTR sLua = StringUtils::replace(sName,".xml",".lua");

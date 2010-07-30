@@ -92,3 +92,4 @@ KVOID Kylin::GameFrame::SwitchStatus( GameStatus* pStatus )
 		m_pActiveStatus->Initialize();
 	}
 }
+

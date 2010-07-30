@@ -22,8 +22,10 @@ namespace Kylin
 	Level::Level(KVOID)
 		: m_fTimeStep(.0f)
 		, m_bTimerEnable(false)
+		, m_nSuccessFactors(0)
+		, m_nFailureFactors(0)
 	{
-
+		
 	}
 
 	Level::~Level(KVOID)
@@ -119,7 +121,24 @@ namespace Kylin
 		OgreRoot::GetSingletonPtr()->ShutDown();
 	}
 
-// 	KVOID Level::SetVictoryFactors( KINT nCount )
+	KVOID Level::AddSuccessFactor()
+	{
+		m_nSuccessFactors--;
+		if (m_nSuccessFactors <= 0)
+		{
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_success");
+		}
+	}
+
+	KVOID Level::AddFailureFactor()
+	{
+		m_nFailureFactors--;
+		if (m_nFailureFactors <= 0)
+		{
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_failure");
+		}
+	}
+	// 	KVOID Level::SetVictoryFactors( KINT nCount )
 // 	{
 // 		assert(nCount > 0);
 // 		m_nVictoryFactors = nCount;

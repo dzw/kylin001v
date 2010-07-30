@@ -22,7 +22,7 @@ namespace Kylin
 		virtual KVOID Serialize(const PropertySet& kProp){ m_kProperty = kProp; }
 		virtual KVOID Deserialize(PropertySet& kProp) { kProp = m_kProperty; }
 		virtual PropertySet& GetPropertyRef() { return m_kProperty; }
-
+	
 	protected:
 		friend class KylinRoot;
 		
@@ -58,7 +58,7 @@ namespace Kylin
 		virtual KVOID Destroy();
 		
 		inline virtual KFLOAT GetGameTime() { return m_fGameTime; }
-
+		
 	protected:
 		friend class KylinRoot;
 
