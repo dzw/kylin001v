@@ -2,6 +2,9 @@
 #include "GameApp.h"
 #include "DotSceneLoader.h"
 #include "Utility.h"
+#include "../Resource.h"
+
+#define OGRE_MEMORY_TRACKER_DEBUG_MODE 1
 
 //-------------------------------------------------------------------------------------
 GameApp::GameApp(void)
@@ -53,7 +56,7 @@ extern "C" {
 	KVOID DoWork(KCHAR *argv)
 	{
 		GameApp app;
-		if (app.Initialize("OGRE Sample ...","kylin.ico"))
+		if (app.Initialize("OGRE Sample ...",MAKEINTRESOURCE(IDR_MAINFRAME)))
 		{
 			app.Entrance(argv);
 			app.Run();
