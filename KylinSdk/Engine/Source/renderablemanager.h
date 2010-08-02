@@ -18,7 +18,8 @@ namespace Kylin
 		{
 			for (KUINT i = 0; i < m_kRenderableList.size(); i++)
 			{
-				m_kRenderableList[i]->OnRenderStarted(fElapsed);
+				if (m_kRenderableList[i])
+					m_kRenderableList[i]->OnRenderStarted(fElapsed);
 			}
 		}
 
@@ -26,7 +27,8 @@ namespace Kylin
 		{
 			for (KUINT i = 0; i < m_kRenderableList.size(); i++)
 			{
-				m_kRenderableList[i]->OnRenderEnded(fElapsed);
+				if (m_kRenderableList[i])
+					m_kRenderableList[i]->OnRenderEnded(fElapsed);
 			}
 		}
 

@@ -27,7 +27,9 @@ namespace Kylin
 		// 获得动画长度
 		KFLOAT GetLength(KCSTR& sAnim);
 		
-		KBOOL HasAnimation(KCSTR& sAnim);
+		KBOOL IsPlaying(KCSTR& sAnim);
+
+		KINT HasAnimation(KCSTR& sAnim);
 		
 		// 将动画加入等待队列，上一个动画播放完后再播放此动画
 		KVOID AddQueue(KCSTR& sAnim);

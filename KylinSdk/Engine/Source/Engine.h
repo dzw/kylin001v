@@ -10,7 +10,7 @@
 typedef boost::any	KANY;
 
 #define INVALID_ID			0xffffffff
-#define VISIBLE_DISTANCE	420.0f
+#define VISIBLE_DISTANCE	500.0f
 
 #define KPoint2		Ogre::Vector2 
 #define KPoint3		Ogre::Vector3 

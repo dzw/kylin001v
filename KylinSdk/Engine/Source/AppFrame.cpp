@@ -37,12 +37,7 @@ namespace Kylin
 
 	AppFrame::~AppFrame()
 	{
-		//Remove ourself as a Window listener
-		Ogre::WindowEventUtilities::removeWindowEventListener(m_pWindow, this);
-		windowClosed(m_pWindow);
-		
-		SAFE_DEL(m_pRenderableMgr);
-		SAFE_DEL(m_pRoot);
+
 	}
 
 	KBOOL AppFrame::Initialize( KCCHAR* pTitle, KCCHAR* pIcon )
@@ -113,13 +108,33 @@ namespace Kylin
 		SAFE_DEL(m_pGuiMgr);
 
 		SAFE_DEL(m_pCameraCtrl);
-		SAFE_DEL(m_pInputMgr);
 		
 		if (OgreRoot::Initialized())
 			KDEL OgreRoot::GetSingletonPtr();
 
 		if (DataManager::Initialized())
 			KDEL DataManager::GetSingletonPtr();
+
+		SAFE_DEL(m_pRenderableMgr);
+		SAFE_CALL(m_pSceneMgr,clearScene());
+
+		Ogre::ResourceGroupManager::ResourceManagerIterator resMgrs =
+			Ogre::ResourceGroupManager::getSingleton().getResourceManagerIterator();
+		while (resMgrs.hasMoreElements())
+		{
+			resMgrs.getNext()->unloadUnreferencedResources();
+		}
+		
+		SAFE_CALL(m_pRoot,destroySceneManager(m_pSceneMgr));
+
+		//Remove ourself as a Window listener
+		Ogre::WindowEventUtilities::removeWindowEventListener(m_pWindow, this);
+		//windowClosed(m_pWindow);
+
+		SAFE_DEL(m_pInputMgr);
+
+		if (m_pRoot) OGRE_DELETE m_pRoot;
+
 	}
 
 	KBOOL AppFrame::LoadResources()
@@ -161,8 +176,9 @@ namespace Kylin
 		// set shadow properties
 		m_pSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
 		m_pSceneMgr->setShadowColour(Ogre::ColourValue(0.5, 0.5, 0.5));
-		m_pSceneMgr->setShadowTextureSize(1024);
+		m_pSceneMgr->setShadowTextureSize(256);
 		m_pSceneMgr->setShadowTextureCount(1);
+
 		//////////////////////////////////////////////////////////////////////////
 		Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
 		if (pCam)
@@ -207,9 +223,15 @@ namespace Kylin
 	
 	KBOOL AppFrame::frameStarted( const Ogre::FrameEvent& evt )
 	{
+		if(m_pWindow->isClosed())
+			return false;
+
+		if (m_bShutDown)
+			return false;
+
 		SAFE_CALL(m_pRenderableMgr,OnRenderStarted(evt.timeSinceLastFrame));
 
-		return true;
+		return FrameListener::frameStarted(evt);
 	}
 
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
@@ -232,9 +254,15 @@ namespace Kylin
 
 	KBOOL AppFrame::frameEnded( const Ogre::FrameEvent& evt )
 	{
+		if(m_pWindow->isClosed())
+			return false;
+
+		if (m_bShutDown)
+			return false;
+
 		SAFE_CALL(m_pRenderableMgr,OnRenderEnded(evt.timeSinceLastFrame));
 
-		return true;
+		return FrameListener::frameEnded(evt);
 	}
 
 	void AppFrame::windowResized( Ogre::RenderWindow* rw )

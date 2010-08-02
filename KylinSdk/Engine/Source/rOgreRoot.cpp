@@ -279,3 +279,27 @@ Kylin::RenderableManager* Kylin::OgreRoot::GetRenderableManager()
 {
 	return g_theApp->m_pRenderableMgr;
 }
+
+KVOID Kylin::OgreRoot::SetNextPolygonMode( )
+{
+	Ogre::Camera* pCamera = GetCamera("$MainCamera");
+	if (!pCamera)
+		return;
+
+	Ogre::String newVal;
+	Ogre::PolygonMode pm;
+
+	switch (pCamera->getPolygonMode())
+	{
+	case Ogre::PM_SOLID:
+		pm = Ogre::PM_WIREFRAME;
+		break;
+	case Ogre::PM_WIREFRAME:
+		pm = Ogre::PM_POINTS;
+		break;
+	default:
+		pm = Ogre::PM_SOLID;
+	}
+
+	pCamera->setPolygonMode(pm);
+}
