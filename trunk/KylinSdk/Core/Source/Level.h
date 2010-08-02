@@ -45,7 +45,6 @@ namespace Kylin
 
 	protected:
 		KVOID			EV_OnTimer(EventPtr spEV);
-		KVOID			EV_DoQuit(EventPtr spEV);
 
 	protected:
 		KBOOL	m_bTimerEnable;

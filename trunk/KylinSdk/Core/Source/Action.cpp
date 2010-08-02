@@ -372,7 +372,7 @@ KVOID Kylin::Action::EndTime( KCSTR& sClass,KCSTR& sName, KANY aUserData )
 	if (m_kProperty.GetStrValue("$Animation",sAnim))
 	{
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_pDispatcher->GetHostWorldID());
-		if (pEnt && sName == sAnim)
+		if (pEnt && _stricmp(sName.data(), sAnim.data()) == 0)
 		{
 			pEnt->GetAnimationProxy()->SetCallbackObj(NULL);
 

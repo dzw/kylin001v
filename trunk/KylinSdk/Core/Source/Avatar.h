@@ -38,7 +38,7 @@ namespace Kylin
 		virtual KVOID Update(KFLOAT fElapsed);
 
 		// À¢–¬ Ù–‘
-		virtual KVOID RefreshProp(KUINT uID);
+		virtual KVOID RefreshProp(KUINT uID, KBOOL bAddin=true);
 
 	protected:
 		Node*	m_pLWeapon;
