@@ -7,6 +7,7 @@
 #include "normalfactor.h"
 #include "PlayerObject.h"
 #include "CollapsarFactor.h"
+#include "ClLevel.h"
 
 using namespace Kylin;
 
@@ -17,6 +18,7 @@ KVOID ClRegisterClasses()
 	RegEntity(ChainFactor);
 	RegEntity(NormalFactor);
 	RegEntity(CollapsarFactor);
-
+	
+	RegEntity(ClLevel);
 	RegEntity(PlayerObject);
 }

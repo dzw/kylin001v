@@ -21,7 +21,8 @@ namespace Script
 	extern void set_ui_monster_hp(unsigned int uEntID);
 	// 更新PLAYER 生命UI
 	extern void set_ui_player_hp(unsigned int uEntID);
-	
+	extern void set_ui_player_exp(unsigned int uEntID);
+
 	// 通知游戏结果
 	extern void post_gameresult(bool bFlag);
 

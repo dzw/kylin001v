@@ -1,5 +1,6 @@
 #include "cltpch.h"
 #include "uiOptionMenu.h"
+#include "uiHelpMenu.h"
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "GameStatus.h"
@@ -16,6 +17,11 @@ Kylin::OptionMenu::OptionMenu()
 
 KBOOL Kylin::OptionMenu::Initialize()
 {
+	MyGUI::WindowPtr window = MyGUI::castWidget<MyGUI::Window>(mMainWidget);
+	window->eventWindowButtonPressed		= MyGUI::newDelegate(this, &Kylin::OptionMenu::notifyWindowPressed);
+	
+	m_pBtnOption->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::OptionMenu::NotifyButtonClick);
+	m_pBtnHelp->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::OptionMenu::NotifyButtonClick);
 	m_pBtnResume->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::OptionMenu::NotifyButtonClick);
 	m_pBtnQuit->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::OptionMenu::NotifyButtonClick);
 	m_pBtnExit->eventMouseButtonClick		= MyGUI::newDelegate(this, &Kylin::OptionMenu::NotifyButtonClick);
@@ -23,16 +29,6 @@ KBOOL Kylin::OptionMenu::Initialize()
 	return true;
 }
 
-KVOID Kylin::OptionMenu::Render( KFLOAT fElapsed )
-{
-
-}
-
-KVOID Kylin::OptionMenu::Destroy()
-{
-	
-
-}
 
 KVOID Kylin::OptionMenu::SetVisible( KBOOL bVisible )
 {
@@ -54,7 +50,13 @@ void Kylin::OptionMenu::NotifyButtonClick( MyGUI::Widget* _sender )
 	{
 		OgreRoot::GetSingletonPtr()->ShutDown();
 	}
+	else if (pButton == m_pBtnHelp)
+	{
+		HelpMenu* pMenu = GET_GUI_PTR(HelpMenu);
+		pMenu->SetVisible(true);
 
+		SetVisible(false);
+	}
 }
 
 KVOID Kylin::OptionMenu::OnKeyDown(KUINT uKey)
@@ -66,5 +68,14 @@ KVOID Kylin::OptionMenu::OnKeyDown(KUINT uKey)
 			SetVisible(false);
 		else
 			SetVisible(true);
+	}
+}
+
+KVOID Kylin::OptionMenu::notifyWindowPressed( MyGUI::WidgetPtr _widget, const std::string& _name )
+{
+	MyGUI::WindowPtr window = MyGUI::castWidget<MyGUI::Window>(_widget);
+	if (_name == "close") 
+	{
+		SetVisible(false);
 	}
 }

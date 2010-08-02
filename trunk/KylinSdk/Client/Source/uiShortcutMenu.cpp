@@ -50,10 +50,8 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 
 	m_pImageHealth->setColour(MyGUI::Colour(0.85,0,0,0.1));
 	
-	//-----------------------------------------------------
-	// test code
-	
-	SetWidgetWidthPct("image_experience",0.6f);
+
+	//SetWidgetWidthPct("image_experience",0.6f);
 	
 	//-----------------------------------------------------
 	m_pImageSkill_L->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill);
@@ -105,12 +103,9 @@ KVOID Kylin::ShortcutMenu::SetHPWidthPct(KFLOAT fH )
 	}
 }
 //-----------------------------------------------------------------------------
-KVOID Kylin::ShortcutMenu::SetWidgetWidthPct( KSTR sName, KFLOAT fW )
+KVOID Kylin::ShortcutMenu::SetExpWidthPct( KFLOAT fW )
 {
-	if (sName == "image_experience")
-	{
-		m_pImageExprience->setSize(int(fW*m_pImageExprience->getWidth()),m_pImageExprience->getHeight());
-	}
+	m_pImageExprience->setSize(int(fW*m_pImageExprience->getWidth()),m_pImageExprience->getHeight());
 }
 
 //-----------------------------------------------------------------------------

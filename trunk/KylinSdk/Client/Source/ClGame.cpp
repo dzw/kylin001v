@@ -10,6 +10,7 @@
 #include "uiMonsterInfoMenu.h"
 #include "uiTaskTipsMenu.h"
 #include "uiMiniMapMenu.h"
+#include "uiHelpMenu.h"
 #include "CameraControl.h"
 #include "UserCommandHandler.h"
 
@@ -50,7 +51,7 @@ KVOID Kylin::ClGame::Destroy()
 	
 	OgreRoot::GetSingletonPtr()->DestroyCameraControl();
 	// 注：摄像机不被销毁
-	OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
+	//OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
 }
 
 KVOID Kylin::ClGame::UiLoader()
@@ -64,14 +65,17 @@ KVOID Kylin::ClGame::UiLoader()
 	MonsterInfoMenu* pMonsterInfo = KNEW MonsterInfoMenu();
 	pMonsterInfo->Initialize();
 	
-// 	CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
-// 	pCharInfo->Initialize();
+ 	CharInfoMenu* pCharInfo = KNEW CharInfoMenu();
+ 	pCharInfo->Initialize();
 
 	KitbagMenu* pKitbag = KNEW KitbagMenu();
 	pKitbag->Initialize();
 
 	TaskTipsMenu* pTaskTip = KNEW TaskTipsMenu();
 	pTaskTip->Initialize();
+
+	HelpMenu* pHelp = KNEW HelpMenu();
+	pHelp->Initialize();
 
 	OptionMenu* pOption = KNEW OptionMenu();
 	pOption->Initialize();	
@@ -84,8 +88,9 @@ KVOID Kylin::ClGame::UiLoader()
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pMonsterInfo);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pTaskTip);
 
-//	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pCharInfo);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pKitbag);
+	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pHelp);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);
 
 }

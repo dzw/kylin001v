@@ -128,13 +128,28 @@ KBOOL Kylin::LobbyScene::LoadActors()
 	return true;
 }
 
+#ifdef _DEBUG
+bool bsd = true;
+#endif
 KVOID Kylin::LobbyScene::Tick( KFLOAT fElapsed )
 {
 	SAFE_CALL(m_pShowgirl,Tick(fElapsed));
+	SAFE_CALL(m_pSceneLoader,Tick(fElapsed));
+
+	//-------------------------
+	// test code
+#ifdef _DEBUG
+	if (bsd)
+	{
+		SpawnActor(1);
+		bsd = false;
+	}
+#endif
 }
 
 KVOID Kylin::LobbyScene::Destroy()
 {
+	SAFE_CALL(m_pShowgirl,Destroy());
 	SAFE_DEL(m_pShowgirl);
 	//////////////////////////////////////////////////////////////////////////
 	SAFE_CALL(m_pSceneLoader,Unload(NULL));
@@ -143,10 +158,11 @@ KVOID Kylin::LobbyScene::Destroy()
 
 KVOID Kylin::LobbyScene::SpawnActor(KUINT uIndex)
 {
+	SAFE_CALL(m_pShowgirl,Destroy());
 	SAFE_DEL(m_pShowgirl);
 	//////////////////////////////////////////////////////////////////////////
 	m_pShowgirl = KNEW Showgirl(uIndex);
-	if (!m_pShowgirl->Initialize())
+	if (!m_pShowgirl->Initialize(m_kAnimQueue))
 		return;
 	
 	m_pShowgirl->SetScale(m_fScale);
