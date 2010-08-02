@@ -159,6 +159,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Source\ClLevel.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Source\ClLobby.cpp"
 				>
 			</File>
@@ -230,6 +234,10 @@
 			>
 			<File
 				RelativePath=".\Source\ClGame.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\ClLevel.h"
 				>
 			</File>
 			<File
@@ -308,6 +316,14 @@
 			</File>
 			<File
 				RelativePath=".\Source\uiCharInfoMenu.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiHelpMenu.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\uiHelpMenu.h"
 				>
 			</File>
 			<File
