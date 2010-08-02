@@ -58,6 +58,7 @@ namespace Kylin
 
 		if (m_nMaxCount <= 0)
 			return;
+		m_nMaxCount--;
 
 		EventPtr spEV(
 			KNEW Event(
@@ -94,7 +95,6 @@ namespace Kylin
 			// 回调脚步计时器
 			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_timer");
 			//-----------------------------------------------------------------
-			m_nMaxCount--;
 			if (m_nMaxCount <= 0)
 			{
 				m_nLevel++;

@@ -17,6 +17,13 @@ Kylin::Avatar::Avatar(Character* pChar)
 , m_pRWeapon(NULL)
 //, m_pLWeaponTrail(NULL)
 , m_pRWeaponTrail(NULL)
+, m_uHelmet(INVALID_ID)
+, m_uChest(INVALID_ID)
+, m_uRWeapon(INVALID_ID)
+, m_uFace(INVALID_ID)
+, m_uShoulders(INVALID_ID)
+, m_uGloves(INVALID_ID)
+, m_uBoots(INVALID_ID)
 {
 
 }
@@ -75,9 +82,53 @@ KBOOL Kylin::Avatar::Exchange( KUINT uGID )
 		bRet = Exchange(m_pHost->GetEntityPtr(), eType, sMaterials);
 	else
 		bRet = AttachWeapon(uGID,eType);
-	
+		
+	//------------------------------------------------------------------
 	if (bRet)
+	{	
+		KUINT uOld = INVALID_ID;
+		switch (eType)
+		{
+		case AP_CHEST:
+			uOld = m_uChest;
+			m_uChest = uGID;
+			
+			break;
+		case AP_HELMET:
+			uOld = m_uHelmet;
+			m_uHelmet = uGID;
+
+			break;
+		case AP_SHOULDERS:
+			uOld = m_uShoulders;
+			m_uShoulders = uGID;
+
+			break;
+		case AP_FACE:
+			uOld = m_uFace;
+			m_uFace = uGID;
+
+			break;
+		case AP_GLOVES:
+			uOld = m_uGloves;
+			m_uGloves = uGID;
+
+			break;
+		case AP_BOOTS:
+			uOld = m_uBoots;
+			m_uBoots = uGID;
+
+			break;
+		case AP_RWEAPON:
+			uOld = m_uRWeapon;
+			m_uRWeapon = uGID;
+
+			break;
+		}
+		
+		RefreshProp(uOld,false);
 		RefreshProp(uGID);
+	}
 
 	return bRet;
 }
@@ -256,7 +307,7 @@ KVOID Kylin::Avatar::Update( KFLOAT fElapsed )
 //	SAFE_CALL(m_pLWeaponTrail,onUpdate(fElapsed));
 }
 
-KVOID Kylin::Avatar::RefreshProp(KUINT uID)
+KVOID Kylin::Avatar::RefreshProp(KUINT uID, KBOOL bAddin)
 {
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("AVATAR_DB",sValue))
@@ -285,23 +336,48 @@ KVOID Kylin::Avatar::RefreshProp(KUINT uID)
 	
 	//---------------------------------------------------------------
 	KINT ncHP = 0;
-	m_pHost->GetPropertyRef().GetIntValue("$HP",ncHP);
-	ncHP += nHP;
-	m_pHost->GetPropertyRef().SetValue("$HP",ncHP);
-
 	KINT ncStr = 0;
-	m_pHost->GetPropertyRef().GetIntValue("$STR",ncStr);
-	ncStr += nStr;
-	m_pHost->GetPropertyRef().SetValue("$STR",ncStr);
-
 	KINT ncDef = 0;
-	if (nStr > 0)
-		ncDef = log10((KFLOAT)ncStr) / log10(2.0f);
-
-	m_pHost->GetPropertyRef().SetValue("$DEF",ncDef);
-
 	KINT ncAtk = 0;
-	m_pHost->GetPropertyRef().GetIntValue("$ATK",ncAtk);
-	ncAtk += nAtk;
-	m_pHost->GetPropertyRef().SetValue("$ATK",ncAtk);
+
+	if (bAddin)
+	{
+		m_pHost->GetPropertyRef().GetIntValue("$HP",ncHP);
+		ncHP += nHP;
+		m_pHost->GetPropertyRef().SetValue("$HP",ncHP);
+		m_pHost->GetPropertyRef().SetValue("$InitHP",ncHP);
+
+		m_pHost->GetPropertyRef().GetIntValue("$STR",ncStr);
+		ncStr += nStr;
+		m_pHost->GetPropertyRef().SetValue("$STR",ncStr);
+
+		if (nStr > 0)
+			ncDef = log10((KFLOAT)ncStr) / log10(2.0f);
+
+		m_pHost->GetPropertyRef().SetValue("$DEF",ncDef);
+
+		m_pHost->GetPropertyRef().GetIntValue("$ATK",ncAtk);
+		ncAtk += nAtk;
+		m_pHost->GetPropertyRef().SetValue("$ATK",ncAtk);
+	}
+	else
+	{
+		m_pHost->GetPropertyRef().GetIntValue("$HP",ncHP);
+		ncHP -= nHP;
+		m_pHost->GetPropertyRef().SetValue("$HP",ncHP);
+		m_pHost->GetPropertyRef().SetValue("$InitHP",ncHP);
+
+		m_pHost->GetPropertyRef().GetIntValue("$STR",ncStr);
+		ncStr -= nStr;
+		m_pHost->GetPropertyRef().SetValue("$STR",ncStr);
+
+		if (nStr > 0)
+			ncDef = log10((KFLOAT)ncStr) / log10(2.0f);
+
+		m_pHost->GetPropertyRef().SetValue("$DEF",ncDef);
+
+		m_pHost->GetPropertyRef().GetIntValue("$ATK",ncAtk);
+		ncAtk -= nAtk;
+		m_pHost->GetPropertyRef().SetValue("$ATK",ncAtk);
+	}
 }

@@ -73,9 +73,9 @@ KVOID Kylin::BaseAI::Tick( KFLOAT fElapsed )
 
 	case AS_USE_SKILL:
 
-		bRet = Tick_UseSkill(fElapsed);
-		if (!bRet)
-			bRet = Tick_Move(fElapsed);
+		Tick_UseSkill(fElapsed);
+// 		if (!bRet)
+// 			bRet = Tick_Move(fElapsed);
 
 		break;
 
@@ -164,8 +164,9 @@ RC_RESULT Kylin::BaseAI::Enter_UseSkill( KUINT uSkillId, KUINT uTarget, KPoint3 
 	Action* pAction = m_pHostChar->GetActionDispatcher()->GetActionPtr(uSkillId);
 	KFLOAT fTimes = 0.6f;
 	if (pAction->GetPropertyRef().GetFloatValue("$AnimLength",fTimes))
-		m_fStayTime = fTimes * 1.2f;
-	
+		fTimes *= 1.2f;
+	m_fStayTime = fTimes;
+
 	m_uTargetFoe = uTarget;
 
 	m_eCurrState = AS_USE_SKILL;
@@ -274,11 +275,11 @@ KBOOL Kylin::BaseAI::Tick_UseSkill( KFLOAT fElapsed )
 			else
 				Enter_Idle();
 
-			return false;
+			return true;
 		}
 	}
 
-	return true;
+	return false;
 }
 
 KBOOL Kylin::BaseAI::Tick_Dead( KFLOAT fElapsed )

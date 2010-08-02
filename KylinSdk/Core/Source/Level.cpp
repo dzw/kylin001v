@@ -14,7 +14,6 @@ namespace Kylin
 	Implement_Event_Handler(Level, Entity)
 	{
 		{&ev_on_timer,				&EV_OnTimer},
-		{&ev_do_quit,				&EV_DoQuit},
 		{NULL, NULL}
 	};
 
@@ -114,11 +113,6 @@ namespace Kylin
 		{
 			OnTimer();
 		}
-	}
-
-	KVOID Level::EV_DoQuit( EventPtr spEV )
-	{
-		OgreRoot::GetSingletonPtr()->ShutDown();
 	}
 
 	KVOID Level::AddSuccessFactor()

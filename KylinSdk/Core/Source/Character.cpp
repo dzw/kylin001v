@@ -140,6 +140,9 @@ KVOID Kylin::Character::EV_Damage( EventPtr spEV )
 				// 升级
 				KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pKiller,"on_upgrade");
 			}
+			
+			// 击中对方
+			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pKiller,"on_hit");
 		}
 		
 		// 执行对应的脚步函数
