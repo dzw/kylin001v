@@ -20,15 +20,15 @@ KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 	DataTableLoading();
 	//////////////////////////////////////////////////////////////////////////
 	// √¸¡Ó––Ω‚Œˆ
-	if (strcmp(argv,"-m 0") == 0)
-		SwitchStatus(KNEW ClGame());
-	else
- 		SwitchStatus(KNEW ClLobby());
-}
 
-KVOID Kylin::GameClient::Destroy()
-{
-	GameFrame::Destroy();
+	//if (strcmp(argv,"-m 0") == 0)
+		
+// #ifdef _DEBUG
+// 	SwitchStatus(KNEW ClLobby());
+// #else
+	SwitchStatus(KNEW ClGame());
+/*#endif	*/
+  		
 }
 
 KVOID Kylin::GameClient::DataTableLoading()

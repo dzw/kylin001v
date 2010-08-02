@@ -15,17 +15,22 @@ namespace Kylin
 		OptionMenu();
 
 		virtual KBOOL Initialize();
-		virtual KVOID Render(KFLOAT fElapsed);
-		virtual KVOID Destroy();
-		
+		virtual KVOID Render(KFLOAT fElapsed) {}
+		virtual KVOID Destroy() {}
+
 		virtual KVOID SetVisible(KBOOL bVisible);
 		
 		void NotifyButtonClick(MyGUI::Widget* _sender);
 
 	protected:
+		virtual KVOID notifyWindowPressed(MyGUI::WidgetPtr _widget, const std::string& _name);
 		virtual KVOID OnKeyDown(KUINT uKey);
 
 	private:
+		ATTRIBUTE_FIELD_WIDGET_NAME(OptionMenu, m_pBtnHelp, "help");
+		MyGUI::Button* m_pBtnHelp;
+		ATTRIBUTE_FIELD_WIDGET_NAME(OptionMenu, m_pBtnOption, "option");
+		MyGUI::Button* m_pBtnOption;
 		ATTRIBUTE_FIELD_WIDGET_NAME(OptionMenu, m_pBtnQuit, "quit_game");
 		MyGUI::Button* m_pBtnQuit;
 		ATTRIBUTE_FIELD_WIDGET_NAME(OptionMenu, m_pBtnResume, "resume_game");

@@ -9,6 +9,7 @@
 #include "LobbyScene.h"
 #include "rPhyXSystem.h"
 
+#include "ClGame.h"
 
 Kylin::ClLobby::ClLobby()
 : m_pLobbyScene(NULL)
@@ -33,10 +34,22 @@ KBOOL Kylin::ClLobby::Initialize()
 	return true;
 }
 
+#ifdef _DEBUG
+int tbst = 0;
+#endif
+
 KVOID Kylin::ClLobby::Tick( KFLOAT fElapsed )
 {
 	if (m_pLobbyScene)
 		m_pLobbyScene->Tick(fElapsed);
+
+	//-------------------------
+	// test code
+#ifdef _DEBUG
+	if (tbst++ == 10)
+		KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW ClGame());
+#endif
+
 }
 
 KVOID Kylin::ClLobby::Destroy()
@@ -44,7 +57,7 @@ KVOID Kylin::ClLobby::Destroy()
 	SAFE_DEL(m_pLobbyScene);
 	OgreRoot::GetSingletonPtr()->DestroyCameraControl();
 	// 注：摄像机不被销毁
-	OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
+//	OgreRoot::GetSingletonPtr()->GetSceneManager()->clearScene();
 }
 
 KVOID Kylin::ClLobby::UiLoader()

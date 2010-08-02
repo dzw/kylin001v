@@ -78,15 +78,15 @@ KVOID Kylin::SelectMenu::NotifyToolTip( wraps::BaseLayout * _sender, const MyGUI
 
 KVOID Kylin::SelectMenu::NotifyNotifyItem(wraps::BaseLayout * _sender, const MyGUI::IBNotifyItemData & _info)
 {
-	if (_info.index != MyGUI::ITEM_NONE)
-	{
-		if (_info.notify == MyGUI::IBNotifyItemData::MouseReleased)
-		{
-			Kylin::ClLobby* pLobby = static_cast<ClLobby*>(KylinRoot::GetSingletonPtr()->GetCurrentGameStatus());
-			if (pLobby)
-			{
-				pLobby->GetLobbyScene()->SpawnActor(1);
-			}
-		}
-	}
+// 	if (_info.index != MyGUI::ITEM_NONE)
+// 	{
+// 		if (_info.notify == MyGUI::IBNotifyItemData::MouseReleased)
+// 		{
+// 			Kylin::ClLobby* pLobby = static_cast<ClLobby*>(KylinRoot::GetSingletonPtr()->GetCurrentGameStatus());
+// 			if (pLobby)
+// 			{
+// 				pLobby->GetLobbyScene()->SpawnActor(1);
+// 			}
+// 		}
+// 	}
 }

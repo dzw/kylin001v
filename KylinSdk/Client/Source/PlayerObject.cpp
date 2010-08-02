@@ -50,6 +50,13 @@ namespace Kylin
 		// ¸üÐÂUI
 		MiniMapMenu* pMenu = GET_GUI_PTR(MiniMapMenu);
 		pMenu->SetMyself(this->GetID());
+
+// 		//-------------------------------
+// 		// test code
+#ifdef _DEBUG
+//		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+//		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+#endif
 	}
 
 	KVOID PlayerObject::PostDestroy()

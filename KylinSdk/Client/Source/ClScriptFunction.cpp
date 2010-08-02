@@ -43,7 +43,7 @@ namespace Script
 
 			Kylin::CharInfoMenu* pMenu = GET_GUI_PTR(Kylin::CharInfoMenu);
 
-			SAFE_CALL(pMenu,SetRenderMyself(pChar->GetEntityPtr()));
+			SAFE_CALL(pMenu,SetTarget(uEntID));
 		}
 	}
 
@@ -85,6 +85,7 @@ namespace Script
 				{	SAFE_CALL(pAct,SetEmitterNode(pNode->GetEntityPtr()->getParentNode())); }
 				else
 				{	SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode())); }
+
 				//---------------------------------------------------------------
 				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
 				pMenu->SetSkillInfo(pAct->GetIcon(),pAct->GetCooldawn(),uActID,true,"",pAct->GetExplain());
@@ -152,20 +153,17 @@ namespace Script
 
 		if (!bFlag)
 		{
-
-			Kylin::KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW Kylin::ClLobby());
-
 			// 游戏失败，十秒后自动退出游戏
-// 			EventPtr spEV(
-// 				KNEW Event(
-// 				&ev_do_quit, 
-// 				Event::ev_timing, 
-// 				10, 
-// 				0, 
-// 				NULL
-// 				));
-// 
-// 			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(0,spEV);
+			EventPtr spEV(
+				KNEW Event(
+				&ev_do_quit, 
+				Event::ev_timing, 
+				10, 
+				0, 
+				NULL
+				));
+
+			Kylin::KylinRoot::GetSingletonPtr()->PostMessage(0,spEV);
 		}
 	}
 
@@ -276,6 +274,30 @@ namespace Script
 
 			Kylin::TaskTipsMenu* pMenu = GET_GUI_PTR(Kylin::TaskTipsMenu);
 			pMenu->SetContent(pExplain);
+		}
+	}
+
+	extern void set_ui_player_exp( unsigned int uEntID )
+	{
+		Kylin::ClSceneLoader* pLoader = (Kylin::ClSceneLoader*)Kylin::KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+		if (pLoader)
+		{
+			Kylin::Entity* pEnt = pLoader->GetController()->GetHostChar();
+			if (pEnt)
+			{
+				KINT nExp = 0, nLevel = 1;
+				pEnt->GetPropertyRef().GetIntValue("$SumExp",nExp);
+				pEnt->GetPropertyRef().GetIntValue("$Level",nLevel);
+				
+				KINT nU = pow(2.0f,nLevel + 1);
+				KINT nL = pow(2.0f,nLevel);
+				
+				KFLOAT fP = KFLOAT(nExp - nL) / KFLOAT(nU - nL);
+
+				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
+				Assert(pMenu);
+				pMenu->SetExpWidthPct(fP);
+			}
 		}
 	}
 }

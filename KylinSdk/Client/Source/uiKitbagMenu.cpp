@@ -65,7 +65,11 @@ KVOID Kylin::KitbagMenu::OnKeyDown( KUINT uKey )
 	if (uKey == MyGUI::KeyCode::M)
 	{
 		if (this->IsVisible())
+		{
 			SetVisible(false);
+
+			m_pItemTips->Hide();
+		}
 		else
 			SetVisible(true);
 	}

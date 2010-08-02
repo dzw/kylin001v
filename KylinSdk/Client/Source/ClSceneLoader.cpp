@@ -104,7 +104,7 @@ KVOID Kylin::ClSceneLoader::LoadLevel(KSTR sSceneName)
 
 	PropertySet kProp;
 
-	kProp.SetValue("$CLASS_ID",(KUINT)id_level);
+	kProp.SetValue("$CLASS_ID",(KUINT)id_level_cl);
 	kProp.SetValue("$Name",sName);
 
 	KylinRoot::GetSingletonPtr()->SpawnEntity(kProp);

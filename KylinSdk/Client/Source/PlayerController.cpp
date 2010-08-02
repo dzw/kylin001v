@@ -112,15 +112,22 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 		else if (yawToGoal > 0) yawToGoal	= std::max<KFLOAT>(0, std::min<KFLOAT>(yawToGoal, yawAtSpeed));
 
 		m_pHostChar->GetSceneNode()->yaw(Ogre::Degree(yawToGoal));
+		
+		KFLOAT fSpeed = 1.0f;
+		m_pHostChar->GetPropertyRef().GetFloatValue("$Speed",fSpeed);
 
 		// move in current body direction (not the goal direction)
-		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, RUN_SPEED));
+		Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, fSpeed));
 	}
 	else if (m_kMousePickPos != KPoint3::ZERO)
 	{
 		KPoint3 kDir = m_kMousePickPos - m_pHostChar->GetTranslate();
 		kDir.normalise();
-		KFLOAT fOffset = fElapsed * RUN_SPEED;
+		
+		KFLOAT fSpeed = 1.0f;
+		m_pHostChar->GetPropertyRef().GetFloatValue("$Speed",fSpeed);
+
+		KFLOAT fOffset = fElapsed * fSpeed;
 		m_fDistance -= fOffset;
 		if (m_fDistance < -KZERO)
 		{	
@@ -142,7 +149,7 @@ KVOID Kylin::PlayerController::UpdateBody( KFLOAT fElapsed )
 				m_pGuideEffect->SetVisible(false);
 
 			// move in current body direction (not the goal direction)
-			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, RUN_SPEED));
+			Kylin::PhyX::PhysicalSystem::GetSingletonPtr()->GetMotionSimulator()->Commit(m_pHostChar,KPoint3(0, 0, fSpeed));
 		}
 	}
 }
