@@ -88,6 +88,8 @@ namespace Kylin
 		
 		// 设置图标
 		KVOID							SetWindowIcon(KCCHAR* pIcon);
+		
+		KVOID							SetNextPolygonMode();
 
 	protected:
 		// 鼠标射线和场景交集

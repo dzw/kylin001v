@@ -28,7 +28,11 @@ Kylin::AnimationProxy::~AnimationProxy()
 
 KVOID Kylin::AnimationProxy::Play( KCSTR& sAnim, KBOOL bL /*= false*/, BlendingTransition eTransition /*= BlendSwitch*/, KFLOAT fDuration /*= 1.0*/ )
 {
-	if (!HasAnimation( sAnim ))
+	if (IsPlaying(sAnim))
+		return;
+
+	KINT nIndex = HasAnimation( sAnim );
+	if (nIndex < 0)
 	{
 		//AssertEx(NULL,KSTR("不存在此动画： " + sAnim).data());
 		return;
@@ -37,9 +41,9 @@ KVOID Kylin::AnimationProxy::Play( KCSTR& sAnim, KBOOL bL /*= false*/, BlendingT
 	m_bLoop = bL; //设置是否需要循环
 	if( eTransition == AnimationProxy::BlendSwitch )
 	{	//如果混合方式为直接切换，改变m_pSource 即可
-		if( m_pSource != 0 )
+		if( m_pSource )
 			m_pSource->setEnabled(false);
-		m_pSource = m_pEntity->getAnimationState( sAnim );
+		m_pSource = m_pEntity->getAnimationState( m_kAnimNameList[nIndex] );
 		m_pSource->setEnabled(true);
 		m_pSource->setWeight(1);
 		m_pSource->setTimePosition(0);
@@ -48,7 +52,7 @@ KVOID Kylin::AnimationProxy::Play( KCSTR& sAnim, KBOOL bL /*= false*/, BlendingT
 	else 
 	{ 
 		//先取得新的动画状态
-		Ogre::AnimationState *newTarget = m_pEntity->getAnimationState( sAnim );
+		Ogre::AnimationState *newTarget = m_pEntity->getAnimationState( m_kAnimNameList[nIndex] );
 		if( m_fTimeleft > 0 ) //前一次的混合尚未结束
 		{
 			if( newTarget == m_pTarget )
@@ -182,9 +186,10 @@ KVOID Kylin::AnimationProxy::SetTarget( Ogre::Entity * pEnt )
 
 KFLOAT Kylin::AnimationProxy::GetLength( KCSTR& sAnim )
 {
-	if (HasAnimation( sAnim ))
+	KINT nIndex = HasAnimation( sAnim );
+	if (nIndex >= 0)
 	{
-		Ogre::AnimationState *pSource = m_pEntity->getAnimationState( sAnim );
+		Ogre::AnimationState *pSource = m_pEntity->getAnimationState( m_kAnimNameList[nIndex] );
 		if (pSource)
 			return pSource->getLength();		
 	}
@@ -192,22 +197,22 @@ KFLOAT Kylin::AnimationProxy::GetLength( KCSTR& sAnim )
 	return .0f;
 }
 
-KBOOL Kylin::AnimationProxy::HasAnimation( KCSTR& sAnim )
+KINT Kylin::AnimationProxy::HasAnimation( KCSTR& sAnim )
 {
 	for (KUINT i = 0 ; i < m_kAnimNameList.size(); i++)
 	{
-		if (sAnim == m_kAnimNameList[i])
+		if (_stricmp(sAnim.data(),m_kAnimNameList[i].data()) == 0)
 		{
-			return true;
+			return i;
 		}
 	}
 
-	return false;
+	return KINT(-1);
 }
 
 KVOID Kylin::AnimationProxy::AddQueue( KCSTR& sAnim )
 {
-	if (HasAnimation(sAnim))
+	if (HasAnimation(sAnim) >= 0)
 	{
 		if (m_pSource && m_pSource->getTimePosition() < m_pSource->getLength())
 		{
@@ -239,4 +244,21 @@ KVOID Kylin::AnimationProxy::ClearQueue()
 KVOID Kylin::AnimationProxy::SetCallbackObj( ClockingCallback* pObj )
 {
 	m_pClocking = pObj;
+}
+
+KBOOL Kylin::AnimationProxy::IsPlaying( KCSTR& sAnim )
+{
+	if (m_pSource && _stricmp(m_pSource->getAnimationName().data(),sAnim.data()) == 0)
+	{
+		if (m_pSource->getLoop())
+		{
+			return true;
+		}
+		else if (m_pSource->getTimePosition() < m_pSource->getLength())
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
