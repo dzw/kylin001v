@@ -34,13 +34,14 @@ namespace Kylin
 	{
 		// ¼¤»îÌØÐ§
 		Kylin::Entity* pEnt = KylinRoot::GetSingletonPtr()->GetEntity(m_spHostAct->GetHostWorldID());
-		Kylin::Entity* pTgt = KylinRoot::GetSingletonPtr()->GetEntity(GetTarget());
-		if (pEnt && pTgt)
+		//Kylin::Entity* pTgt = KylinRoot::GetSingletonPtr()->GetEntity(GetTarget());
+		//if (pEnt && pTgt)
+		if (pEnt)
 		{
 			KSTR sName = "factor_lightning_" + Ogre::StringConverter::toString(this->GetID());
 			EffectLightning* pEffect = static_cast<EffectLightning*>(EffectManager::GetSingletonPtr()->Generate(KNEW EffectLightning(sName)));
 
-			pEffect->Attach(KPoint3(pEnt->GetTranslate().x,1000.0f,pEnt->GetTranslate().z),pTgt->GetTranslate());
+			pEffect->Attach(KPoint3(pEnt->GetTranslate().x,1000.0f,pEnt->GetTranslate().z),this->GetTranslate());
 		}
 
 // 		EventPtr spPosEV(

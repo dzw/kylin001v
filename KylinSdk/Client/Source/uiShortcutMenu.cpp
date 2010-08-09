@@ -41,7 +41,9 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 	m_kImageHealthCoord.width	= info.size.width;
 	m_kImageHealthCoord.height	= info.size.height;
 
-	m_kHealthWidgetCoord  = m_pImageHealth->getCoord();
+	m_kHealthWidgetCoord		= m_pImageHealth->getCoord();
+	
+	m_pExprienceWidgetCoord		= m_pImageExprience->getCoord();
 
 	m_pImageExprience->setItemResourcePtr(resource_exp);
 	m_pImageExprience->setItemGroup("States");
@@ -49,9 +51,6 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 	//-----------------------------------------------------
 
 	m_pImageHealth->setColour(MyGUI::Colour(0.85,0,0,0.1));
-	
-
-	//SetWidgetWidthPct("image_experience",0.6f);
 	
 	//-----------------------------------------------------
 	m_pImageSkill_L->eventMouseButtonPressed = newDelegate(this, &ShortcutMenu::NotifyClick_Skill);
@@ -68,6 +67,8 @@ KBOOL Kylin::ShortcutMenu::Initialize()
 	m_pImageSkill_4->eventToolTip	 = newDelegate(this, &ShortcutMenu::NotifyToolTip);
 	m_pImageSkill_5->eventToolTip	 = newDelegate(this, &ShortcutMenu::NotifyToolTip);
 
+	SetExpWidthPct(.0f);
+
 	return true;
 }
 
@@ -83,29 +84,29 @@ KVOID Kylin::ShortcutMenu::SetVisible( KBOOL bVisible )
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetHPWidthPct(KFLOAT fH )
 {	
-	if (fH >= 1)
+//	if (fH >= 1.0f )
 	{
-		m_pImageHealth->setCoord(m_kHealthWidgetCoord);
-		m_pImageHealth->setImageCoord(m_kImageHealthCoord);
+//		m_pImageHealth->setCoord(m_kHealthWidgetCoord);
+//		m_pImageHealth->setImageCoord(m_kImageHealthCoord);
 	}
-	else
+//	else if (fH >=.0f)
 	{
-		KINT h = (KFLOAT)m_kImageHealthCoord.height * fH;
-		KINT t = (KFLOAT)m_kImageHealthCoord.top + (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
-		m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.left,t,m_kImageHealthCoord.width,h));
-
-		MyGUI::IntCoord crd = m_pImageHealth->getCoord();
-
-		crd.top += (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height + 0.5f;
-		crd.height = h;
-
-		m_pImageHealth->setCoord(crd);
+ 		KINT h = (KFLOAT)m_kHealthWidgetCoord.height * fH;
+// 		KINT t = (KFLOAT)m_kImageHealthCoord.top + (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
+// 		m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.left,t,m_kImageHealthCoord.width,h));
+// 
+ 		MyGUI::IntCoord crd = m_kHealthWidgetCoord;
+ 
+ 		crd.top +=  (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
+ 		crd.height = h;
+ 
+ 		m_pImageHealth->setCoord(crd);
 	}
 }
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetExpWidthPct( KFLOAT fW )
 {
-	m_pImageExprience->setSize(int(fW*m_pImageExprience->getWidth()),m_pImageExprience->getHeight());
+	m_pImageExprience->setSize(int(fW*m_pExprienceWidgetCoord.width),m_pImageExprience->getHeight());
 }
 
 //-----------------------------------------------------------------------------
@@ -265,4 +266,23 @@ KVOID Kylin::ShortcutMenu::NotifyToolTip( MyGUI::WidgetPtr _sender, const MyGUI:
 	}
 }
 
+KVOID Kylin::ShortcutMenu::OnKeyDown( KUINT uKey )
+{
+	KUINT uIndex = -1;
+
+	uIndex = uKey - MyGUI::KeyCode::One + 1;
+	
+	if (uIndex < 1 || uIndex > 5) return;
+
+	ClSceneLoader* pLoader = (ClSceneLoader*)KylinRoot::GetSingletonPtr()->GetCurrentScene()->GetSceneLoader();
+	if ( m_kActions[uIndex].uActionID != INVALID_ID && 
+		m_kActions[uIndex].fCooldown <= .0f )
+	{
+		pLoader->GetController()->UseSkill(m_kActions[uIndex].uActionID);
+
+		m_kActions[uIndex].pImage->setAlpha(0.3f);
+
+		m_kActions[uIndex].fCooldown = m_kActions[uIndex].fInitCooldown;
+	}
+}
 //-----------------------------------------------------------------------------

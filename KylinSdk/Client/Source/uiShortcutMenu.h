@@ -2,12 +2,14 @@
 
 #include "BaseLayout/BaseLayout.h"
 #include "GuiManager.h"
+#include "InputListener.h"
 
 namespace Kylin
 {
 	class TipsMenu;
 	ATTRIBUTE_CLASS_LAYOUT(ShortcutMenu, "shortcut.layout");
 	class ShortcutMenu : public GuiBase
+					   , public InputListener
 					   , public wraps::BaseLayout
 	{
 	public:
@@ -25,6 +27,8 @@ namespace Kylin
 		KVOID SetSkillInfo(KSTR sIcon, KFLOAT fCooldown, KUINT uActionID, KBOOL bDefault=false,KCSTR& sTitle="", KCSTR& sContent="");
 		
 	public:
+		virtual KVOID OnKeyDown(KUINT uKey);
+
 		KVOID NotifyClick_Skill(MyGUI::WidgetPtr _sender, int _left, int _top, MyGUI::MouseButton _id);
 		KVOID NotifyToolTip(MyGUI::WidgetPtr _sender, const MyGUI::ToolTipInfo & _info);
 
@@ -57,7 +61,8 @@ namespace Kylin
 	protected:
 		MyGUI::IntCoord		m_kImageHealthCoord;
 		MyGUI::IntCoord		m_kHealthWidgetCoord; 
-		
+		MyGUI::IntCoord		m_pExprienceWidgetCoord;
+
 		TipsMenu*			m_pActionTips;
 
 		struct ActionInfo

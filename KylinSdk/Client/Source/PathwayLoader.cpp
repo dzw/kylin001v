@@ -47,13 +47,8 @@ KBOOL Kylin::PathwayLoader::Load( KCCHAR* pScene )
 		KBOOL bPoint = kXml.SetToFirstChild("point");
 		while (bPoint)
 		{
-			kXml.SetToFirstChild("x");
-			KFLOAT fX = kXml.GetFloat(0);
-			kXml.SetToParent();
-			
-			kXml.SetToFirstChild("z");
-			KFLOAT fZ = kXml.GetFloat(0);
-			kXml.SetToParent();
+			KFLOAT fX = kXml.GetAttrFloat("x");
+			KFLOAT fZ = kXml.GetAttrFloat("z");
 		
 			pPathway->Add(KPoint3(fX,0,fZ));
 

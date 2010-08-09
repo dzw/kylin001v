@@ -34,6 +34,7 @@ namespace Kylin
 		KVOID	EV_Reborn(EventPtr spEV);
 		KVOID	EV_RestoreHP(EventPtr spEV);
 		KVOID	EV_LearnSkill(EventPtr spEV);			
+		KVOID	Ev_Teleport(EventPtr spEV);
 
 	protected:
 		// ∏¥ªÓ ±º‰

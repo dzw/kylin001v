@@ -12,8 +12,13 @@ namespace Kylin
 
 		virtual KBOOL		Initialize();
 		virtual KVOID		Destroy();
-		
-		virtual KVOID		UiLoader();
+		virtual KVOID		Tick(KFLOAT fElapsed);
 
+		virtual KVOID		UiLoader();
+		
+		virtual KVOID		Quit() { m_bQuitFlag = true; }
+
+	protected:
+		KBOOL m_bQuitFlag;
 	};
 }

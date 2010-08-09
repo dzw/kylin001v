@@ -54,20 +54,36 @@ namespace Kylin
 		MyGUI::StaticImage* m_pItem_1_6;
 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_1_7, "img_1_7");
 		MyGUI::StaticImage* m_pItem_1_7;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_1, "img_2_1");
-// 		MyGUI::StaticImage* m_pItem_2_1;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_2, "img_2_2");
-// 		MyGUI::StaticImage* m_pItem_2_2;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_3, "img_2_3");
-// 		MyGUI::StaticImage* m_pItem_2_3;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_4, "img_2_4");
-// 		MyGUI::StaticImage* m_pItem_2_4;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_5, "img_2_5");
-// 		MyGUI::StaticImage* m_pItem_2_5;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_6, "img_2_6");
-// 		MyGUI::StaticImage* m_pItem_2_6;
-// 		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_7, "img_2_7");
-// 		MyGUI::StaticImage* m_pItem_2_7;
+
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_1, "img_2_1");
+		MyGUI::StaticImage* m_pItem_2_1;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_2, "img_2_2");
+		MyGUI::StaticImage* m_pItem_2_2;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_3, "img_2_3");
+		MyGUI::StaticImage* m_pItem_2_3;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_4, "img_2_4");
+		MyGUI::StaticImage* m_pItem_2_4;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_5, "img_2_5");
+		MyGUI::StaticImage* m_pItem_2_5;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_6, "img_2_6");
+		MyGUI::StaticImage* m_pItem_2_6;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_2_7, "img_2_7");
+		MyGUI::StaticImage* m_pItem_2_7;
+
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_1, "img_3_1");
+		MyGUI::StaticImage* m_pItem_3_1;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_2, "img_3_2");
+		MyGUI::StaticImage* m_pItem_3_2;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_3, "img_3_3");
+		MyGUI::StaticImage* m_pItem_3_3;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_4, "img_3_4");
+		MyGUI::StaticImage* m_pItem_3_4;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_5, "img_3_5");
+		MyGUI::StaticImage* m_pItem_3_5;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_6, "img_3_6");
+		MyGUI::StaticImage* m_pItem_3_6;
+		ATTRIBUTE_FIELD_WIDGET_NAME(KitbagMenu, m_pItem_3_7, "img_3_7");
+		MyGUI::StaticImage* m_pItem_3_7;
 		
 	private:
 		Kitbag::KitbagListener*		m_pKitbagListener;

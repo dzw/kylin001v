@@ -4,7 +4,6 @@
 
 #include "RemoteEvents.h"
 #include "KylinRoot.h"
-#include "ClLobby.h"
 
 
 namespace Kylin
@@ -20,6 +19,7 @@ namespace Kylin
 
 	KVOID ClLevel::EV_DoQuit( EventPtr spEV )
 	{
-		KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW ClLobby());
+		KylinRoot::GetSingletonPtr()->QuitGame();
+		//OgreRoot::GetSingletonPtr()->Pause();
 	}
 }

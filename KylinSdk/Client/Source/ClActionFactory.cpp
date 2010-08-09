@@ -8,6 +8,7 @@
 #include "SummonSkill.h"
 #include "FoodSkill.h"
 #include "LearnSkill.h"
+#include "TeleportSkill.h"
 #include "DataItem.h"
 
 
@@ -85,6 +86,10 @@ Kylin::Action* Kylin::ClActionFactory::Generate( KUINT uGID )
 	else if (sClass == "LearnSkill")
 	{
 		pAct = KNEW LearnSkill(m_pDispatcher);
+	}
+	else if (sClass == "TeleportSkill")
+	{
+		pAct = KNEW TeleportSkill(m_pDispatcher);
 	}
 
 	pAct->Init(kProp);
