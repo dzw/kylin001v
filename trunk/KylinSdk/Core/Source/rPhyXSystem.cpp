@@ -75,3 +75,10 @@ Kylin::PhyX::CoverMonitor* Kylin::PhyX::PhysicalSystem::GetCoverMonitor()
 {
 	return m_pCoverMonitor;
 }
+
+KVOID Kylin::PhyX::PhysicalSystem::Clear()
+{
+	m_pCollisionMonitor->Destroy();
+	m_pMotionSimulator->Destroy();
+	m_pCoverMonitor->Destroy();
+}

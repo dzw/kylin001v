@@ -44,14 +44,12 @@ namespace Script
 			KSTR sEffect;
 			KFLOAT fScale = 1.0f;
 
-			Kylin::DataItem::DataField dbField;
-			KINT nEffectID = boost::any_cast<KINT>(dbField.m_aValue);	
 			KANY aRet;
-			if ( Kylin::DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"TEMPLATE",aRet) )
+			if ( Kylin::DataManager::GetSingletonPtr()->Select("EFFECT_DB",uEffectID,"TEMPLATE",aRet) )
 			{
 				sEffect = boost::any_cast<KSTR>(aRet);	
 			}
-			if ( Kylin::DataManager::GetSingletonPtr()->Select("EFFECT_DB",nEffectID,"SCALE",aRet) )
+			if ( Kylin::DataManager::GetSingletonPtr()->Select("EFFECT_DB",uEffectID,"SCALE",aRet) )
 			{
 				fScale = boost::any_cast<KFLOAT>(aRet);	
 			}

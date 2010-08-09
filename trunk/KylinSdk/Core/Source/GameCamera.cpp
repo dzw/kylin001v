@@ -1,5 +1,6 @@
 #include "corepch.h"
 #include "GameCamera.h"
+#include "KylinRoot.h"
 
 #define CAMERA_DIS 10.0f
 #define MAX_CAM_DIS 35
@@ -55,16 +56,28 @@ KVOID Kylin::GameCamera::Update( KFLOAT fElapsed )
 {
 	if (m_eMode == CM_3P)
 	{
-		KPoint3 Capos = m_pCameraNode->getPosition();
-		KPoint3 Nopos = m_pTargetNode->getPosition();
+		//KPoint3 Capos = m_pCameraNode->getPosition();
+		//KPoint3 Nopos = m_pTargetNode->getPosition();
 		// place the camera pivot roughly at the character's shoulder
-		m_pCameraPivot->setPosition(Nopos + KPoint3::UNIT_Y * CAM_HEIGHT);
+		m_pCameraPivot->setPosition(m_pTargetNode->getPosition() + KPoint3::UNIT_Y * CAM_HEIGHT);
 		// move the camera smoothly to the goal
 		KPoint3 goalOffset = m_pCameraGoal->_getDerivedPosition() - m_pCameraNode->getPosition();
 
-		KPoint3 DistPos = Capos + goalOffset; //* fElapsed * 9.0f;
-		if(DistPos.y < GetCameraPosY())
-			DistPos.y = GetCameraPosY();
+		KPoint3 DistPos = m_pCameraNode->getPosition() + goalOffset; //* fElapsed * 9.0f;
+
+		if ( abs(goalOffset.y) - GetCameraPosY() > KZERO )
+		{
+			KPoint3 ptRet;
+			if ( KylinRoot::GetSingletonPtr()->HitTest(DistPos,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
+			{
+				if (DistPos.y < ptRet.y)
+				{
+					DistPos.y = ptRet.y;
+				}
+			}
+		}
+
+		DistPos.y += GetCameraPosY();
 		m_pCameraNode->setPosition(DistPos);
 		// always look at the pivot
 		m_pCameraNode->lookAt(m_pCameraPivot->_getDerivedPosition(), Ogre::Node::TS_WORLD);
@@ -133,7 +146,7 @@ const KPoint3& Kylin::GameCamera::GetCameraPosition()
 
 const KPoint3& Kylin::GameCamera::GetCameraDirection()
 {
-	return m_pCameraNode->getOrientation() * KPoint3::UNIT_Z;
+	return (m_pCameraNode->getOrientation() * KPoint3::UNIT_Z);
 }
 
 KFLOAT Kylin::GameCamera::GetCameraDistance()
@@ -188,7 +201,7 @@ KVOID Kylin::GameCamera::SetMode( GameCameraMode eMod )
 Ogre::Ray Kylin::GameCamera::GetCameraToTargetRay()
 {
 	KPoint3 kSrc = m_pTargetNode->getPosition();
-	kSrc += 1.0f;
+	kSrc.y += 1.0f;
 	KPoint3 kDir =kSrc-m_pCamera->getPosition();
 	kDir.normalise();
 	Ogre::Ray kRay = Ogre::Ray(m_pCamera->getPosition(),kDir);

@@ -55,6 +55,8 @@ namespace Kylin
 		
 		// 向entity发送消息
 		KVOID		PostMessage(KUINT uEntID,const EventPtr spEvent);
+		KVOID		ClearMessage();
+
 		// 切换状态
 		KVOID		SwitchStatus(GameStatus* pStatus);
 		// 切换场景
@@ -85,6 +87,8 @@ namespace Kylin
 	
 		// 检测对象间关系是否可以攻击
 		KUINT		CheckRelation(Kylin::Character* pEnt1,Kylin::Character* pEnt2);
+		
+		KVOID		QuitGame();
 
 	protected:
 		GameCamera* m_pCamera;

@@ -36,14 +36,10 @@ Kylin::Scene::Scene( const SceneHag& kSceneHag )
 	m_pEntityManager = KNEW EntityManager();
 	m_pEventManager  = KNEW EventManager(m_pEntityManager);
 
-	m_pZone			 = KNEW Zone();
 }
 
 Kylin::Scene::~Scene()
 {
-	LeaveScene();
-
-	SAFE_DEL(m_pZone);
 	SAFE_DEL(m_pEventManager);
 	SAFE_DEL(m_pEntityManager);
 }
@@ -51,9 +47,6 @@ Kylin::Scene::~Scene()
 KVOID Kylin::Scene::EnterScene( KVOID )
 {
 	//////////////////////////////////////////////////////////////////////////
-	if (!PhyX::PhysicalSystem::Initialized())
-		KNEW PhyX::PhysicalSystem();
-
 	// 读取配置文件
 	// 加载场景
 	SpawnScene();
@@ -62,11 +55,16 @@ KVOID Kylin::Scene::EnterScene( KVOID )
 
 KVOID Kylin::Scene::LeaveScene( KVOID )
 {
+	m_pEntityManager->Destroy();
+	m_pEventManager->RemoveAllEvents();
+
 	SAFE_CALL(m_pSceneLoader,Unload(&m_kSceneHag));
 	SAFE_DEL(m_pSceneLoader);
 
 	if (PhyX::PhysicalSystem::Initialized())
-		KDEL PhyX::PhysicalSystem::GetSingletonPtr();
+	{
+		PhyX::PhysicalSystem::GetSingletonPtr()->Clear();
+	}
 }
 
 KVOID Kylin::Scene::SpawnScene()
@@ -82,28 +80,7 @@ KVOID Kylin::Scene::SpawnScene()
 	KSTR sName = fInfo.archive->getName();
 	sName += "/" + m_kSceneHag.m_sSceneFile;
 	//------------------------------------------------------------------
-	// 预加载资源
-// 	KSTR sRes = StringUtils::replace(sName,".xml",".res");
-// 	
-// 	XmlStream kXml(sRes.data());
-// 	if (!kXml.Open(XmlStream::Read))
-// 		return ;
-// 
-// 	//////////////////////////////////////////////////////////////////////////
-// 	// 加载所有场景配置
-// 	KSTR sDir;
-// 	KBOOL bScene = kXml.SetToFirstChild("dir");
-// 	while (bScene)
-// 	{
-// 		sDir = kXml.GetString("");
-// 		Ogre::ResourceGroupManager::getSingletonPtr()->addResourceLocation(sDir,"FileSystem","General");
-// 
-// 		bScene = kXml.SetToNextChild("dir");
-// 	}
-// 
-// 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-// 
-// 	kXml.Close();
+
 	//------------------------------------------------------------------
 	// 执行lua文件
 	KSTR sLua = StringUtils::replace(sName,".xml",".lua");
@@ -122,7 +99,7 @@ KVOID Kylin::Scene::SpawnScene()
 	// 加载玩家
 	m_pSceneLoader->LoadPlayer();
 	//-----------------------------------------------------------------
-	m_pZone->Initialize(sName.data());
+
 }
 
 KVOID Kylin::Scene::Tick( KFLOAT fElapsed )

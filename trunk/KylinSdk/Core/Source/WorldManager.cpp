@@ -76,7 +76,7 @@ KVOID Kylin::WorldManager::Destroy()
 	m_kSceneInfo.clear();
 
 	m_pActiveScene->LeaveScene();
-	KDEL m_pActiveScene;
+	SAFE_DEL(m_pActiveScene);
 }
 
 KBOOL Kylin::WorldManager::EnterScene( KINT nSceneID )

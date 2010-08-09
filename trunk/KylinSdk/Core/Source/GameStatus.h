@@ -56,7 +56,8 @@ namespace Kylin
 		virtual KBOOL Initialize();
 		virtual KVOID Tick(KFLOAT fElapsed);
 		virtual KVOID Destroy();
-		
+		virtual KVOID Quit(){}
+
 		inline virtual KFLOAT GetGameTime() { return m_fGameTime; }
 		
 	protected:

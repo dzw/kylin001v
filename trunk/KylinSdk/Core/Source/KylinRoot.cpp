@@ -256,6 +256,7 @@ KVOID Kylin::KylinRoot::SwitchScene( KUINT uSceneID )
 	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
 	{
 		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+
 		return pStatus->m_pWorldManager->SwitchScene(uSceneID);
 	}
 }
@@ -410,4 +411,22 @@ Kylin::Entity* Kylin::KylinRoot::SpawnItem( KUINT uGid,KUINT uCid )
 	//////////////////////////////////////////////////////////////////////////
 
 	return pEnt;
+}
+
+KVOID Kylin::KylinRoot::ClearMessage()
+{
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		pStatus->m_pWorldManager->m_pActiveScene->m_pEventManager->RemoveAllEvents();
+	}
+}
+
+KVOID Kylin::KylinRoot::QuitGame()
+{
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		pStatus->Quit();
+	}
 }
