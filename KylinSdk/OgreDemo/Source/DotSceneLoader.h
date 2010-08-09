@@ -115,6 +115,8 @@
 		Ogre::String			m_sPrependNode;
 		//Ogre::TerrainGroup* mTerrainGroup;
 		Ogre::Vector3 mLightDirection;
+	
+		KVEC<KSTR>				m_sStaticNodeList;
 
 		Ogre::ShadowCameraSetupPtr  mPSSMSetup;
 		bool						mShadowsEnabled;

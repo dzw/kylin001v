@@ -8,12 +8,8 @@
 
 //-------------------------------------------------------------------------------------
 GameApp::GameApp(void)
-: mTerrainImported(true),
-mSceneFile(Ogre::StringUtil::BLANK),
-mHelpInfo(Ogre::StringUtil::BLANK),
-mFallVelocity(0)
 {
-	mHelpInfo = Ogre::String("Use [W][A][S][D] keys for movement.\nKeys [1]-[9] to switch between cameras.\n[0] toggles SceneNode debug visuals.\n\nPress [C] to toggle clamp to terrain (gravity).\n\n[G] toggles the detail panel.\n[R] cycles polygonModes (Solid/Wireframe/Points).\n[T] cycles various filtering.\n\n\nPress [ESC] to quit.");
+
 }
 
 //-------------------------------------------------------------------------------------
@@ -56,36 +52,32 @@ extern "C" {
 	KVOID DoWork(KCHAR *argv)
 	{
 		GameApp app;
+#ifdef _DEBUG
 		if (app.Initialize("OGRE Sample ...",MAKEINTRESOURCE(IDR_MAINFRAME)))
+#else
+		if (app.Initialize("∆Ê√≈",MAKEINTRESOURCE(IDR_MAINFRAME)))
+#endif // _DEBUG
 		{
 			app.Entrance(argv);
 			app.Run();
 		}
 	}
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 	INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT nArgc)
-#else
-	int main(KINT argc, KCHAR *argv[])
-#endif
 	{
 		// Create application object
-//#ifndef _DEBUG
-//		__try
-//#else
+#ifndef _DEBUG
 		try
-//#endif
+#endif
 		{
 			DoWork(strCmdLine);
 		} 
-//#ifndef _DEBUG
-//		__except(GenerateDump(GetExceptionInformation())){}
-//#else
-		catch(Ogre::Exception &e)
-		{
-			Ogre::LogManager::getSingleton().logMessage(e.getDescription());
-		}
-//#endif
+#ifndef _DEBUG
+ 		catch(Ogre::Exception &e)
+ 		{
+ 			Ogre::LogManager::getSingleton().logMessage(e.getDescription());
+ 		}
+#endif
 
 		return 0;
 	}

@@ -19,6 +19,7 @@
 #include "profile.h"
 #include "Entity.h"
 #include "ClScriptFunction.h"
+#include "RenderableManager.h"
 
 
 #pragma warning(disable:4390)
@@ -508,7 +509,10 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 		if(pParent)
 			pNode = pParent->createChildSceneNode();
 		else
+		{
 			pNode = mAttachNode->createChildSceneNode();
+			m_sStaticNodeList.push_back(pNode->getName());
+		}
 	}
 	else
 	{
@@ -545,7 +549,10 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 			if(pParent)
 				pNode = pParent->createChildSceneNode(name);
 			else
+			{
 				pNode = mAttachNode->createChildSceneNode(name);
+				m_sStaticNodeList.push_back(name);
+			}
 		}
 	}
 
@@ -931,17 +938,19 @@ KVOID DotSceneLoader::Unload( Kylin::SceneHag* pHag )
 		if(mHydraxHandle->isCreated()) mHydraxHandle->remove();
 		SAFE_DEL(mHydraxHandle);
 	}
-	
+
+// 	if (mAttachNode)
+// 	{
+// 		mAttachNode->detachAllObjects();
+// 		//		mAttachNode->removeAndDestroyAllChildren();
+// 	}
+
 	Kylin::ClSceneLoader::Unload(pHag);
-	
-	if (mAttachNode)
-	{
-		mAttachNode->detachAllObjects();
-		mAttachNode->removeAndDestroyAllChildren();
-	}
 
 	OGRE_DELETE mTerrainGlobalOptions;
 	mTerrainGlobalOptions = NULL;
+
+	OgreRoot::GetSingletonPtr()->GetRenderableManager()->Remove(this);
 }
 
 KVOID DotSceneLoader::Tick( KFLOAT fElapsed )
@@ -955,16 +964,16 @@ KVOID DotSceneLoader::Tick( KFLOAT fElapsed )
 // º”‘ÿÀÆ
 KVOID DotSceneLoader::processHydrax( rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent /*= 0*/ )
 {
-	std::vector<Ogre::String> _camnames;
-	// Loop through all cameras and grab their name and set their debug representation
-	Ogre::SceneManager::CameraIterator cameras = mSceneMgr->getCameraIterator();
-	while (cameras.hasMoreElements())
-	{
-		Ogre::Camera* camera = cameras.getNext();
-		_camnames.push_back(camera->getName());
-	}
+// 	std::vector<Ogre::String> _camnames;
+// 	// Loop through all cameras and grab their name and set their debug representation
+// 	Ogre::SceneManager::CameraIterator cameras = mSceneMgr->getCameraIterator();
+// 	while (cameras.hasMoreElements())
+// 	{
+// 		Ogre::Camera* camera = cameras.getNext();
+// 		_camnames.push_back(camera->getName());
+// 
 
-	Ogre::Camera* _temp = mSceneMgr->getCamera(_camnames[0]);
+	Ogre::Camera* _temp = mSceneMgr->getCamera("$MainCamera");
 	createWaterPlane(mSceneMgr,_temp,_temp->getViewport());
 
 	rapidxml::xml_node<>* pElement;
@@ -987,7 +996,9 @@ KVOID DotSceneLoader::processHydrax( rapidxml::xml_node<>* XMLNode, Ogre::SceneN
 
 KVOID DotSceneLoader::createWaterPlane( Ogre::SceneManager *scenemgr, Ogre::Camera *camera, Ogre::Viewport *viewport )
 {
-	mHydraxHandle = KNEW Hydrax::Hydrax(scenemgr, camera, viewport);
+	Ogre::Viewport* vp = OgreRoot::GetSingletonPtr()->CreateViewports(camera);
+
+	mHydraxHandle = KNEW Hydrax::Hydrax(scenemgr, camera, vp);
 
 	// Create our projected grid module
 	mHydraxModule = KNEW Hydrax::Module::ProjectedGrid(// Hydrax parent pointer
@@ -1100,6 +1111,8 @@ void DotSceneLoader::processCollision( rapidxml::xml_node<>* XMLNode, Ogre::Scen
 		int index = name.find("collision_box");
 		if (index == 0)
 		{
+			PhyX::CollisionMonitor* pt = PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor();
+			assert(pt);
 			// collisionmanager add collisionbox
 			PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->AddSceneCllsnBox(name,OrientedBox(kCenter,kSize,kMat));
 		}
@@ -1110,7 +1123,8 @@ void DotSceneLoader::processCollision( rapidxml::xml_node<>* XMLNode, Ogre::Scen
 				PhyX::PhysicalSystem::GetSingletonPtr()->GetCollisionMonitor()->AddSceneCllsnPlane(name,OrientedBox(kCenter,kSize,kMat));
 		}
 		//////////////////////////////////////////////////////////////////////////
-
+		
+		pParent->detachObject(pEntity);
 		pParent->removeAndDestroyAllChildren();
 		mSceneMgr->destroySceneNode(pParent);
 	}

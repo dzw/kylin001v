@@ -26,13 +26,6 @@ protected:
 
 private:
 	
-	Ogre::TerrainGroup* mTerrainGroup;
-	//DotSceneLoader* mLoader;
-	bool mTerrainImported;
-	Ogre::String mSceneFile;
-	Ogre::String mHelpInfo;
-	
-	Ogre::Real mFallVelocity;
 };
 
 
