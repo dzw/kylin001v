@@ -11,6 +11,7 @@ namespace Kylin
 
 	EntityManager::~EntityManager(void)
 	{
+		Destroy();
 	}
 
 	void EntityManager::Destroy()
@@ -68,8 +69,7 @@ namespace Kylin
 
 	KVOID EntityManager::Tick( KFLOAT fElapsed )
 	{
-		KUINT nSize = m_idManager.GetPtrs().size();
-		for(KUINT i=0; i<nSize; i++)
+		for(KUINT i=0; i<m_idManager.GetPtrs().size(); i++)
 		{
 			Entity * pEnt = m_idManager.GetPtrs()[i];
 			if(pEnt)

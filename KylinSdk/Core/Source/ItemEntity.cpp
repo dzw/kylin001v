@@ -66,11 +66,12 @@ namespace Kylin
 			m_kProperty.GetStrValue("$Icon",pItem->m_sIcon);
 			m_kProperty.GetStrValue("$Explain", pItem->m_sExplain);
 
-			pChar->GetKitbag()->AddItem(pItem);
+			if ( pChar->GetKitbag()->AddItem(pItem) )
+			{
+				//
+				PostDestroy();
+			}
 		}
-
-		//
-		PostDestroy();
 	}
 
 	KVOID ItemEntity::BindEffect( PropertySet kProp )

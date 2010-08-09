@@ -14,7 +14,7 @@ namespace Kylin
 			
 			virtual KVOID	Tick(KFLOAT fElapsed);
 			virtual KVOID	Destroy();
-			
+
 		protected:
 			typedef KLIST<EntityMaterialInstance*> CoverObjs;
 			virtual KVOID	Testing(KFLOAT fElapsed);

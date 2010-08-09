@@ -141,12 +141,7 @@ Kylin::Factor* Kylin::Action::SpawnFactor()
 			kFactorProp.SetValue("$Mesh",sName);
 		}	
 	}
-	// 获得材质
-// 	if (dbItem.QueryField("MATERIAL",dbField))
-// 	{
-// 		KSTR sMat = boost::any_cast<KSTR>(dbField.m_aValue);	
-// 		kFactorProp.SetValue("$Material",sMat);
-// 	}
+
 	// 设置时限
 	if (dbItem.QueryField("TIMES",dbField))
 	{
@@ -361,7 +356,7 @@ KFLOAT Kylin::Action::GetRange()
 KFLOAT Kylin::Action::GetCooldawn()
 {
 	KFLOAT fValue = 0;
-	m_kProperty.GetFloatValue("$Cooldawn",fValue);
+	m_kProperty.GetFloatValue("$Cooldown",fValue);
 
 	return fValue;
 }

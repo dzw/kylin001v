@@ -120,7 +120,17 @@ namespace Kylin
 		m_nSuccessFactors--;
 		if (m_nSuccessFactors <= 0)
 		{
-			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_success");
+			KSTR sName;
+			m_kProperty.GetStrValue("$Name",sName);
+			//-----------------------------------------------------------------
+			// 调用脚步胜利
+			KVEC<KCCHAR *> kModules;
+			kModules.push_back(sName.data());
+			kModules.push_back("lvl");
+
+			OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"on_success",true,"i",GetID());
+
+			//-----------------------------------------------------------------
 		}
 	}
 
@@ -129,7 +139,17 @@ namespace Kylin
 		m_nFailureFactors--;
 		if (m_nFailureFactors <= 0)
 		{
-			KylinRoot::GetSingletonPtr()->NotifyScriptEntity(this,"on_failure");
+			KSTR sName;
+			m_kProperty.GetStrValue("$Name",sName);
+			//-----------------------------------------------------------------
+			// 调用脚步失败
+			KVEC<KCCHAR *> kModules;
+			kModules.push_back(sName.data());
+			kModules.push_back("lvl");
+
+			OgreRoot::GetSingletonPtr()->GetScriptVM()->ExecuteScriptFunc(kModules,"on_failure",true,"i",GetID());
+
+			//-----------------------------------------------------------------
 		}
 	}
 	// 	KVOID Level::SetVictoryFactors( KINT nCount )

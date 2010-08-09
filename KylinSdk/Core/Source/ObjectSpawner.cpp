@@ -126,7 +126,7 @@ namespace Kylin
 				it = m_kChildList.erase(it);
 			}
 		}
-
+		
 		return (m_kChildList.size() == 0);
 	}
 }

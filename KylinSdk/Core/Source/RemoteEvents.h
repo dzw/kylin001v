@@ -28,6 +28,7 @@ extern EventTemplate ev_restore_hp;
 extern EventTemplate ev_do_spawn;				
 extern EventTemplate ev_on_timer;
 extern EventTemplate ev_do_quit;				// 退出游戏
+extern EventTemplate ev_do_teleport;			// 瞬间移动
 
 // 用于同步的消息(位置，旋转，缩放，时间) 前缀 ev_sync_
 extern EventTemplate ev_sync_translate;

@@ -60,7 +60,6 @@ namespace Kylin
 		//场景数据
 		SceneHag		m_kSceneHag;
 		//
-		Zone*			m_pZone;
 		//场景加载接口
 		SceneLoader*	m_pSceneLoader;
 		//场景ENTITY管理器

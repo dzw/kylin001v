@@ -27,6 +27,7 @@ namespace Kylin
 		
 			KVOID				SetEnable(KBOOL bFlag) { m_bEnable = bFlag; }
 			KBOOL				IsEnable() { return m_bEnable; }
+			KVOID				Clear();
 
 		protected:
 			CoverMonitor*		m_pCoverMonitor;
