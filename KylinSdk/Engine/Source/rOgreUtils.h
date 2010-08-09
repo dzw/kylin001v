@@ -123,7 +123,7 @@ namespace Kylin
 
 			return INTERSECTS;
 		}
-
+		
 	protected:
 		static KUINT   mVertexBufferSize;
 		static KUINT   mIndexBufferSize;
