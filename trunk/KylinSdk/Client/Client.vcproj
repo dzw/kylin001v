@@ -518,6 +518,14 @@
 				RelativePath=".\Source\SummonSkill.h"
 				>
 			</File>
+			<File
+				RelativePath=".\Source\TeleportSkill.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Source\TeleportSkill.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="DataPool"
