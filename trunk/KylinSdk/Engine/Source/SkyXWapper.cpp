@@ -40,6 +40,7 @@ Kylin::SkyXWapper::SkyXWapper(Ogre::SceneManager* pSceneMnger, Ogre::Camera* pCa
 
 Kylin::SkyXWapper::~SkyXWapper()
 {
+	SAFE_CALL(m_pSkyX,remove());
 	SAFE_DEL(m_pSkyX);
 }
 

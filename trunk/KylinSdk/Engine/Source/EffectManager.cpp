@@ -24,6 +24,9 @@ KBOOL Kylin::EffectManager::Initialize()
 	Generate("Bloom","",-1.0f,ET_COMPOSITOR);
 	Generate(KNEW EffectFade());
 	Generate(KNEW EffectMotionBlur());
+	
+	//
+	Activate("Bloom",true);
 
 	return true;
 }
@@ -92,14 +95,29 @@ KVOID Kylin::EffectManager::DestroyEffect( KSTR sName )
 	EffectMap::iterator it = m_kEffectMap.find(sName);
 	if (it != m_kEffectMap.end())
 	{
-		SAFE_CALL(it->second,Destroy());
-		SAFE_DEL(it->second);
-		m_kEffectMap.erase(it);
+		m_kWaitList.push_back(sName);
 	}
 }
 
 KVOID Kylin::EffectManager::Render( KFLOAT fElapsed )
 {
+	if (m_kWaitList.size() > 0)
+	{
+		for (KUINT i = 0; i < m_kWaitList.size(); i++)
+		{
+			EffectMap::iterator it = m_kEffectMap.find(m_kWaitList[i]);
+			if (it != m_kEffectMap.end())
+			{
+				SAFE_CALL(it->second,Destroy());
+				SAFE_DEL(it->second);
+				m_kEffectMap.erase(it);
+			}
+		}
+
+		m_kWaitList.clear();
+	}
+
+
 	EffectMap::iterator beg = m_kEffectMap.begin();
 	EffectMap::iterator end = m_kEffectMap.end();
 	for (EffectMap::iterator it = beg; it != end; it++)
@@ -176,9 +194,9 @@ KVOID Kylin::EffectParticle::Destroy()
 	pSceneMngr->destroyParticleSystem(m_pParticleHandle);
 	m_pParticleHandle = NULL;
 	
-	if (m_pRoot->getParentSceneNode())
-		m_pRoot->getParentSceneNode()->removeChild(m_pRoot);
-	pSceneMngr->destroySceneNode(m_pRoot);
+	if (pSceneMngr->hasSceneNode(m_pRoot->getName()))
+		pSceneMngr->destroySceneNode(m_pRoot);
+
 	m_pRoot = NULL;
 }
 
@@ -206,8 +224,8 @@ KVOID Kylin::EffectParticle::Attach( Ogre::SceneNode* pNode, KFLOAT fScale)
 // 		m_pParticleSystemEx->getParentSceneNode()->detachObject(m_pParticleSystemEx);
 // 	pNode->attachObject(m_pParticleSystemEx);
 
-	if (m_pRoot->getParentSceneNode())
-		m_pRoot->getParentSceneNode()->removeChild(m_pRoot);
+	if (m_pRoot->getParent())
+		m_pRoot->getParent()->removeChild(m_pRoot);
 
 	pNode->addChild(m_pRoot);
 	m_pRoot->setScale(KPoint3(fScale,fScale,fScale));

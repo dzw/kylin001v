@@ -125,10 +125,10 @@ KVOID Kylin::GuiManager::Update( KFLOAT fElapsed )
 			it->second->Render(fElapsed);
 	}
 	
-	if(	CProfiling::Initialized() && CProfiling::GetSingleton().m_bShow==true)
-	{
-		CProfiling::GetSingleton().Render( fElapsed );
-	}
+// 	if(	CProfiling::Initialized() && CProfiling::GetSingleton().m_bShow==true)
+// 	{
+// 		CProfiling::GetSingleton().Render( fElapsed );
+// 	}
 }
 
 Kylin::GuiBase* Kylin::GuiManager::GetGuiBase( KSTR sName )

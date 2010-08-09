@@ -96,7 +96,7 @@ KVOID Kylin::Node::Unload()
 
 KVOID Kylin::Node::Tick( KFLOAT fElapsed )
 {
-	if (m_pAnimProxy) m_pAnimProxy->Update(fElapsed);
+	SAFE_CALL(m_pAnimProxy,Update(fElapsed));
 }
 
 KVOID Kylin::Node::SetTranslate( KPoint3 kPos )
@@ -160,11 +160,15 @@ KVOID Kylin::Node::Destroy()
 	//--------------------------------------------------------
 	SAFE_DEL(m_pAnimProxy);
 
-	//SAFE_CALL(m_pOgreNode,detachAllObjects());
-	SAFE_CALL(m_pOgreNode,removeAndDestroyAllChildren());
 	//--------------------------------------------------------
 	if (m_pOgreEntity && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasEntity(m_pOgreEntity->getName()))
+	{
+		m_pOgreEntity->getParentSceneNode()->detachObject(m_pOgreEntity);
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyEntity(m_pOgreEntity);
+	}
+
+	SAFE_CALL(m_pOgreNode,removeAndDestroyAllChildren());
+
 	if (m_pOgreNode && OgreRoot::GetSingletonPtr()->GetSceneManager()->hasSceneNode(m_pOgreNode->getName()))
 		OgreRoot::GetSingletonPtr()->GetSceneManager()->destroySceneNode(m_pOgreNode);
 }

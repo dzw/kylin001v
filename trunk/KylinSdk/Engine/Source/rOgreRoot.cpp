@@ -55,6 +55,7 @@ Ogre::Viewport* Kylin::OgreRoot::CreateViewports(Ogre::Camera* pCamera, KColor k
 	Ogre::Viewport* vp = pCamera->getViewport();
 	if (!vp)
 	{
+		g_theApp->m_pWindow->removeAllViewports();
 		vp = g_theApp->m_pWindow->addViewport(pCamera);
 		vp->setBackgroundColour(kValue);
 

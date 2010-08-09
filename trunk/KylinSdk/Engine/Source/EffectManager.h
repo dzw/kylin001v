@@ -151,7 +151,9 @@ namespace Kylin
 
 	protected:
 		typedef KMAP<KSTR,EffectObject*> EffectMap;
-		
+		typedef KVEC<KSTR>	WaitList;
+
 		EffectMap m_kEffectMap;	// 特效列表
+		WaitList  m_kWaitList;	// 等待列表
 	};
 }
