@@ -27,12 +27,12 @@ KBOOL Kylin::SelectMenu::Initialize()
 	mToolTip->Hide();
 
 	mItemBoxV = KNEW ItemBoxContainer("ItemBoxV.layout");
-	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero0", 3));
-	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero1", 3));
-	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero2", 3));
-	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero3", 3));
-	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero4", 3));
-	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero5", 3));
+// 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero0", 3));
+// 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero1", 3));
+// 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero2", 3));
+// 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero3", 3));
+// 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero4", 3));
+// 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero5", 3));
 // 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero6", 3));
 // 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero7", 3));
 // 	mItemBoxV->getItemBox()->addItem(KNEW ItemMenu("info_Hero8", 3));
@@ -78,15 +78,15 @@ KVOID Kylin::SelectMenu::NotifyToolTip( wraps::BaseLayout * _sender, const MyGUI
 
 KVOID Kylin::SelectMenu::NotifyNotifyItem(wraps::BaseLayout * _sender, const MyGUI::IBNotifyItemData & _info)
 {
-// 	if (_info.index != MyGUI::ITEM_NONE)
-// 	{
-// 		if (_info.notify == MyGUI::IBNotifyItemData::MouseReleased)
-// 		{
-// 			Kylin::ClLobby* pLobby = static_cast<ClLobby*>(KylinRoot::GetSingletonPtr()->GetCurrentGameStatus());
-// 			if (pLobby)
-// 			{
-// 				pLobby->GetLobbyScene()->SpawnActor(1);
-// 			}
-// 		}
-// 	}
+	if (_info.index != MyGUI::ITEM_NONE)
+	{
+		if (_info.notify == MyGUI::IBNotifyItemData::MouseReleased)
+		{
+			Kylin::ClLobby* pLobby = static_cast<ClLobby*>(KylinRoot::GetSingletonPtr()->GetCurrentGameStatus());
+			if (pLobby)
+			{
+				pLobby->GetLobbyScene()->SpawnActor(1);
+			}
+		}
+	}
 }

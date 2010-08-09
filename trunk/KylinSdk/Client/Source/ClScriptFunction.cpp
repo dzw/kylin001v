@@ -61,7 +61,7 @@ namespace Script
 			
 			//---------------------------------------------------------------
 			if (toUi)
-				pMenu->SetSkillInfo(pAct->GetIcon(),pAct->GetCooldawn(),uActID,false,"",pAct->GetExplain());
+				pMenu->SetSkillInfo(pAct->GetIcon(),pAct->GetCooldawn(),uActID,false,"技能说明",pAct->GetExplain());
 			//---------------------------------------------------------------
 		}
 	}
@@ -149,7 +149,7 @@ namespace Script
 	{
 		Kylin::TaskTipsMenu* pMenu = GET_GUI_PTR(Kylin::TaskTipsMenu);
 		pMenu->SetVisible(true);
-		pMenu->SetResult(bFlag?"成功":"失败");
+		pMenu->SetResult(bFlag?"成功(十秒后自动退出游戏)":"失败(十秒后自动退出游戏)");
 
 		if (!bFlag)
 		{
@@ -292,7 +292,14 @@ namespace Script
 				KINT nU = pow(2.0f,nLevel + 1);
 				KINT nL = pow(2.0f,nLevel);
 				
-				KFLOAT fP = KFLOAT(nExp - nL) / KFLOAT(nU - nL);
+				KINT nT = nExp - nL;
+				if (nT < 0)
+					nT = nExp;
+
+				KFLOAT fP = KFLOAT(nT) / KFLOAT(nU - nL);
+				fP = abs(fP);
+				if (fP > 1.0f)
+					fP = 1.0f;
 
 				Kylin::ShortcutMenu* pMenu = GET_GUI_PTR(Kylin::ShortcutMenu);
 				Assert(pMenu);

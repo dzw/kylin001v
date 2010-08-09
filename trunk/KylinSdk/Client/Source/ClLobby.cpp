@@ -47,7 +47,10 @@ KVOID Kylin::ClLobby::Tick( KFLOAT fElapsed )
 	// test code
 #ifdef _DEBUG
 	if (tbst++ == 10)
+	{
 		KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW ClGame());
+		tbst = 0;
+	}
 #endif
 
 }

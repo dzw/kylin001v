@@ -13,9 +13,11 @@
 #include "uiHelpMenu.h"
 #include "CameraControl.h"
 #include "UserCommandHandler.h"
+#include "ClLobby.h"
 
 
 Kylin::ClGame::ClGame()
+: m_bQuitFlag(false)
 {
 
 }
@@ -71,14 +73,15 @@ KVOID Kylin::ClGame::UiLoader()
 	KitbagMenu* pKitbag = KNEW KitbagMenu();
 	pKitbag->Initialize();
 
-	TaskTipsMenu* pTaskTip = KNEW TaskTipsMenu();
-	pTaskTip->Initialize();
-
 	HelpMenu* pHelp = KNEW HelpMenu();
 	pHelp->Initialize();
 
 	OptionMenu* pOption = KNEW OptionMenu();
 	pOption->Initialize();	
+	
+	// °´¼ü³åÍ»´¦Àí
+	TaskTipsMenu* pTaskTip = KNEW TaskTipsMenu();
+	pTaskTip->Initialize();
 
 	//////////////////////////////////////////////////////////////////////////
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pMiniMap);
@@ -93,4 +96,15 @@ KVOID Kylin::ClGame::UiLoader()
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pHelp);
 	OgreRoot::GetSingletonPtr()->GetGuiManager()->RegisterGui(pOption);
 
+}
+
+KVOID Kylin::ClGame::Tick( KFLOAT fElapsed )
+{
+	GSGame::Tick(fElapsed);
+
+	if (m_bQuitFlag)
+	{
+		OgreRoot::GetSingletonPtr()->ShutDown();// SwitchStatus(KNEW ClLobby());
+		m_bQuitFlag = false;
+	}
 }

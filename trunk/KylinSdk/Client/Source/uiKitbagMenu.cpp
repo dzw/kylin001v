@@ -41,6 +41,38 @@ KBOOL Kylin::KitbagMenu::Initialize()
 	m_pItem_1_6->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
 	m_pItem_1_7->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
 	//---------------------------------------------------------------
+	m_pItem_2_1->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_2_2->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_2_3->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_2_4->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_2_5->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_2_6->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_2_7->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+
+	m_pItem_2_1->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_2_2->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_2_3->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_2_4->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_2_5->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_2_6->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_2_7->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	//---------------------------------------------------------------
+	m_pItem_3_1->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_3_2->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_3_3->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_3_4->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_3_5->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_3_6->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+	m_pItem_3_7->eventMouseButtonPressed = newDelegate(this, &KitbagMenu::NotifyClick_Item);
+
+	m_pItem_3_1->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_3_2->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_3_3->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_3_4->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_3_5->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_3_6->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	m_pItem_3_7->eventToolTip	 = newDelegate(this, &KitbagMenu::NotifyToolTip);
+	//---------------------------------------------------------------
 
 	SetVisible(false);
 
@@ -111,6 +143,62 @@ KVOID Kylin::KitbagMenu::SetItemInfo( KINT nIndex,ItemCell* pCell )
 
 		pItem = m_pItem_1_7;
 		break;
+	case 7:
+
+		pItem = m_pItem_2_1;
+		break;
+	case 8:
+
+		pItem = m_pItem_2_2;
+		break;
+	case 9:
+
+		pItem = m_pItem_2_3;
+		break;
+	case 10:
+
+		pItem = m_pItem_2_4;
+		break;
+	case 11:
+
+		pItem = m_pItem_2_5;
+		break;
+	case 12:
+
+		pItem = m_pItem_2_6;
+		break;
+	case 13:
+
+		pItem = m_pItem_3_7;
+		break;
+	case 14:
+
+		pItem = m_pItem_3_1;
+		break;
+	case 15:
+
+		pItem = m_pItem_3_2;
+		break;
+	case 16:
+
+		pItem = m_pItem_3_3;
+		break;
+	case 17:
+
+		pItem = m_pItem_3_4;
+		break;
+	case 18:
+
+		pItem = m_pItem_3_5;
+		break;
+	case 19:
+
+		pItem = m_pItem_3_6;
+		break;
+	case 20:
+
+		pItem = m_pItem_3_7;
+		break;
 	default:
 		assert(NULL);
 	}
@@ -150,6 +238,34 @@ KVOID Kylin::KitbagMenu::NotifyClick_Item( MyGUI::WidgetPtr _sender, int _left, 
 		nIndex = 5;
 	else if ( _sender == m_pItem_1_7)
 		nIndex = 6;
+	else if ( _sender == m_pItem_2_1)
+		nIndex = 7;
+	else if ( _sender == m_pItem_2_2)
+		nIndex = 8;
+	else if ( _sender == m_pItem_2_3)
+		nIndex = 9;
+	else if ( _sender == m_pItem_2_4)
+		nIndex = 10;
+	else if ( _sender == m_pItem_2_5)
+		nIndex = 11;
+	else if ( _sender == m_pItem_2_6)
+		nIndex = 12;
+	else if ( _sender == m_pItem_2_7)
+		nIndex = 13;
+	else if ( _sender == m_pItem_3_1)
+		nIndex = 14;
+	else if ( _sender == m_pItem_3_2)
+		nIndex = 15;
+	else if ( _sender == m_pItem_3_3)
+		nIndex = 16;
+	else if ( _sender == m_pItem_3_4)
+		nIndex = 17;
+	else if ( _sender == m_pItem_3_5)
+		nIndex = 18;
+	else if ( _sender == m_pItem_3_6)
+		nIndex = 19;
+	else if ( _sender == m_pItem_3_7)
+		nIndex = 20;
 
 	if (nIndex != -1)
 	{ 
@@ -184,6 +300,22 @@ KVOID Kylin::KitbagMenu::Clear()
 	m_pItem_1_5->setVisible(false);
 	m_pItem_1_6->setVisible(false);
 	m_pItem_1_7->setVisible(false);
+
+	m_pItem_2_1->setVisible(false);
+	m_pItem_2_2->setVisible(false);
+	m_pItem_2_3->setVisible(false);
+	m_pItem_2_4->setVisible(false);
+	m_pItem_2_5->setVisible(false);
+	m_pItem_2_6->setVisible(false);
+	m_pItem_2_7->setVisible(false);
+
+	m_pItem_3_1->setVisible(false);
+	m_pItem_3_2->setVisible(false);
+	m_pItem_3_3->setVisible(false);
+	m_pItem_3_4->setVisible(false);
+	m_pItem_3_5->setVisible(false);
+	m_pItem_3_6->setVisible(false);
+	m_pItem_3_7->setVisible(false);
 }
 
 KVOID Kylin::KitbagMenu::NotifyToolTip( MyGUI::WidgetPtr _sender, const MyGUI::ToolTipInfo & _info )
@@ -203,6 +335,34 @@ KVOID Kylin::KitbagMenu::NotifyToolTip( MyGUI::WidgetPtr _sender, const MyGUI::T
 		nIndex = 5;
 	else if ( _sender == m_pItem_1_7)
 		nIndex = 6;
+	else if ( _sender == m_pItem_2_1)
+		nIndex = 7;
+	else if ( _sender == m_pItem_2_2)
+		nIndex = 8;
+	else if ( _sender == m_pItem_2_3)
+		nIndex = 9;
+	else if ( _sender == m_pItem_2_4)
+		nIndex = 10;
+	else if ( _sender == m_pItem_2_5)
+		nIndex = 11;
+	else if ( _sender == m_pItem_2_6)
+		nIndex = 12;
+	else if ( _sender == m_pItem_2_7)
+		nIndex = 13;
+	else if ( _sender == m_pItem_3_1)
+		nIndex = 14;
+	else if ( _sender == m_pItem_3_2)
+		nIndex = 15;
+	else if ( _sender == m_pItem_3_3)
+		nIndex = 16;
+	else if ( _sender == m_pItem_3_4)
+		nIndex = 17;
+	else if ( _sender == m_pItem_3_5)
+		nIndex = 18;
+	else if ( _sender == m_pItem_3_6)
+		nIndex = 19;
+	else if ( _sender == m_pItem_3_7)
+		nIndex = 20;
 
 	if (nIndex != -1)
 	{ 

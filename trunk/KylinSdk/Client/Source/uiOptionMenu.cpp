@@ -1,6 +1,7 @@
 #include "cltpch.h"
 #include "uiOptionMenu.h"
 #include "uiHelpMenu.h"
+#include "uiTaskTipsMenu.h"
 #include "rOgreRoot.h"
 #include "KylinRoot.h"
 #include "GameStatus.h"
@@ -61,6 +62,10 @@ void Kylin::OptionMenu::NotifyButtonClick( MyGUI::Widget* _sender )
 
 KVOID Kylin::OptionMenu::OnKeyDown(KUINT uKey)
 {
+
+	TaskTipsMenu* pMenu = GET_GUI_PTR(TaskTipsMenu);
+	if (pMenu->IsVisible())
+		return;
 
 	if (uKey == MyGUI::KeyCode::Escape)
 	{

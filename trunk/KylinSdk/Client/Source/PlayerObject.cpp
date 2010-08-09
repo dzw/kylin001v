@@ -20,6 +20,7 @@ namespace Kylin
 		{&ev_post_reborn,			&EV_Reborn},
 		{&ev_restore_hp,			&EV_RestoreHP},
 		{&ev_learn_skill,			&EV_LearnSkill},
+		{&ev_do_teleport,			&Ev_Teleport},
 		{NULL, NULL}
 	};
 
@@ -54,8 +55,9 @@ namespace Kylin
 // 		//-------------------------------
 // 		// test code
 #ifdef _DEBUG
-//		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
-//		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+// 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+// 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+		
 #endif
 	}
 
@@ -150,5 +152,19 @@ namespace Kylin
 		KINT nSkill	= boost::get<int>(spEV->args[0]);
 		
 		Script::to_learn_skill(this->GetID(),nSkill,true);	
+	}
+
+	KVOID PlayerObject::Ev_Teleport( EventPtr spEV )
+	{
+		KPoint3 pt(0,50000,0);
+		pt.x	= boost::get<float>(spEV->args[0]);
+		pt.z	= boost::get<float>(spEV->args[1]);
+		
+		KPoint3 ptRet;
+		if ( KylinRoot::GetSingletonPtr()->HitTest(pt,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
+		{
+			pt.y = ptRet.y;
+			this->SetTranslate(pt);
+		}
 	}
 }
