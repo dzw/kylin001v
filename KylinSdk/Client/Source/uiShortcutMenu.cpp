@@ -83,25 +83,27 @@ KVOID Kylin::ShortcutMenu::SetVisible( KBOOL bVisible )
 }
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetHPWidthPct(KFLOAT fH )
-{	
-//	if (fH >= 1.0f )
+{
+	m_pImageHealth->setImageTile(MyGUI::IntSize(m_kImageHealthCoord.width,m_kImageHealthCoord.height));
+	m_pImageHealth->setImageCoord(m_kImageHealthCoord);
+	
+	m_pImageHealth->setSize(MyGUI::IntSize(m_kHealthWidgetCoord.width,m_kHealthWidgetCoord.height));
+	m_pImageHealth->setCoord(m_kHealthWidgetCoord);
+
+	if (fH < .0) fH = .0f;
+
+	if (fH < 1.0f)
 	{
-//		m_pImageHealth->setCoord(m_kHealthWidgetCoord);
-//		m_pImageHealth->setImageCoord(m_kImageHealthCoord);
+		KINT h = (KFLOAT)m_kImageHealthCoord.height * fH;
+		KINT t = (KFLOAT)m_kImageHealthCoord.top + (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
+		m_pImageHealth->setImageTile(MyGUI::IntSize(m_kImageHealthCoord.width,h));
+		m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.left,t,m_kImageHealthCoord.width,h));
+		
+		t = (KFLOAT)m_kHealthWidgetCoord.top + (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
+		m_pImageHealth->setSize(MyGUI::IntSize(m_kHealthWidgetCoord.width,m_kHealthWidgetCoord.height*fH));
+		m_pImageHealth->setCoord(MyGUI::IntCoord(m_kHealthWidgetCoord.left,t,m_kHealthWidgetCoord.width,m_kHealthWidgetCoord.height*fH));
 	}
-//	else if (fH >=.0f)
-	{
- 		KINT h = (KFLOAT)m_kHealthWidgetCoord.height * fH;
-// 		KINT t = (KFLOAT)m_kImageHealthCoord.top + (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
-// 		m_pImageHealth->setImageCoord(MyGUI::IntCoord(m_kImageHealthCoord.left,t,m_kImageHealthCoord.width,h));
-// 
- 		MyGUI::IntCoord crd = m_kHealthWidgetCoord;
- 
- 		crd.top +=  (1.0f-fH) * (KFLOAT)m_kImageHealthCoord.height;
- 		crd.height = h;
- 
- 		m_pImageHealth->setCoord(crd);
-	}
+
 }
 //-----------------------------------------------------------------------------
 KVOID Kylin::ShortcutMenu::SetExpWidthPct( KFLOAT fW )
