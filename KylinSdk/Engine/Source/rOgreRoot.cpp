@@ -91,7 +91,34 @@ KVOID Kylin::OgreRoot::GetWindowSize( KUINT& uWidth,KUINT& uHeight )
 
 KVOID Kylin::OgreRoot::ScreenShot()
 {
-	g_theApp->m_pWindow->writeContentsToTimestampedFile("ky_", ".jpg");
+	//g_theApp->m_pWindow->writeContentsToTimestampedFile("ky_", ".jpg");
+
+	const char* szScreenShortPath = ".\\ScreenShots";
+	CHAR szFileName[MAX_PATH] = {0};
+	try
+	{
+		//时间
+		SYSTEMTIME timeNow;
+		::GetLocalTime(&timeNow);
+
+		_snprintf(szFileName, MAX_PATH, "%04d_%02d_%02d_%02d_%02d_%02d.jpg",
+			timeNow.wYear, timeNow.wMonth, timeNow.wDay, 
+			timeNow.wHour, timeNow.wMinute, timeNow.wSecond);
+
+		//创建目录
+		::CreateDirectoryA(szScreenShortPath, 0);
+
+		//全路径
+		char szPathFileName[MAX_PATH] = {0};
+		_snprintf(szPathFileName, MAX_PATH, "%s\\%s", szScreenShortPath, szFileName);
+
+		g_theApp->m_pWindow->writeContentsToFile(szPathFileName);
+	}
+	catch(...)
+	{
+		assert(NULL);
+		//return FALSE;	
+	}
 }
 
 KVOID Kylin::OgreRoot::Resume()
