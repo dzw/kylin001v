@@ -33,8 +33,10 @@ KVOID Kylin::OgreUtils::DynamicLoadMesh( KSTR sMesh )
 	// addResourceLocation 此方法材质脚步无法解析需要手动加载
 	KSTR sMat = FileUtils::GetFileName(sMesh);
 	sMat += ".material";
+	
 	if (!Ogre::MaterialManager::getSingletonPtr()->resourceExists(sMat))
 	{
+		Ogre::MaterialManager::getSingletonPtr()->remove(sMat);
 		KSTR sMatPath = sDir + sMat;
 		std::ifstream fs(sMatPath.data());
 		Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fs, false));

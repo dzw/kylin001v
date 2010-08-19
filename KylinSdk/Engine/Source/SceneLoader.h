@@ -29,9 +29,9 @@ namespace Kylin
 				OGRE_DELETE m_pTerrainGroup;
 
 			// 清空场景管理器
-  			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllEntities();
+//  			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllEntities();
   			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllLights();
-  			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllParticleSystems();
+//  			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllParticleSystems();
 // 			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllMovableObjects();
 //			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllManualObjects();
 //			OgreRoot::GetSingletonPtr()->GetSceneManager()->destroyAllAnimations();
