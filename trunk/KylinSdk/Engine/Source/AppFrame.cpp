@@ -12,6 +12,7 @@
 #include "profile.h"
 #include "../resource.h"
 #include "RenderableManager.h"
+#include "OgreOggSound.h"
 
 namespace Kylin
 {
@@ -115,8 +116,8 @@ namespace Kylin
 		if (DataManager::Initialized())
 			KDEL DataManager::GetSingletonPtr();
 
-		SAFE_DEL(m_pRenderableMgr);
-		SAFE_CALL(m_pSceneMgr,clearScene());
+		//SAFE_DEL(m_pRenderableMgr);
+		//SAFE_CALL(m_pSceneMgr,clearScene());
 
 		Ogre::ResourceGroupManager::ResourceManagerIterator resMgrs =
 			Ogre::ResourceGroupManager::getSingleton().getResourceManagerIterator();
@@ -174,10 +175,10 @@ namespace Kylin
 		m_pSceneMgr = m_pRoot->createSceneManager(Ogre::ST_EXTERIOR_CLOSE);
 
 		// set shadow properties
-		m_pSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_TEXTURE_MODULATIVE);
-		m_pSceneMgr->setShadowColour(Ogre::ColourValue(0.5, 0.5, 0.5));
-		m_pSceneMgr->setShadowTextureSize(1024);
-		m_pSceneMgr->setShadowTextureCount(1);
+// 		m_pSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_NONE);
+// 		m_pSceneMgr->setShadowColour(Ogre::ColourValue(0.5, 0.5, 0.5));
+// 		m_pSceneMgr->setShadowTextureSize(1024);
+// 		m_pSceneMgr->setShadowTextureCount(1);
 
 		//////////////////////////////////////////////////////////////////////////
 		Ogre::Camera* pCam = OgreRoot::GetSingletonPtr()->CreateCamera("$MainCamera");
@@ -210,6 +211,8 @@ namespace Kylin
 		if (!EffectManager::Initialized())
 			KNEW EffectManager();
 		EffectManager::GetSingletonPtr()->Initialize();
+
+		OgreOggSound::OgreOggSoundManager::getSingletonPtr()->init();
 		//////////////////////////////////////////////////////////////////////////
 		if (!m_pRenderableMgr)
 			m_pRenderableMgr = KNEW RenderableManager();
