@@ -8,7 +8,11 @@
 #include "ActionDispatcher.h"
 #include "Action.h"
 #include "ClScriptFunction.h"
+#include "OgreOggSound.h"
 
+#ifdef _DEBUG
+#include "ClLobby.h"
+#endif
 
 namespace Kylin
 {
@@ -37,11 +41,19 @@ namespace Kylin
 
 		return true;
 	}
-
+	
+	int ttstdaf = 0;
 	KVOID PlayerObject::Tick( KFLOAT fElapsed )
 	{
 		Character::Tick(fElapsed);
 
+// #ifdef _DEBUG
+// 		if (ttstdaf++ == 10)
+// 		{
+// 			KylinRoot::GetSingletonPtr()->SwitchStatus(KNEW ClLobby());
+// 			ttstdaf = 0;
+// 		}
+// #endif
 	}
 
 	KVOID PlayerObject::PostSpawn()
@@ -55,7 +67,7 @@ namespace Kylin
 // 		//-------------------------------
 // 		// test code
 #ifdef _DEBUG
-// 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+ 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
 // 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
 		
 #endif
@@ -166,5 +178,12 @@ namespace Kylin
 			pt.y = ptRet.y;
 			this->SetTranslate(pt);
 		}
+	}
+
+	KVOID PlayerObject::SetTranslate( KPoint3 kPos )
+	{
+		Character::SetTranslate(kPos);
+
+		SAFE_CALL(OgreOggSound::OgreOggSoundManager::getSingletonPtr()->getListener(),setPosition(kPos));
 	}
 }
