@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm159"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../Engine/Source;../Core/Source;../../Dependencies/MyGUI3.0/Common;../../Dependencies/ParticleUniverse/include"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../Engine/Source;../Core/Source;../../Dependencies/MyGUI3.0/Common;../../Dependencies/ParticleUniverse/include;../../Dependencies/OgreOggSound/include;&quot;../../Dependencies/OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -107,14 +107,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm150"
-				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../Engine/Source;../Core/Source;../../Dependencies/MyGUI3.0/Common;../../Dependencies/ParticleUniverse/include"
+				AdditionalIncludeDirectories="&quot;../../Dependencies\Lua\tolua++-1.0.93\include&quot;;../Standard/Source;../../Dependencies\tinyxml;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../../Dependencies/boost_1_42;./Source;../../Dependencies/MyGUI3.0/MyGUIEngine/include;../../Dependencies/MyGUI3.0/Platforms/Ogre/OgrePlatform/include;../Engine/Source;../Core/Source;../../Dependencies/MyGUI3.0/Common;../../Dependencies/ParticleUniverse/include;../../Dependencies/OgreOggSound/include;&quot;../../Dependencies/OpenAL 1.1 SDK\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="cltpch.h"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="true"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
