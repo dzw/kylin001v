@@ -18,6 +18,8 @@ namespace Kylin
 		virtual KVOID PostSpawn();
 
 		virtual KVOID PostDestroy();
+		
+		virtual KVOID SetTranslate(KPoint3 kPos);
 
 	public:
 		// 判断是否是本地玩家

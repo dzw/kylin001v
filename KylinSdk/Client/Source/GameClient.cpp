@@ -51,6 +51,9 @@ KVOID Kylin::GameClient::DataTableLoading()
 
 	if (DataManager::GetSingletonPtr()->GetGlobalValue("ITEM_DB",sValue))
 		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
+
+	if (DataManager::GetSingletonPtr()->GetGlobalValue("SOUND_DB",sValue))
+		DataManager::GetSingletonPtr()->InvokeLoader(KNEW Kylin::DataLoader(sValue));
 }
 
 extern int tolua_clscript_open(lua_State* tolua_S);
