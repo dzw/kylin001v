@@ -18,7 +18,7 @@ KBOOL Kylin::GSGame::Initialize()
 {
 	if (PhyX::PhysicalSystem::Initialized())
 		PhyX::PhysicalSystem::GetSingletonPtr()->SetEnable(true);
-
+	
 	m_pWorldManager = KNEW Kylin::WorldManager();
 
 	return m_pWorldManager->Initialize(KY_WORLD_CGF);

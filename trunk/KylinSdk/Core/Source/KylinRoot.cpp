@@ -19,6 +19,8 @@
 #include "GuiManager.h"
 #include "uiCursorEx.h"
 #include "Character.h"
+#include "OgreOggSound.h"
+
 
 extern Kylin::AppFrame* g_theApp;
 
@@ -429,4 +431,112 @@ KVOID Kylin::KylinRoot::QuitGame()
 		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
 		pStatus->Quit();
 	}
+}
+
+OgreOggSound::OgreOggISound* Kylin::KylinRoot::CreateSound( KCSTR& sName, KINT nID )
+{
+	KSTR sValue;
+	if (!DataManager::GetSingletonPtr()->GetGlobalValue("SOUND_DB",sValue))
+		return NULL;
+
+	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
+
+	// 查询对应的角色信息
+	DataItem dbItem;
+	if (!pLoader->GetDBPtr()->Query(nID,dbItem))
+		return NULL;
+
+	DataItem::DataField dbField;
+	dbItem.QueryField("NAME",dbField);
+	KSTR sFile = boost::any_cast<KSTR>(dbField.m_aValue);
+	
+	dbItem.QueryField("LOOP",dbField);
+	KBOOL bLoop = boost::any_cast<KBOOL>(dbField.m_aValue);
+	
+	OgreOggSound::OgreOggISound* pSound = NULL;
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr()->hasSound(sName))
+	{
+		pSound = OgreOggSound::OgreOggSoundManager::getSingletonPtr()->getSound(sName);
+	}
+	else
+	{
+		pSound = OgreOggSound::OgreOggSoundManager::getSingletonPtr()->createSound(sName,sFile,false,bLoop);
+	}
+
+	if (pSound)
+		pSound->play();
+
+	return pSound;
+}
+
+KBOOL Kylin::KylinRoot::CreateSound( KCSTR& sName, KINT nID, const KPoint3& pt, KFLOAT fDis )
+{
+	OgreOggSound::OgreOggISound* pSound = CreateSound(sName,nID);
+
+	if (pSound)
+	{
+		pSound->setPosition(pt);
+		pSound->setMaxDistance(fDis);
+		pSound->disable3D(false);
+
+		return true;
+	}
+
+	return false;
+}
+
+KVOID Kylin::KylinRoot::PlaySound( KCSTR& sName )
+{
+	OgreOggSound::OgreOggISound* pSound = NULL;
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr()->hasSound(sName))
+	{
+		pSound = OgreOggSound::OgreOggSoundManager::getSingletonPtr()->getSound(sName);
+		pSound->play();
+	}
+}
+
+KVOID Kylin::KylinRoot::StopSound( KCSTR& sName )
+{
+	OgreOggSound::OgreOggISound* pSound = NULL;
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr()->hasSound(sName))
+	{
+		pSound = OgreOggSound::OgreOggSoundManager::getSingletonPtr()->getSound(sName);
+		pSound->stop();
+	}
+}
+
+KVOID Kylin::KylinRoot::DestroySound( KCSTR& sName )
+{
+	OgreOggSound::OgreOggISound* pSound = NULL;
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr()->hasSound(sName))
+	{
+		OgreOggSound::OgreOggSoundManager::getSingletonPtr()->destroySound(sName);
+	}
+}
+
+KBOOL Kylin::KylinRoot::IsPlaying( KCSTR& sName )
+{
+	OgreOggSound::OgreOggISound* pSound = NULL;
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr()->hasSound(sName))
+	{
+		pSound = OgreOggSound::OgreOggSoundManager::getSingletonPtr()->getSound(sName);
+		return pSound->isPlaying();
+	}
+
+	return false;
+}
+
+KVOID Kylin::KylinRoot::ChangeBgSound( KINT nNewID )
+{
+	OgreOggSound::OgreOggISound* pSound = OgreOggSound::OgreOggSoundManager::getSingletonPtr()->getSound("$BackgroundSound");
+	if (pSound)
+	{
+		// Get SceneManager
+		Ogre::SceneManager* s = pSound->getSceneManager();
+		s->destroyMovableObject(pSound);
+	}
+
+	DestroySound("$BackgroundSound");
+	
+	CreateSound("$BackgroundSound",nNewID);
 }

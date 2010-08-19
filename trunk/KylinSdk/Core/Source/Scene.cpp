@@ -15,6 +15,7 @@
 #include "StringUtils.h"
 #include "ScriptVM.h"
 #include "XmlStream.h"
+#include "OgreOggSound.h"
 
 
 Kylin::SceneHag::SceneHag()
@@ -23,7 +24,7 @@ Kylin::SceneHag::SceneHag()
 	m_uType		= INVALID_ID;
 	m_uLevel	= INVALID_ID;
 	m_sName		= "";
-	m_sBackgroundSound = "";
+	m_nBgSound	= -1;
 	m_sSceneFile= "";
 	m_bPass		= FALSE;
 }
@@ -55,6 +56,13 @@ KVOID Kylin::Scene::EnterScene( KVOID )
 
 KVOID Kylin::Scene::LeaveScene( KVOID )
 {
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr())
+	{
+		OgreOggSound::OgreOggSoundManager::getSingletonPtr()->stopAllSounds();	
+		
+		//OgreOggSound::OgreOggSoundManager::getSingletonPtr()->destroyAllSounds();	
+	}
+
 	m_pEntityManager->Destroy();
 	m_pEventManager->RemoveAllEvents();
 
@@ -80,6 +88,9 @@ KVOID Kylin::Scene::SpawnScene()
 	KSTR sName = fInfo.archive->getName();
 	sName += "/" + m_kSceneHag.m_sSceneFile;
 	//------------------------------------------------------------------
+	// 加载背景音乐
+	
+	KylinRoot::GetSingletonPtr()->CreateSound("$BackgroundSound",m_kSceneHag.m_nBgSound);
 
 	//------------------------------------------------------------------
 	// 执行lua文件
@@ -98,8 +109,6 @@ KVOID Kylin::Scene::SpawnScene()
 	//-----------------------------------------------------------------
 	// 加载玩家
 	m_pSceneLoader->LoadPlayer();
-	//-----------------------------------------------------------------
-
 }
 
 KVOID Kylin::Scene::Tick( KFLOAT fElapsed )
@@ -109,6 +118,9 @@ KVOID Kylin::Scene::Tick( KFLOAT fElapsed )
 	
 	if (PhyX::PhysicalSystem::Initialized())
 		PhyX::PhysicalSystem::GetSingletonPtr()->Tick(fElapsed);
+
+	if (OgreOggSound::OgreOggSoundManager::getSingletonPtr())
+		OgreOggSound::OgreOggSoundManager::getSingletonPtr()->update(fElapsed);
 
 	SAFE_CALL(m_pSceneLoader,Tick(fElapsed));
 }

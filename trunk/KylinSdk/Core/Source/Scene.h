@@ -15,7 +15,7 @@ namespace Kylin
 		// 场景名称
 		KSTR	m_sName;
 		// 背景音乐
-		KSTR	m_sBackgroundSound;
+		KINT	m_nBgSound;
 		// 场景文件
 		KSTR	m_sSceneFile;
 		// 是否通过

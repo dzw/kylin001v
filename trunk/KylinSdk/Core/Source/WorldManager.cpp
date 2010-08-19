@@ -49,6 +49,10 @@ KBOOL Kylin::WorldManager::Initialize( KCCHAR* pWorldCfg )
 		hag->m_uLevel		= kXml.GetInt(0);
 
 		kXml.SetToParent();
+		kXml.SetToFirstChild("BackgroundSound");
+		hag->m_nBgSound		= kXml.GetInt(-1);
+
+		kXml.SetToParent();
 
 		hag->m_bPass = false;
 

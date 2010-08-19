@@ -219,4 +219,9 @@ namespace Script
 			//KylinRoot::GetSingletonPtr()->NotifyScriptEntity(pEnt,"do_idle");
 		}
 	}
+
+	extern void change_background_sound( unsigned int uSoundID )
+	{
+		Kylin::KylinRoot::GetSingletonPtr()->ChangeBgSound(uSoundID);
+	}
 }
