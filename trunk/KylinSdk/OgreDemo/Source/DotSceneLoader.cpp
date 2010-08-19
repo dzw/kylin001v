@@ -194,8 +194,8 @@ KVOID DotSceneLoader::processEnvironment(rapidxml::xml_node<>* XMLNode)
 
 	// Process colourAmbient (?)
 	pElement = XMLNode->first_node("shadows");
-	//if(pElement)
-	//	processSceneShadows(pElement);
+// 	if(pElement)
+// 		processSceneShadows(pElement);
 
 	// Process colourBackground (?)
 	//! @todo Set the background colour of all viewports (RenderWindow has to be provided then)
@@ -208,7 +208,7 @@ KVOID DotSceneLoader::processEnvironment(rapidxml::xml_node<>* XMLNode)
 KVOID DotSceneLoader::processSceneShadows(rapidxml::xml_node<>* XMLNode) 
 {
 	configureShadows(XMLNode);
-	setupPSSM();
+	//setupPSSM();
 }
 
 Ogre::MaterialPtr DotSceneLoader::buildDepthShadowMaterial(Ogre::MaterialPtr cpyMat) 
@@ -303,14 +303,14 @@ KVOID DotSceneLoader::configureShadows(rapidxml::xml_node<>* XMLNode)
 	{
 		// General scene setup
 		int technique = getAttribReal(XMLNode, "shadowstechnique");
-		mSceneMgr->setShadowTechnique((Ogre::ShadowTechnique)technique);
-		mSceneMgr->setShadowFarDistance(getAttribReal(XMLNode, "shadowsrenderingdistance"));
+		//mSceneMgr->setShadowTechnique((Ogre::ShadowTechnique)technique);
+		//mSceneMgr->setShadowFarDistance(getAttribReal(XMLNode, "shadowsrenderingdistance"));
 
 		if(mSceneMgr->getShadowTechnique() >= (int)Ogre::SHADOWTYPE_TEXTURE_ADDITIVE && 
 			mSceneMgr->getShadowTechnique() <= (int)Ogre::SHADOWTYPE_TEXTURE_MODULATIVE_INTEGRATED)
 		{
 			// 3 textures per directional light (PSSM)
-			mSceneMgr->setShadowTextureCountPerLightType(Ogre::Light::LT_DIRECTIONAL, 3);
+			//mSceneMgr->setShadowTextureCountPerLightType(Ogre::Light::LT_DIRECTIONAL, 3);
 
 			mSceneMgr->setShadowTextureCount(3);
 			mSceneMgr->setShadowTextureConfig(0, 1024, 1024, (Ogre::PixelFormat)33);
@@ -318,7 +318,7 @@ KVOID DotSceneLoader::configureShadows(rapidxml::xml_node<>* XMLNode)
 			mSceneMgr->setShadowTextureConfig(2, 512, 512, (Ogre::PixelFormat)33);
 			mSceneMgr->setShadowTextureSelfShadow(true);
 			mSceneMgr->setShadowCasterRenderBackFaces(true);
-			mSceneMgr->setShadowTextureCasterMaterial("PSSM/shadow_caster");
+			//mSceneMgr->setShadowTextureCasterMaterial("PSSM/shadow_caster");
 		}
 	}
 	else
@@ -336,20 +336,24 @@ KVOID DotSceneLoader::processTerrain(rapidxml::xml_node<>* XMLNode)
 	int compositeMapDistance = Ogre::StringConverter::parseInt(XMLNode->first_attribute("tuningCompositeMapDistance")->value());
 	int maxPixelError = Ogre::StringConverter::parseInt(XMLNode->first_attribute("tuningMaxPixelError")->value());
 
-// 	Ogre::Vector3 lightdir(0, -0.3, 0.75);
-// 	lightdir.normalise();
-// 	Ogre::Light* l = mSceneMgr->createLight("tstLight");
-// 	l->setType(Ogre::Light::LT_DIRECTIONAL);
-// 	l->setDirection(lightdir);
-// 	l->setDiffuseColour(Ogre::ColourValue(1.0, 1.0, 1.0));
-// 	l->setSpecularColour(Ogre::ColourValue(0.4, 0.4, 0.4));
-// 	mSceneMgr->setAmbientLight(Ogre::ColourValue(0.6, 0.6, 0.6));
+	Ogre::Vector3 lightdir(0, -0.3, 0.75);
+	lightdir.normalise();
 
+	if (mSceneMgr->hasLight("tstLight"))
+		mSceneMgr->destroyLight("tstLight");
+
+	Ogre::Light* l = mSceneMgr->createLight("tstLight");
+	l->setType(Ogre::Light::LT_DIRECTIONAL);
+	l->setPosition(KPoint3(-500,1000,-500));
+	l->setDirection(lightdir);
+	l->setDiffuseColour(Ogre::ColourValue(1.0, 1.0, 1.0));
+	l->setSpecularColour(Ogre::ColourValue(0.4, 0.4, 0.4));
+	
 	mTerrainGlobalOptions->setMaxPixelError((Ogre::Real)maxPixelError);
 	mTerrainGlobalOptions->setCompositeMapDistance((Ogre::Real)compositeMapDistance);
-//	mTerrainGlobalOptions->setLightMapDirection(lightdir);
-//	mTerrainGlobalOptions->setCompositeMapAmbient(mSceneMgr->getAmbientLight());
-//	mTerrainGlobalOptions->setCompositeMapDiffuse(l->getDiffuseColour());
+	mTerrainGlobalOptions->setLightMapDirection(lightdir);
+	mTerrainGlobalOptions->setCompositeMapAmbient(mSceneMgr->getAmbientLight());
+	mTerrainGlobalOptions->setCompositeMapDiffuse(l->getDiffuseColour());
 
 	m_pTerrainGroup = OGRE_NEW Ogre::TerrainGroup(mSceneMgr, Ogre::Terrain::ALIGN_X_Z, mapSize, worldSize);
 	m_pTerrainGroup->setOrigin(Ogre::Vector3::ZERO);
@@ -498,7 +502,7 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 
 		return;
 	}
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	// Create the scene node
 	Ogre::SceneNode *pNode;
@@ -516,6 +520,36 @@ KVOID DotSceneLoader::processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode
 	}
 	else
 	{
+		// 加载音效
+		int s = name.find("$sound");
+		if (s == 0)
+		{
+			KINT np = name.find("_d");
+			if (np < (KINT)0)
+				np = name.length();
+
+			KSTR sGid = name.substr(6,np-6);
+			KUINT uGID = atoi(sGid.data());
+			KINT nDis = 10.0f;
+
+			if (np > (KINT)0 && np < name.length())
+			{	
+				KSTR sDis = name.substr(np+2,name.length()-np-2);
+				nDis = atoi(sDis.data());
+			}
+			
+			KPoint3 kPos ;
+			rapidxml::xml_node<>* pElement;
+			// Process position (?)
+			pElement = XMLNode->first_node("position");
+			if(pElement)
+				kPos = parseVector3(pElement);
+
+			Kylin::KylinRoot::GetSingletonPtr()->CreateSound(name,uGID,kPos,nDis);
+
+			return;
+		}
+		
 		// 初始化NPC
 		int n = name.find("$npc");
 		if (n == 0)
