@@ -89,6 +89,15 @@ namespace Kylin
 		KUINT		CheckRelation(Kylin::Character* pEnt1,Kylin::Character* pEnt2);
 		
 		KVOID		QuitGame();
+	
+		// ¥¥Ω®…˘“Ù
+		OgreOggSound::OgreOggISound*	CreateSound(KCSTR& sName, KINT nID);
+		KBOOL							CreateSound(KCSTR& sName, KINT nID, const KPoint3& pt, KFLOAT fDis);
+		KVOID							DestroySound(KCSTR& sName);
+		KVOID							PlaySound(KCSTR& sName);
+		KVOID							StopSound(KCSTR& sName);
+		KBOOL							IsPlaying(KCSTR& sName);
+		KVOID							ChangeBgSound(KINT nNewID);
 
 	protected:
 		GameCamera* m_pCamera;

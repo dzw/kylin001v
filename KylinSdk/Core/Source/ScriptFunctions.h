@@ -47,6 +47,9 @@ namespace Script
 	
 	// ¥”‘À∂ØµΩæ≤÷π
 	extern void to_stop(unsigned int uEntID);
+	
+	// «–ªª±≥æ∞“Ù¿÷
+	extern void change_background_sound(unsigned int uSoundID);
 
 //tolua_end
 };

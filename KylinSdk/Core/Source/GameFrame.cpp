@@ -1,6 +1,7 @@
 #include "corepch.h"
 #include "gameFrame.h"
 #include "KylinRoot.h"
+#include "rOgreRoot.h"
 #include "RegisterClass.h"
 #include "GameStatus.h"
 #include "Property.h"
@@ -32,8 +33,6 @@ KVOID Kylin::GameFrame::Destroy()
 
 	if (KylinRoot::Initialized())
 		KDEL KylinRoot::GetSingletonPtr();
-
-
 
 	AppFrame::Destroy();
 }
@@ -68,7 +67,7 @@ KVOID Kylin::GameFrame::CreateWidgets()
 	//////////////////////////////////////////////////////////////////////////
 	if (!KylinRoot::Initialized())
 		KNEW KylinRoot();
-
+	
 	//////////////////////////////////////////////////////////////////////////
 	RegisterClasses();
 }

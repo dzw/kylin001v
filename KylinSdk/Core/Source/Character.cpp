@@ -86,6 +86,7 @@ KVOID Kylin::Character::Tick( KFLOAT fElapsed )
 	Entity::Tick(fElapsed);
 
 	SAFE_CALL(m_pActDispatcher,Tick(fElapsed));
+	SAFE_CALL(m_pAvatar,Update(fElapsed));
 }
 
 Kylin::ActionDispatcher* Kylin::Character::GetActionDispatcher()

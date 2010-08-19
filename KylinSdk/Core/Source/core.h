@@ -54,6 +54,12 @@ namespace Kylin
 	}
 }
 
+namespace OgreOggSound
+{
+	class OgreOggISound;
+	class OgreOggSoundManager;
+}
+
 class EventTemplate;
 
 struct DamageResult;
