@@ -27,6 +27,13 @@
         class TerrainGlobalOptions;
 	}
 
+	namespace Forests
+	{
+		class PagedGeometry;
+		class GrassLoader;
+		class GrassLayer;
+	}
+
 	class nodeProperty
 	{
 	public:
@@ -98,6 +105,8 @@
 
 		void processLightRange(rapidxml::xml_node<>* XMLNode, Ogre::Light *pLight);
 		void processLightAttenuation(rapidxml::xml_node<>* XMLNode, Ogre::Light *pLight);
+		
+		//void processGrassLayers();
 
 		Ogre::String getAttrib(rapidxml::xml_node<>* XMLNode, const Ogre::String &parameter, const Ogre::String &defaultValue = "");
 		Ogre::Real getAttribReal(rapidxml::xml_node<>* XMLNode, const Ogre::String &parameter, Ogre::Real defaultValue = 0);
@@ -125,6 +134,9 @@
 
 		Hydrax::Hydrax*						mHydraxHandle;
 		Hydrax::Module::ProjectedGrid *		mHydraxModule;
+
+		Forests::PagedGeometry  *mPGHandle;                         /** Handle to Forests::PagedGeometry object */
+		Forests::GrassLoader    *mGrassLoaderHandle;                /** Handle to Forests::GrassLoader object */
 	};
 
 #endif // DOT_SCENELOADER_H
