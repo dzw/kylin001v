@@ -158,7 +158,7 @@ KVOID Kylin::PhyX::MotionSimulator::Calculator::Handle( MotionDummy* pDummy, KFL
 		//---------------------------------------------------------------
 		// 获得地面高度
 		kCurrPos.y = 50000.0f;
-		KylinRoot::GetSingletonPtr()->HitTest(kCurrPos,KPoint3(KPoint3::NEGATIVE_UNIT_Y),kCurrPos);
+		KylinRoot::GetSingletonPtr()->GetTerrainHeight(kCurrPos);//HitTest(kCurrPos,KPoint3(KPoint3::NEGATIVE_UNIT_Y),kCurrPos);
 	}
 	
 	// 跳跃下落状态

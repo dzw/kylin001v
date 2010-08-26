@@ -115,8 +115,8 @@ namespace Script
 	{
 		Kylin::Entity* pEnt = Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 		
-		KPoint3 kPos;
-		if ( Kylin::KylinRoot::GetSingletonPtr()->HitTest(KPoint3(x,0,z),KPoint3::NEGATIVE_UNIT_Y,kPos) )
+		KPoint3 kPos(x,0,z);
+		if ( Kylin::KylinRoot::GetSingletonPtr()->GetTerrainHeight(kPos) )//HitTest(KPoint3(x,0,z),KPoint3::NEGATIVE_UNIT_Y,kPos) )
 			SAFE_CALL(pEnt,SetTranslate(kPos));
 	}
 

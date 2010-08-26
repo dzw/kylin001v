@@ -108,8 +108,8 @@ namespace Kylin
 	private:
 		KFLOAT	getHeight(KFLOAT x, KFLOAT z)
 		{
-			KPoint3 vPos;
-			if ( KylinRoot::GetSingletonPtr()->HitTest(KPoint3(x, 5000, z),KPoint3::NEGATIVE_UNIT_Y,vPos) )
+			KPoint3 vPos(x,0,z);
+			if ( KylinRoot::GetSingletonPtr()->GetTerrainHeight(vPos) )//HitTest(KPoint3(x, 5000, z),KPoint3::NEGATIVE_UNIT_Y,vPos) )
 				return vPos.y;
 
 			return 0;
