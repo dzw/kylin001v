@@ -75,6 +75,22 @@ KBOOL Kylin::KylinRoot::HitTest( const Ogre::Ray &kCamRay, KPoint3& vRetPos )
 	return false;
 }
 
+
+KBOOL Kylin::KylinRoot::GetTerrainHeight( KPoint3& vRetPos )
+{
+	if (GetGameFramePtr()->m_pActiveStatus->m_eStatus == GS_GAME_)
+	{
+		Kylin::GSGame* pStatus = static_cast<Kylin::GSGame*>(GetGameFramePtr()->m_pActiveStatus);
+		Ogre::TerrainGroup* pTerrain = pStatus->m_pWorldManager->m_pActiveScene->m_pSceneLoader->getTerrainGroup();
+
+		vRetPos.y = pTerrain->getHeightAtWorldPosition(vRetPos);
+
+		return true;
+	}
+
+	return false;
+}
+
 Kylin::Entity * Kylin::KylinRoot::SpawnEntity( PropertySet& rProp )
 {
 	KUINT uClassID;

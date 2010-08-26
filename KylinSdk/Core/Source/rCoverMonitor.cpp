@@ -6,8 +6,8 @@
 #include "EntityMaterialInstance.h"
 
 
-#define MAX_COVER_SPAN 0.2f
-#define COVER_OBJ_ALPHA 0.6f
+#define MAX_COVER_SPAN 0.5f
+#define COVER_OBJ_ALPHA 0.5f
 
 Kylin::PhyX::CoverMonitor::CoverMonitor()
 : m_fTimespan(.0f)

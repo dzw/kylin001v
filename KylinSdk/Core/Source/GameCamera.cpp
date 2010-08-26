@@ -13,7 +13,7 @@ Kylin::GameCamera::GameCamera( Ogre::Camera* pCam,Ogre::SceneManager* pSceneMgr 
 , m_pCameraPivot(NULL)
 , m_pCameraGoal(NULL)
 , m_pCameraNode(NULL)
-, m_fCamPosY(0.8f)
+, m_fCamPosY(1.2f)
 , m_fCameraDistance(CAMERA_DIS)
 , m_eMode(CM_NULL)
 , m_pFreeNode(NULL)
@@ -56,24 +56,18 @@ KVOID Kylin::GameCamera::Update( KFLOAT fElapsed )
 {
 	if (m_eMode == CM_3P)
 	{
-		//KPoint3 Capos = m_pCameraNode->getPosition();
-		//KPoint3 Nopos = m_pTargetNode->getPosition();
 		// place the camera pivot roughly at the character's shoulder
 		m_pCameraPivot->setPosition(m_pTargetNode->getPosition() + KPoint3::UNIT_Y * CAM_HEIGHT);
 		// move the camera smoothly to the goal
-		KPoint3 goalOffset = m_pCameraGoal->_getDerivedPosition() - m_pCameraNode->getPosition();
+		KPoint3 ptTmp = m_pCameraGoal->_getDerivedPosition() - m_pCameraNode->getPosition();
+		KPoint3 DistPos = m_pCameraNode->getPosition() + ptTmp; //* fElapsed * 9.0f;
 
-		KPoint3 DistPos = m_pCameraNode->getPosition() + goalOffset; //* fElapsed * 9.0f;
-
-		if ( abs(goalOffset.y) - GetCameraPosY() > KZERO )
+		if ( abs(DistPos.y) - GetCameraPosY() < KZERO )
 		{
-			KPoint3 ptRet;
-			if ( KylinRoot::GetSingletonPtr()->HitTest(DistPos,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
+			ptTmp = DistPos;
+			if ( KylinRoot::GetSingletonPtr()->GetTerrainHeight(ptTmp) )//HitTest(DistPos,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
 			{
-				if (DistPos.y < ptRet.y)
-				{
-					DistPos.y = ptRet.y;
-				}
+				DistPos.y = ptTmp.y;
 			}
 		}
 

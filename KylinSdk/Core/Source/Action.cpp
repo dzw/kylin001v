@@ -40,10 +40,10 @@ KBOOL Kylin::Action::Init( const PropertySet& kProp )
 //-------------------------------------------------------------------
 KVOID Kylin::Action::Tick( KFLOAT fElapsed )
 {
-	if (!IsComplete())
-	{
-
-	}
+// 	if (!IsComplete())
+// 	{
+// 
+// 	}
 }
 //-------------------------------------------------------------------
 KVOID Kylin::Action::RemoveFactor( KUINT uFactorID )

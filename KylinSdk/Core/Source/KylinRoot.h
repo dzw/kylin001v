@@ -42,6 +42,8 @@ namespace Kylin
 		// 检测射线与地面是否相交
 		KBOOL		HitTest(const KPoint3& vOrg, const KPoint3& vDir, KPoint3& vPicked);
 		KBOOL		HitTest(const Ogre::Ray &kCamRay, KPoint3& vRetPos);
+		
+		KBOOL		GetTerrainHeight(KPoint3& vRetPos);
 
 		// 由属性产生entity
 		Entity *	SpawnEntity(PropertySet& rProp);

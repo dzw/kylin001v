@@ -72,8 +72,8 @@ namespace Kylin
 		for(KUINT i=0; i<m_idManager.GetPtrs().size(); i++)
 		{
 			Entity * pEnt = m_idManager.GetPtrs()[i];
-			if(pEnt)
-				pEnt->Tick(fElapsed);
+
+			SAFE_CALL(pEnt,Tick(fElapsed));
 		}
 	}
 
