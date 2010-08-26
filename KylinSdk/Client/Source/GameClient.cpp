@@ -23,11 +23,11 @@ KVOID Kylin::GameClient::Entrance(KCHAR *argv)
 
 	//if (strcmp(argv,"-m 0") == 0)
 		
-#ifdef _DEBUG
- 	SwitchStatus(KNEW ClLobby());
-#else
+// #ifdef _DEBUG
+//  	SwitchStatus(KNEW ClLobby());
+// #else
 	SwitchStatus(KNEW ClGame());
-#endif
+//#endif
   		
 }
 

@@ -67,7 +67,7 @@ namespace Kylin
 // 		//-------------------------------
 // 		// test code
 #ifdef _DEBUG
- 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
+// 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
 // 		OgreRoot::GetSingletonPtr()->SetNextPolygonMode();
 		
 #endif
@@ -172,8 +172,8 @@ namespace Kylin
 		pt.x	= boost::get<float>(spEV->args[0]);
 		pt.z	= boost::get<float>(spEV->args[1]);
 		
-		KPoint3 ptRet;
-		if ( KylinRoot::GetSingletonPtr()->HitTest(pt,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
+		KPoint3 ptRet(pt);
+		if ( KylinRoot::GetSingletonPtr()->GetTerrainHeight(ptRet) )//HitTest(pt,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
 		{
 			pt.y = ptRet.y;
 			this->SetTranslate(pt);
