@@ -7,6 +7,9 @@
 #include <Terrain/OgreTerrainGroup.h>
 #include <Terrain/OgreTerrainMaterialGeneratorA.h>
 
+#include "PagedGeometry.h"
+#include "GrassLoader.h"
+
 #include "SkyXWapper.h"
 #include "CameraControl.h"
 #include "ParticleUniverseSystemManager.h"
@@ -20,6 +23,7 @@
 #include "Entity.h"
 #include "ClScriptFunction.h"
 #include "RenderableManager.h"
+#include "FileUtils.h"
 
 
 #pragma warning(disable:4390)
@@ -27,6 +31,14 @@
 
 using namespace Kylin;
 
+Ogre::TerrainGroup *StaticGroupPtr = 0;
+
+//-----------------------------------------------------------------------------------------
+Ogre::Real TerrainGroupHeightFunction(Ogre::Real x, Ogre::Real z, void *userData)
+{
+	return StaticGroupPtr->getHeightAtWorldPosition(x,0,z);
+}
+//-----------------------------------------------------------------------------------------
 
 DotSceneLoader::DotSceneLoader()
 : mSceneMgr(NULL)
@@ -34,6 +46,8 @@ DotSceneLoader::DotSceneLoader()
 , mHydraxHandle(NULL)
 , mHydraxModule(NULL)
 , mAttachNode(NULL)
+, mPGHandle(NULL)
+, mGrassLoaderHandle(NULL)
 {
     mTerrainGlobalOptions = OGRE_NEW Ogre::TerrainGlobalOptions();
 }
@@ -359,6 +373,8 @@ KVOID DotSceneLoader::processTerrain(rapidxml::xml_node<>* XMLNode)
 	m_pTerrainGroup->setOrigin(Ogre::Vector3::ZERO);
 
 	m_pTerrainGroup->setResourceGroup("General");
+	//
+	StaticGroupPtr = m_pTerrainGroup;
 
 	rapidxml::xml_node<>* pElement;
 	rapidxml::xml_node<>* pPageElement;
@@ -389,12 +405,98 @@ KVOID DotSceneLoader::processTerrainPage(rapidxml::xml_node<>* XMLNode)
 	if (Ogre::ResourceGroupManager::getSingleton().resourceExists(m_pTerrainGroup->getResourceGroup(), name))
 	{
 		m_pTerrainGroup->defineTerrain(pageX, pageY, name);
-		m_pTerrainGroup->loadTerrain(pageX, pageY,true);
+		m_pTerrainGroup->loadTerrain(pageX, pageY, true);
 		
 		mTerrainHandle = m_pTerrainGroup->getTerrain(pageX,pageY);	//获得新的地形指针
+
 		//////////////////////////////////////////////////////////////////////////
 		//Ogre::Terrain* pTer = m_pTerrainGroup->getTerrain(pageX, pageY);
 		//SAFE_CALL(m_pSkyWapper,AddGroundPass(pTer->getMaterial()));
+		if (!mPGHandle)
+		{
+			Ogre::Camera* _temp = mSceneMgr->getCamera("$MainCamera");
+
+			mPGHandle = new Forests::PagedGeometry(_temp, 40);
+			mPGHandle->addDetailLevel<Forests::GrassPage>(240);
+
+			//Create a GrassLoader object
+			mGrassLoaderHandle = new Forests::GrassLoader(mPGHandle);
+			//Assign the "grassLoader" to be used to load geometry for the PagedGrass instance
+			mPGHandle->setPageLoader(mGrassLoaderHandle);    
+
+			//Supply a height function to GrassLoader so it can calculate grass Y values
+			mGrassLoaderHandle->setHeightFunction(TerrainGroupHeightFunction);
+
+			//processGrassLayers();
+			Ogre::String denmapname = "./Media/Terrain/";
+			denmapname += name;
+			denmapname = denmapname.substr(0, denmapname.size() - 4) + "_density.tga";
+
+			if (!FileUtils::IsFileExist(denmapname.data()))
+				return;
+
+			std::fstream fstr(denmapname.c_str(), std::ios::in|std::ios::binary);
+			Ogre::DataStreamPtr stream = Ogre::DataStreamPtr(OGRE_NEW Ogre::FileStreamDataStream(&fstr, false));
+
+			Ogre::Image mPGDensityMap;
+			try
+			{
+				mPGDensityMap.load(stream);
+			}
+			catch(...) { return; }
+
+			stream.setNull();
+
+			Ogre::AxisAlignedBox bBox = mTerrainHandle->getWorldAABB();
+			Forests::TBounds bounds(bBox.getMinimum().x, bBox.getMinimum().z, bBox.getMaximum().x, bBox.getMaximum().z);
+
+			Ogre::TexturePtr denptr = Ogre::TextureManager::getSingletonPtr()->createOrRetrieve("scene_grass_densitymap", Ogre::ResourceGroupManager::INTERNAL_RESOURCE_GROUP_NAME).first;
+			denptr->loadImage(mPGDensityMap);
+
+			rapidxml::xml_node<>* pLayer = XMLNode->first_node("grassLayer");
+			int i = 0;
+
+			while(pLayer)
+			{
+				KBOOL act   = Ogre::StringConverter::parseBool(pLayer->first_attribute("active")->value());
+				if (act)
+				{
+					KBOOL ani   = Ogre::StringConverter::parseBool(pLayer->first_attribute("animate")->value());
+
+					Ogre::String mat = pLayer->first_attribute("material")->value();
+					Ogre::Vector2 mini = Ogre::StringConverter::parseVector2(pLayer->first_attribute("minsize")->value());
+					Ogre::Vector2 maxi = Ogre::StringConverter::parseVector2(pLayer->first_attribute("maxsize")->value());
+					KFLOAT dis = Ogre::StringConverter::parseReal(pLayer->first_attribute("swaydistribution")->value());
+					KFLOAT len = Ogre::StringConverter::parseReal(pLayer->first_attribute("swaylength")->value());
+					KFLOAT spe = Ogre::StringConverter::parseReal(pLayer->first_attribute("swayspeed")->value());
+					KFLOAT den = Ogre::StringConverter::parseReal(pLayer->first_attribute("density")->value());
+					KINT fad   = Ogre::StringConverter::parseInt(pLayer->first_attribute("fadetech")->value());
+					KINT gra   = Ogre::StringConverter::parseInt(pLayer->first_attribute("grasstech")->value());
+
+					Forests::GrassLayer * pPGLayers = mGrassLoaderHandle->addLayer(mat);
+
+					//Configure the grass layer properties (size, density, animation properties, fade settings, etc.)
+					pPGLayers->setLightingEnabled(true);
+					pPGLayers->setMinimumSize(mini.x, mini.y);
+					pPGLayers->setMaximumSize(maxi.x, maxi.y);
+					pPGLayers->setAnimationEnabled(ani);        
+					pPGLayers->setSwayDistribution(dis);
+					pPGLayers->setSwayLength(len);            
+					pPGLayers->setSwaySpeed(spe);                
+					pPGLayers->setDensity(den);                
+
+					pPGLayers->setDensityMap(denptr, static_cast<Forests::MapChannel>(Forests::CHANNEL_RED + i));
+					pPGLayers->setFadeTechnique(static_cast<Forests::FadeTechnique>(fad));    
+					pPGLayers->setRenderTechnique(static_cast<Forests::GrassTechnique>(gra));
+					pPGLayers->setMapBounds(bounds);
+				}
+				
+				i++;
+				pLayer = pLayer->next_sibling("grassLayer");
+			}
+
+			mPGHandle->reloadGeometryPages(bounds);
+		}
 	}
 }
 
@@ -973,11 +1075,13 @@ KVOID DotSceneLoader::Unload( Kylin::SceneHag* pHag )
 		SAFE_DEL(mHydraxHandle);
 	}
 
-// 	if (mAttachNode)
-// 	{
-// 		mAttachNode->detachAllObjects();
-// 		//		mAttachNode->removeAndDestroyAllChildren();
-// 	}
+	if(mGrassLoaderHandle)
+		OGRE_DELETE mGrassLoaderHandle;
+	mGrassLoaderHandle = NULL;
+
+	if(mPGHandle)
+		OGRE_DELETE mPGHandle;
+	mPGHandle = NULL;
 
 	Kylin::ClSceneLoader::Unload(pHag);
 
@@ -989,7 +1093,9 @@ KVOID DotSceneLoader::Unload( Kylin::SceneHag* pHag )
 
 KVOID DotSceneLoader::Tick( KFLOAT fElapsed )
 {
-	PROFILE("DotSceneLoader::Tick");
+	//PROFILE("DotSceneLoader::Tick");
+	
+	SAFE_CALL(mPGHandle,update());
 
 	Kylin::ClSceneLoader::Tick(fElapsed);
 }
@@ -998,15 +1104,6 @@ KVOID DotSceneLoader::Tick( KFLOAT fElapsed )
 // 加载水
 KVOID DotSceneLoader::processHydrax( rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent /*= 0*/ )
 {
-// 	std::vector<Ogre::String> _camnames;
-// 	// Loop through all cameras and grab their name and set their debug representation
-// 	Ogre::SceneManager::CameraIterator cameras = mSceneMgr->getCameraIterator();
-// 	while (cameras.hasMoreElements())
-// 	{
-// 		Ogre::Camera* camera = cameras.getNext();
-// 		_camnames.push_back(camera->getName());
-// 
-
 	Ogre::Camera* _temp = mSceneMgr->getCamera("$MainCamera");
 	createWaterPlane(mSceneMgr,_temp,_temp->getViewport());
 
@@ -1172,4 +1269,5 @@ KVOID DotSceneLoader::OnRenderStarted( KFLOAT fElapsed )
 {
 	UpdataHydrax(fElapsed);
 }
+
 //-------------------------------------------------------------------
