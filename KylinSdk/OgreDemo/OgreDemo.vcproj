@@ -41,7 +41,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions=" /Zm1000"
 				Optimization="0"
-				AdditionalIncludeDirectories="./Source;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE\Terrain&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../Engine/Source;../Standard/Source;../Core/Source;../Client/Source;../../Dependencies/ParticleUniverse/include;../../dependencies/HYDRAX/Hydrax/src"
+				AdditionalIncludeDirectories="./Source;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE\Terrain&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../Engine/Source;../Standard/Source;../Core/Source;../Client/Source;../../Dependencies/ParticleUniverse/include;../../dependencies/HYDRAX/Hydrax/src;../../dependencies/PagedGeometry/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,10 +63,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib E:\OgreSDK_vc8_v1-7-0\lib\debug\OgreMain_d.lib E:\OgreSDK_vc8_v1-7-0\lib\debug\OIS_d.lib E:\OgreSDK_vc8_v1-7-0\lib\debug\OgreTerrain_d.lib standard.lib engine.lib core.lib client.lib MyGUIEngine_d.lib MyGUI.OgrePlatform_d.lib lua5.1.lib toluapp_d.lib tinyxml.lib ParticleGenerator_d.lib SkyX_d.lib Hydrax_d.lib OgreOggSound_d.lib OpenAL32.lib vorbis_static_d.lib ogg_static_d.lib vorbisfile_static_d.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib E:\OgreSDK_vc8_v1-7-0\lib\debug\OgreMain_d.lib E:\OgreSDK_vc8_v1-7-0\lib\debug\OIS_d.lib E:\OgreSDK_vc8_v1-7-0\lib\debug\OgreTerrain_d.lib standard.lib engine.lib core.lib client.lib MyGUIEngine_d.lib MyGUI.OgrePlatform_d.lib lua5.1.lib toluapp_d.lib tinyxml.lib ParticleGenerator_d.lib SkyX_d.lib Hydrax_d.lib OgreOggSound_d.lib OpenAL32.lib vorbis_static_d.lib ogg_static_d.lib vorbisfile_static_d.lib PagedGeometry_d.lib"
 				OutputFile="../../Bin\$(ProjectName)_d.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="../Engine/debug;../Standard/debug;&quot;../../Dependencies\Lua\tolua++-1.0.93\lib&quot;;../../Dependencies/MyGUI3.0/solution_ogre/lib/debug;../Client/debug;../Core/debug;../../Dependencies/tinyxml/debug;../../Dependencies/ParticleUniverse/bin;&quot;../../Dependencies/SkyX-v0.1/lib&quot;;../../dependencies/HYDRAX/Hydrax/lib;../../Dependencies/OgreOggSound/lib;&quot;../../Dependencies\OpenAL 1.1 SDK\dependencies&quot;;&quot;../../Dependencies\OpenAL 1.1 SDK\libs\Win32&quot;"
+				AdditionalLibraryDirectories="../Engine/debug;../Standard/debug;&quot;../../Dependencies\Lua\tolua++-1.0.93\lib&quot;;../../Dependencies/MyGUI3.0/solution_ogre/lib/debug;../Client/debug;../Core/debug;../../Dependencies/tinyxml/debug;../../Dependencies/ParticleUniverse/bin;&quot;../../Dependencies/SkyX-v0.1/lib&quot;;../../dependencies/HYDRAX/Hydrax/lib;../../Dependencies/OgreOggSound/lib;&quot;../../Dependencies\OpenAL 1.1 SDK\dependencies&quot;;&quot;../../Dependencies\OpenAL 1.1 SDK\libs\Win32&quot;;../../dependencies/PagedGeometry/lib/debug"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -123,7 +123,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm150"
-				AdditionalIncludeDirectories="./Source;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE\Terrain&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../Engine/Source;../Standard/Source;../Core/Source;../Client/Source;../../Dependencies/ParticleUniverse/include;../../dependencies/HYDRAX/Hydrax/src"
+				AdditionalIncludeDirectories="./Source;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OGRE\Terrain&quot;;&quot;E:\OgreSDK_vc8_v1-7-0\include\OIS&quot;;../Engine/Source;../Standard/Source;../Core/Source;../Client/Source;../../Dependencies/ParticleUniverse/include;../../dependencies/HYDRAX/Hydrax/src;../../dependencies/PagedGeometry/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
@@ -143,10 +143,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib E:\OgreSDK_vc8_v1-7-0\lib\release\OgreMain.lib E:\OgreSDK_vc8_v1-7-0\lib\release\OIS.lib E:\OgreSDK_vc8_v1-7-0\lib\release\OgreTerrain.lib standard.lib engine.lib core.lib client.lib MyGUIEngine.lib MyGUI.OgrePlatform.lib lua5.1.lib toluapp.lib tinyxml.lib ParticleGenerator.lib SkyX.lib Hydrax.lib OgreOggSound.lib"
+				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib E:\OgreSDK_vc8_v1-7-0\lib\release\OgreMain.lib E:\OgreSDK_vc8_v1-7-0\lib\release\OIS.lib E:\OgreSDK_vc8_v1-7-0\lib\release\OgreTerrain.lib standard.lib engine.lib core.lib client.lib MyGUIEngine.lib MyGUI.OgrePlatform.lib lua5.1.lib toluapp.lib tinyxml.lib ParticleGenerator.lib SkyX.lib Hydrax.lib OgreOggSound.lib PagedGeometry.lib"
 				OutputFile="../../Bin\$(ProjectName).exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="../Engine/release;../Standard/release;&quot;../../Dependencies\Lua\tolua++-1.0.93\lib&quot;;../../Dependencies/MyGUI3.0/solution_ogre/lib/release;../Client/release;../Core/release;../../Dependencies/tinyxml/release;../../Dependencies/ParticleUniverse/bin;&quot;../../Dependencies/SkyX-v0.1/lib&quot;;../../dependencies/HYDRAX/Hydrax/lib;../../Dependencies/OgreOggSound/lib"
+				AdditionalLibraryDirectories="../Engine/release;../Standard/release;&quot;../../Dependencies\Lua\tolua++-1.0.93\lib&quot;;../../Dependencies/MyGUI3.0/solution_ogre/lib/release;../Client/release;../Core/release;../../Dependencies/tinyxml/release;../../Dependencies/ParticleUniverse/bin;&quot;../../Dependencies/SkyX-v0.1/lib&quot;;../../dependencies/HYDRAX/Hydrax/lib;../../Dependencies/OgreOggSound/lib;../../dependencies/PagedGeometry/lib/release"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
