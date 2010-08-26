@@ -239,7 +239,7 @@ namespace Kylin
 
 	KBOOL AppFrame::frameRenderingQueued( const Ogre::FrameEvent& evt )
 	{
-		PROFILE("frameRendering");
+		//PROFILE("frameRendering");
 
 		if(m_pWindow->isClosed())
 			return false;
@@ -284,15 +284,13 @@ namespace Kylin
 
 	KVOID AppFrame::OnIdle( KFLOAT fElapsed )
 	{
-		PROFILE("OnIdle");
+		//PROFILE("OnIdle");
 
 		if (m_bStartTick)
 			StartTick();
 
 		SAFE_CALL(EffectManager::GetSingletonPtr(),Render(fElapsed));
 		
-		//SAFE_CALL(m_pCameraCtrl,Update(fElapsed));
-
 		m_pGuiMgr->Update(fElapsed);
 	}
 
