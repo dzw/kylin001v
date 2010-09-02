@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xHook", "xHook.vcproj", "{477BC526-4122-433E-A800-74EE33362F02}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "App", "..\App\App.vcproj", "{6A7ED5E4-3B0A-4D9B-92F8-F2027123E26F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{477BC526-4122-433E-A800-74EE33362F02}.Debug|Win32.ActiveCfg = Debug|Win32
+		{477BC526-4122-433E-A800-74EE33362F02}.Debug|Win32.Build.0 = Debug|Win32
+		{477BC526-4122-433E-A800-74EE33362F02}.Release|Win32.ActiveCfg = Release|Win32
+		{477BC526-4122-433E-A800-74EE33362F02}.Release|Win32.Build.0 = Release|Win32
+		{6A7ED5E4-3B0A-4D9B-92F8-F2027123E26F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6A7ED5E4-3B0A-4D9B-92F8-F2027123E26F}.Debug|Win32.Build.0 = Debug|Win32
+		{6A7ED5E4-3B0A-4D9B-92F8-F2027123E26F}.Release|Win32.ActiveCfg = Release|Win32
+		{6A7ED5E4-3B0A-4D9B-92F8-F2027123E26F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
