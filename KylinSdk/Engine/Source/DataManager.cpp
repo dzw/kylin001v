@@ -23,6 +23,8 @@ Kylin::DataLoader* Kylin::DataManager::GetLoaderPtr( KSTR sName )
 	{
 		return it->second;
 	}
+
+	return NULL;
 }
 
 KVOID Kylin::DataManager::RegisterLoader( DataLoader* pLoader )
