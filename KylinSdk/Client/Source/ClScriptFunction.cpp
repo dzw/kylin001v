@@ -51,10 +51,13 @@ namespace Script
 	{
 		Kylin::Entity* pEnt			= Kylin::KylinRoot::GetSingletonPtr()->GetEntity(uEntID);
 		Kylin::ShortcutMenu* pMenu	= GET_GUI_PTR(Kylin::ShortcutMenu);
+		
+		Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 
-		if (BtIsKindOf(Kylin::Character,pEnt) && pMenu->HasSpare() > 0)
+		if ( BtIsKindOf(Kylin::Character,pEnt) && 
+			 pMenu->HasSpare() > 0 &&
+			 !pChar->GetActionDispatcher()->GetActionPtr(uActID))
 		{
-			Kylin::Character* pChar = BtStaticCast(Kylin::Character,pEnt);
 			Kylin::Action* pAct		= pChar->GetActionDispatcher()->SpawnAction(uActID);
 			
 			SAFE_CALL(pAct,SetEmitterNode(pChar->GetSceneNode()));

@@ -367,8 +367,11 @@ KVOID Kylin::KitbagMenu::NotifyToolTip( MyGUI::WidgetPtr _sender, const MyGUI::T
 	if (nIndex != -1)
 	{ 
 		KVEC<ItemCell*> kItems = m_pKitbagListener->GetKitbag()->GetItems();
-
-		if (!kItems[nIndex]->m_sExplain.empty())
+		
+		assert(nIndex < (KINT)kItems.size());
+		if ( nIndex < (KINT)kItems.size() && 
+			 kItems[nIndex] && 
+			 !kItems[nIndex]->m_sExplain.empty() )
 		{
 			m_pItemTips->SetTitle("µÀ¾ß");
 			m_pItemTips->SetContent(kItems[nIndex]->m_sExplain);
