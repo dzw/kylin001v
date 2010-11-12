@@ -50,13 +50,15 @@ KBOOL Kylin::Kitbag::AddItem( ItemCell* pItem )
 			m_kItemArray.push_back(pItem);
 		}
 	}
+
+	return true;
 }
 
 KBOOL Kylin::Kitbag::AddItem( KUINT uGID )
 {
 	KSTR sValue;
 	if (!DataManager::GetSingletonPtr()->GetGlobalValue("ITEM_DB",sValue))
-		return NULL;
+		return false;
 
 	DataLoader* pLoader = DataManager::GetSingletonPtr()->GetLoaderPtr(sValue);
 
@@ -87,7 +89,8 @@ KBOOL Kylin::Kitbag::AddItem( KUINT uGID )
 	dbItem.QueryField("EFFECT",dbField);
 	pItem->m_uEffectID = boost::any_cast<KINT>(dbField.m_aValue);
 	//------------------------------------------------------------------
-	AddItem(pItem);	
+	
+	return AddItem(pItem);	
 }
 
 KVOID Kylin::Kitbag::RemoveAndDestroyItem( KINT nIndex )
