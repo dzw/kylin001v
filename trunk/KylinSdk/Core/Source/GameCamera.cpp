@@ -3,7 +3,7 @@
 #include "KylinRoot.h"
 
 #define CAMERA_DIS 10.0f
-#define MAX_CAM_DIS 35
+#define MAX_CAM_DIS 25
 #define MIN_CAM_DIS 10
 
 Kylin::GameCamera::GameCamera( Ogre::Camera* pCam,Ogre::SceneManager* pSceneMgr )
@@ -62,7 +62,7 @@ KVOID Kylin::GameCamera::Update( KFLOAT fElapsed )
 		KPoint3 ptTmp = m_pCameraGoal->_getDerivedPosition() - m_pCameraNode->getPosition();
 		KPoint3 DistPos = m_pCameraNode->getPosition() + ptTmp; //* fElapsed * 9.0f;
 
-		if ( abs(DistPos.y) - GetCameraPosY() < KZERO )
+		if ( (DistPos.y) - GetCameraPosY() < KZERO )
 		{
 			ptTmp = DistPos;
 			if ( KylinRoot::GetSingletonPtr()->GetTerrainHeight(ptTmp) )//HitTest(DistPos,KPoint3::NEGATIVE_UNIT_Y,ptRet) )
