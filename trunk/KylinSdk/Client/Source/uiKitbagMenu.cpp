@@ -208,6 +208,7 @@ KVOID Kylin::KitbagMenu::SetItemInfo( KINT nIndex,ItemCell* pCell )
 		SAFE_CALL(pItem,setItemResourcePtr(resource_item))
 		SAFE_CALL(pItem,setItemGroup("States"));
 		SAFE_CALL(pItem,setVisible(true));
+		SAFE_CALL(pItem,setEnableToolTip(true));
 	}
 }
 
@@ -293,6 +294,30 @@ KVOID Kylin::KitbagMenu::Refresh()
 
 KVOID Kylin::KitbagMenu::Clear()
 {
+	m_pItem_1_1->setEnableToolTip(false);
+	m_pItem_1_2->setEnableToolTip(false);
+	m_pItem_1_3->setEnableToolTip(false);
+	m_pItem_1_4->setEnableToolTip(false);
+	m_pItem_1_5->setEnableToolTip(false);
+	m_pItem_1_6->setEnableToolTip(false);
+	m_pItem_1_7->setEnableToolTip(false);
+
+	m_pItem_2_1->setEnableToolTip(false);
+	m_pItem_2_2->setEnableToolTip(false);
+	m_pItem_2_3->setEnableToolTip(false);
+	m_pItem_2_4->setEnableToolTip(false);
+	m_pItem_2_5->setEnableToolTip(false);
+	m_pItem_2_6->setEnableToolTip(false);
+	m_pItem_2_7->setEnableToolTip(false);
+
+	m_pItem_3_1->setEnableToolTip(false);
+	m_pItem_3_2->setEnableToolTip(false);
+	m_pItem_3_3->setEnableToolTip(false);
+	m_pItem_3_4->setEnableToolTip(false);
+	m_pItem_3_5->setEnableToolTip(false);
+	m_pItem_3_6->setEnableToolTip(false);
+	m_pItem_3_7->setEnableToolTip(false);
+
 	m_pItem_1_1->setVisible(false);
 	m_pItem_1_2->setVisible(false);
 	m_pItem_1_3->setVisible(false);
