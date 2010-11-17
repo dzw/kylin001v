@@ -1,6 +1,6 @@
 #pragma once
 
-#pragma warning(disable:C4996)
+#pragma warning(disable:4996)
 
 class FileUtils
 {
