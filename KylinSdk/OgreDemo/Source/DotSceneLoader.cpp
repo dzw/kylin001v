@@ -911,15 +911,15 @@ KVOID DotSceneLoader::processNewParticleSystem(rapidxml::xml_node<>* XMLNode, Og
 	Ogre::String pexname = getAttrib(XMLNode, "script");
 
 	// Create the particle system
-	try
-	{
-		ParticleUniverse::ParticleSystemManager* pManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
-		ParticleUniverse::ParticleSystem*	mSystem =  pManager->createParticleSystem(name,pexname,mSceneMgr); 
-		pParent->attachObject(mSystem);
-		mSystem->start();
-		mSystem->setScale(pParent->getScale());
-	}
-	catch(Ogre::Exception &/*e*/)
+// 	try
+// 	{
+// 		ParticleUniverse::ParticleSystemManager* pManager = ParticleUniverse::ParticleSystemManager::getSingletonPtr(); 
+// 		ParticleUniverse::ParticleSystem*	mSystem =  pManager->createParticleSystem(name,pexname,mSceneMgr); 
+// 		pParent->attachObject(mSystem);
+// 		mSystem->start();
+// 		mSystem->setScale(pParent->getScale());
+// 	}
+// 	catch(Ogre::Exception &/*e*/)
 	{
 		Ogre::LogManager::getSingleton().logMessage("[DotSceneLoader] Error creating a new particle system!");
 	}
