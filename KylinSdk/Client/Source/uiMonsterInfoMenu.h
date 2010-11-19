@@ -34,5 +34,7 @@ namespace Kylin
 		ATTRIBUTE_FIELD_WIDGET_NAME(MonsterInfoMenu, m_pImageAnimaFront, "image_anima_front");
 		MyGUI::StaticImage* m_pImageAnimaFront;
 
+		KINT	m_nInitAnimaFrontWidth;
+		KINT	m_nInitAnimaFrontHeight;
 	};
 }

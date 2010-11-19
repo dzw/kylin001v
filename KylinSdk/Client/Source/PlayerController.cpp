@@ -405,6 +405,12 @@ KVOID Kylin::PlayerController::FocusTarget( KUINT uTargetID )
 			MonsterInfoMenu* pMenu = GET_GUI_PTR(MonsterInfoMenu);
 			pMenu->SetVisible(true);
 			pMenu->SetTitle(pTarget->GetName());
+
+			KINT nHp = 0,nInitHP = 0;
+			pTarget->GetPropertyRef().GetIntValue("$HP",nHp);
+			pTarget->GetPropertyRef().GetIntValue("$InitHP",nInitHP);
+
+			pMenu->SetHPWidthPct((float)nHp / (float)nInitHP);
 			// set anima ... 
 		}
 
