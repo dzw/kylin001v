@@ -1,7 +1,7 @@
 #include "engpch.h"
 #include "EffectManager.h"
 #include "rOgreRoot.h"
-#include "ParticleUniverseSystemManager.h"
+//#include "ParticleUniverseSystemManager.h"
 #include "EffectMotionBlur.h"
 #include "EffectFade.h"
 #include "ClockingCallback.h"
@@ -87,7 +87,7 @@ KVOID Kylin::EffectManager::Destroy()
 
 	m_kEffectMap.clear();
 	//////////////////////////////////////////////////////////////////////////
-	KDEL ParticleUniverse::ParticleSystemManager::getSingletonPtr();
+	//KDEL ParticleUniverse::ParticleSystemManager::getSingletonPtr();
 }
 
 KVOID Kylin::EffectManager::DestroyEffect( KSTR sName )

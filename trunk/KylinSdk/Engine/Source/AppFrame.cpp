@@ -172,7 +172,7 @@ namespace Kylin
 		if (!DataManager::Initialized())
 			KNEW DataManager();
 		//////////////////////////////////////////////////////////////////////////
-		m_pSceneMgr = m_pRoot->createSceneManager(Ogre::ST_EXTERIOR_CLOSE);
+		m_pSceneMgr = m_pRoot->createSceneManager("OctreeSceneManager");//Ogre::ST_EXTERIOR_CLOSE);
 
 		// set shadow properties
 // 		m_pSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_NONE);
