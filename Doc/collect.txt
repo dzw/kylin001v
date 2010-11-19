@@ -1,7 +1,114 @@
 
+email:ismygm@gmail.com
 
 ogitor 编辑器
 http://forum.ogitor.org/	
 
+http://bbs.gameres.com/showforum.asp?forumid=28   
+user:kylin001v	
+
+ogre bbs
+http://bbs.ogrecn.com/forums/bbs
+user:kylin001v
+
+http://bbs.66rpg.com/	
+user:kylin001v
+
+http://www.npc6.com/	
+user:kylin001v
+
+http://44rpg.uueasy.com/read.php?tid=268	
+user:kylin001v
+
+http://www.dogame.com.cn/bbs/	
+user:kylin001v
+
+http://bbs.31uuu.com/index.php	
+user:kylin001v
+
+http://bbs.ogdev.net/
+user:kylin001v
+
+Hydrax 主页
+http://www.ogre3d.org/tikiwiki/Hydrax
+
 项目管理
 http://www.leadge.com
+
+源代码
+http://www.koders.com
+
+武侠世界源代码
+http://www.assembla.com/code/WXSJ/subversion/nodes?rev=124
+
+it is a war
+http://isnw.googlecode.com/svn/trunk/ISNW/ISNW_Scene/
+
+空间
+http://byli.ucoz.com/admin/1
+user:byli
+password:QQ
+
+网盘
+http://ifile.it/
+user: kylin
+
+http://hotfile.com
+user: kylin001v
+
+http://u.115.com
+user: kylin001v
+
+http://www.17173.com
+user:gamecoder
+
+http://www.namipan.com
+ismygame@gmail.com
+
+语音通信组件
+http://www.raidcall.com/
+
+游戏图标下载
+http://www.iconarchive.com
+
+在线印章
+http://www.makepic.com/print.php
+
+展示
+http://www.moddb.com/members/qimen/mods
+
+参考代码
+http://www.csdn.net
+user:longuby
+password:e
+
+http://www.vckbase.com
+user:kylin
+
+http://www.codeproject.com
+user:wizard_longu@163.com
+
+http://qmen.weebly.com
+user:apayaccount@gmail.com
+password:e
+
+招聘
+http://my.chinahr.com/
+user:programming.sr@gmail.com
+password:QQ
+
+http://www.programfan.com
+user:kylin001v
+
+游戏展示
+http://show.gameres.com
+
+游戏策划
+http://gd.91.com/
+
+wow server code
+https://github.com/mangos/mangos
+
+
+
+
