@@ -6,6 +6,8 @@
 
 Kylin::MonsterInfoMenu::MonsterInfoMenu()
 : GuiBase(CLASS_TO(MonsterInfoMenu))
+, m_nInitAnimaFrontWidth(0)
+, m_nInitAnimaFrontHeight(0)
 {
 	initialiseByAttributes(this);
 
@@ -39,6 +41,8 @@ KBOOL Kylin::MonsterInfoMenu::Initialize()
 	m_pImageAnimaFront->setItemGroup("States");
 
 	//-----------------------------------------------------
+	m_nInitAnimaFrontWidth = m_pImageAnimaFront->getWidth();
+	m_nInitAnimaFrontHeight= m_pImageAnimaFront->getHeight();
 
 	SetVisible(false);
 
@@ -61,7 +65,7 @@ KVOID Kylin::MonsterInfoMenu::SetVisible( KBOOL bVisible )
 
 KVOID Kylin::MonsterInfoMenu::SetHPWidthPct( KFLOAT fW )
 {
-	m_pImageAnimaFront->setSize(int(fW*m_pImageAnimaFront->getWidth()),m_pImageAnimaFront->getHeight());
+	m_pImageAnimaFront->setSize(int(fW*m_nInitAnimaFrontWidth),m_nInitAnimaFrontHeight);
 }
 
 KVOID Kylin::MonsterInfoMenu::SetTitle( KCSTR sTitle )
