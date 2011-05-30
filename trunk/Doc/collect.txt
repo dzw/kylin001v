@@ -1,4 +1,3 @@
-
 email:ismygm@gmail.com
 
 ogitor 编辑器
@@ -80,7 +79,7 @@ http://www.moddb.com/members/qimen/mods
 参考代码
 http://www.csdn.net
 user:longuby
-password:e
+
 
 http://www.vckbase.com
 user:kylin
@@ -90,7 +89,7 @@ user:wizard_longu@163.com
 
 http://qmen.weebly.com
 user:apayaccount@gmail.com
-password:e
+
 
 招聘
 http://my.chinahr.com/
